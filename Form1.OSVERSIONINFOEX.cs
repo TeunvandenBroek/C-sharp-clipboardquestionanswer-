@@ -5,7 +5,7 @@ namespace it
     public partial class Form1
     {
         [StructLayout(LayoutKind.Sequential)]
-        internal struct OSVERSIONINFOEX
+        internal struct Osversioninfoex : System.IEquatable<Osversioninfoex>
         {
             internal int OSVersionInfoSize;
             internal int MajorVersion;
@@ -19,6 +19,11 @@ namespace it
             internal short SuiteMask;
             internal byte ProductType;
             internal byte Reserved;
+
+            public bool Equals(Osversioninfoex other)
+            {
+                throw new System.NotImplementedException();
+            }
         }
     }
 }

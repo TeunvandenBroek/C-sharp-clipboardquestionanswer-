@@ -48,7 +48,7 @@ namespace it
 
         private void DoCleaningCheck()
         {
-            var now = Stopwatch.GetTimestamp();
+            long now = Stopwatch.GetTimestamp();
             if (now - _cpuCounterLastAccessedTimestamp > _time.Ticks)
             {
                 lock (_lock)

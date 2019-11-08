@@ -13,6 +13,7 @@
     using System.Security;
     using System.Text;
     using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
     using System.Windows.Forms;
 
     public partial class Form1 : Form
@@ -22,7 +23,7 @@
         private static extern bool SetProcessWorkingSetSize(IntPtr process, UIntPtr minimumWorkingSetSize, UIntPtr maximumWorkingSetSize);
 
         [DllImport("Shell32.dll", CharSet = CharSet.Unicode)]
-        private static extern uint SHEmptyRecycleBin(IntPtr hwnd, string pszRootPath, RecycleFlags dwFlags);
+        private static extern uint SHEmptyRecycleBin(IntPtr hwnd, string pszRootPath, Recycle dwFlags);
 
         private readonly List<Question> questionList = Questions.LoadQuestions();
 
@@ -32,7 +33,7 @@
 
         [SecurityCritical]
         [DllImport("ntdll.dll", SetLastError = true)]
-        internal static extern bool RtlGetVersion(ref OSVERSIONINFOEX versionInfo);
+        internal static extern bool RtlGetVersion(ref Osversioninfoex versionInfo);
 
         public Form1()
         {
@@ -66,7 +67,8 @@
         private void GetAnswer(string clipboardText)
         {
             if (TryDeviceActions(clipboardText) || TryTimeZonesActions(clipboardText) || TryComputeTimeSpan(clipboardText)
-                || ConvertUnits(clipboardText) || TryDoMaths(clipboardText) || TryRandomActions(clipboardText))
+                || ConvertUnits(clipboardText) || TryDoMaths(clipboardText) || TryRandomActions(clipboardText)  || TryDoStopWatch(clipboardText) || TryDoCountdown(clipboardText))
+
             {
                 Clipboard.Clear();
                 return;
@@ -83,6 +85,102 @@
                     }
                 }
             }
+        }
+        private Stopwatch myStopwatch;
+
+        private string lastClipboard;
+
+        private bool TryDoStopWatch(string clipboardText)
+        {
+            {
+                if (Clipboard.ContainsText())
+                {
+                    string clipboard = Clipboard.GetText();
+                    switch (clipboard)
+                    {
+                        case "start stopwatch": //start
+                            {
+                                if (myStopwatch?.IsRunning == true)
+                                {
+                                    ShowNotification("Stopwatch", "Stopwatch already running");
+                                }
+                                if (clipboard != lastClipboard)
+                                {
+                                    InteractiveTimer.Enabled = false;
+                                    lastClipboard = clipboard;
+                                    myStopwatch = new Stopwatch();
+                                    myStopwatch.Start();
+                                }
+                                break;
+                            }
+                        case "reset stopwatch": //reset
+                            {
+                                if (clipboard != lastClipboard)
+                                {
+                                    InteractiveTimer.Enabled = false;
+                                    lastClipboard = clipboard;
+                                    myStopwatch.Reset();
+                                    myStopwatch = new Stopwatch();
+                                    myStopwatch.Start();
+                                    TimeSpan ts = myStopwatch.Elapsed;
+                                    ShowNotification("Stopwatch gereset naar", $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
+                                }
+                                break;
+                            }
+                        case "pauzeer stopwatch": //  pause
+                            {
+                                if (clipboard != lastClipboard)
+                                {
+                                    InteractiveTimer.Enabled = false;
+                                    lastClipboard = clipboard;
+                                    TimeSpan ts = myStopwatch.Elapsed;
+                                    ShowNotification("Stopwatch gepauzeerd op", $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
+                                    myStopwatch.Stop();
+                                }
+                                break;
+                            }
+                        case "resume stopwatch":
+                            {
+                                if (clipboard != lastClipboard)
+                                {
+                                    InteractiveTimer.Enabled = true;
+                                    lastClipboard = clipboard;
+                                    TimeSpan ts = myStopwatch.Elapsed;
+                                    ShowNotification("Stopwatch hervat vanaf", $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
+                                    myStopwatch.Start();
+                                }
+                                break;
+                            }
+                        case "stop stopwatch": //stop
+                            {
+                                if (lastClipboard != null)
+                                {
+                                    lastClipboard = null;
+                                    myStopwatch.Stop();
+                                    TimeSpan ts = myStopwatch.Elapsed;
+                                    ShowNotification("Elapsed time", $"{ts.Hours} uur, {ts.Minutes} minuten, {ts.Seconds}secondes");
+                                }
+                                break;
+                            }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private bool TryDoCountdown(string clipboardText)
+        {
+            if (clipboardText.StartsWith("timer") && TimeSpan.TryParse(clipboardText.Replace("timer ", ""), out TimeSpan ts))
+            {
+                Task.Run(async () =>
+                {
+                    await Task.Delay(ts).ConfigureAwait(false);
+                    ShowNotification("Countdown timer", "time is over");
+                });
+                return true;
+            }
+            return false;
         }
 
         private bool TryDoMaths(string clipboardText)
@@ -102,7 +200,6 @@
             for (int i2 = 0; i2 < rhss.Length; i2++)
             {
                 answer = binaryOperators[operators[i++]](answer, rhss[i2]);
-
             }
             ShowNotification(clipboardText, answer.ToString(CultureInfo.CurrentCulture));
             Clipboard.SetText(answer.ToString(CultureInfo.CurrentCulture));
@@ -126,7 +223,6 @@
                         if (_random.NextDouble() < 0.5)
                         {
                             ShowNotification("Kop of munt?", "Kop");
-
                         }
                         else
                         {
@@ -136,16 +232,16 @@
                     }
                 case "random password":
                     {
-
                         const int minLength = 8;
                         const int maxLength = 12;
                         const string charAvailable = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789-";
                         StringBuilder password = new StringBuilder();
                         int passwordLength = _random.Next(minLength, maxLength + 1);
                         while (passwordLength-- > 0)
+                        {
                             password.Append(charAvailable[_random.Next(charAvailable.Length)]);
-                        ShowNotification("Random password", password.ToString());
-
+                            ShowNotification("Random password", password.ToString());
+                        }
                         return true;
                     }
             }
@@ -198,7 +294,7 @@
                 case "leeg prullebak":
                 case "prullebak":
                     {
-                        SHEmptyRecycleBin(IntPtr.Zero, null, RecycleFlags.SHRB_NOCONFIRMATION);
+                        SHEmptyRecycleBin(IntPtr.Zero, null, Recycle.SHRB_NOCONFIRMATION);
                         ShowNotification(clipboardText, "Prullebak succesvol leeg gemaakt");
                         return true;
                     }
@@ -220,7 +316,7 @@
                     }
                 case "windows versie":
                     {
-                        OSVERSIONINFOEX osVersionInfo = default;
+                        Osversioninfoex osVersionInfo = default;
                         if (!RtlGetVersion(ref osVersionInfo))
                         {
                             ShowNotification("Je windows versie", $"Windows Version {osVersionInfo.MajorVersion}..{osVersionInfo.BuildNumber}");
@@ -250,7 +346,6 @@
                         Clipboard.SetText(dnsName);
                         return true;
                     }
-                //om je momentele processor gebruik te bekijken
                 case "cpu":
                     {
                         // komt nu overeen met lezen van taakbeheer
@@ -258,7 +353,6 @@
                         ShowNotification("Processor verbruik", secondValue.ToString("###", CultureInfo.InvariantCulture) + "%");
                         return true;
                     }
-                //voor je ip adres te zien
                 case "ip":
                     {
                         using (WebClient webClient = new WebClient())
@@ -279,7 +373,6 @@
                         return true;
                     }
             }
-
             return false;
         }
 
@@ -433,7 +526,7 @@
                     }
                 case Countries.UtcOffset.UtcPlusTwelve:
                     {
-                        ShowNotification("Fiji Standard Time");
+                        ShowNotification("New Zealand Standard Time");
                         return true;
                     }
                 case Countries.UtcOffset.UtcPlusThirteen:
@@ -443,17 +536,12 @@
                     }
                 case Countries.UtcOffset.UtcPlusFivepointfive:
                     {
-                        ShowNotification("Sri Lanka Standard Time");
+                        ShowNotification("India Standard Time");
                         return true;
                     }
                 case Countries.UtcOffset.UtcPlusFivepointThreeQuarters:
                     {
-                        ShowNotification("");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcPlusSixpointfive:
-                    {
-                        ShowNotification("???");
+                        ShowNotification("Nepal Standard Time");
                         return true;
                     }
             }
@@ -497,81 +585,6 @@
                         }
                         break;
                     }
-            }
-        }
-
-        private Stopwatch myStopwatch;
-
-        private string lastClipboard;
-
-        private void ClipboardTimer_Tick(object sender, EventArgs e)
-        {
-            if (Clipboard.ContainsText())
-            {
-                string clipboard = Clipboard.GetText();
-                switch (clipboard)
-                {
-                    case "start stopwatch": //start
-                        {
-                            if (clipboard != lastClipboard)
-                            {
-                                InteractiveTimer.Enabled = false;
-                                lastClipboard = clipboard;
-                                myStopwatch = new Stopwatch();
-                                myStopwatch.Start();
-                            }
-                            break;
-                        }
-                    case "reset stopwatch": //reset
-                        {
-                            if (clipboard != lastClipboard)
-                            {
-                                InteractiveTimer.Enabled = false;
-                                lastClipboard = clipboard;
-                                myStopwatch.Reset();
-                                myStopwatch = new Stopwatch();
-                                myStopwatch.Start();
-                                TimeSpan ts = myStopwatch.Elapsed;
-                                ShowNotification("Stopwatch gereset naar", $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
-                            }
-                            break;
-                        }
-                    case "pauzeer stopwatch": //  pause
-                        {
-                            if (clipboard != lastClipboard)
-                            {
-                                InteractiveTimer.Enabled = false;
-                                lastClipboard = clipboard;
-                                TimeSpan ts = myStopwatch.Elapsed;
-                                ShowNotification("Stopwatch gepauzeerd op", $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
-                                myStopwatch.Stop();
-                            }
-                            break;
-                        }
-                    case "resume stopwatch":
-                        {
-                            if (clipboard != lastClipboard)
-                            {
-                                InteractiveTimer.Enabled = true;
-                                lastClipboard = clipboard;
-                                TimeSpan ts = myStopwatch.Elapsed;
-                                ShowNotification("Stopwatch hervat vanaf", $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
-                                myStopwatch.Start();
-                            }
-                            break;
-                        }
-                    case "stop stopwatch": //stop
-                        {
-                            if (lastClipboard != null)
-                            {
-                                lastClipboard = null;
-                                myStopwatch.Stop();
-                                TimeSpan ts = myStopwatch.Elapsed;
-                                ShowNotification("Elapsed time", $"{ts.Hours} uur, {ts.Minutes} minuten, {ts.Seconds}secondes");
-                            }
-                            break;
-                        }
-                }
             }
         }
 
@@ -862,18 +875,13 @@
             }
 
             Clipboard.SetText(result.ToString(CultureInfo.CurrentCulture));
-            string resultStr = wantToHaveDecimals ? result.ToString("F2") : result.ToString("F0");
             ShowNotification(clipboardText, result.ToString() + to);
             return true;
         }
 
-
         private Process _vergrendel;
 
         private Process _afsluiten;
-
-        private readonly bool wantToHaveDecimals = true;
-
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             _vergrendel?.Dispose();

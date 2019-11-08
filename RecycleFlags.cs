@@ -2,7 +2,7 @@
 {
     public partial class Form1
     {
-        private enum RecycleFlags : uint
+        private enum Recycle : uint
         {
             SHRB_NOCONFIRMATION = 0x00000001,
             SHRB_NOPROGRESSUI = 0x00000002,

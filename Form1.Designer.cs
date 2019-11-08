@@ -29,8 +29,6 @@
             //
             // ClipboardTimer
             //
-            this.ClipboardTimer.Enabled = true;
-            this.ClipboardTimer.Tick += new System.EventHandler(this.ClipboardTimer_Tick);
             //
             // Form1
             //
