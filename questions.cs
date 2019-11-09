@@ -4,7 +4,7 @@
 
     public static class Questions
     {
-        private static Dictionary<string, string> questionDict = new Dictionary<string, string>
+        private  static Dictionary<string, string> questionDict = new Dictionary<string, string>
         {
             //Add question/answer to list
             //hoofdstuk 3 it
@@ -749,14 +749,24 @@
             ["straat"] = "b (het meest rechtsonder",
         };
 
-        public static Dictionary<string, string> GetQuestionDict()
+        public static Dictionary<string, string> GetQuestionDict1()
         {
             return questionDict;
         }
 
-        public static void SetQuestionDict(Dictionary<string, string> value)
+        public static void SetQuestionDict1(Dictionary<string, string> value)
         {
             questionDict = value;
+        }
+
+        public static Dictionary<string, string> GetQuestionDict()
+        {
+            return GetQuestionDict1();
+        }
+
+        public static void SetQuestionDict(Dictionary<string, string> value)
+        {
+            SetQuestionDict1(value);
         }
 
         internal static List<Question> LoadQuestions()

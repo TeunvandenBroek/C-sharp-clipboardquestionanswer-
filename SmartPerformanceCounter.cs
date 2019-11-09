@@ -1,16 +1,19 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
-
-namespace it
+﻿namespace it
 {
+    using System;
+    using System.Diagnostics;
+    using System.Threading.Tasks;
+
     public class SmartPerformanceCounter
     {
         private readonly Func<PerformanceCounter> _factory;
+
         private readonly TimeSpan _time;
 
         private long _cpuCounterLastAccessedTimestamp;
+
         private PerformanceCounter _value;
+
         private readonly object _lock = new object();
 
         public bool IsValueCreated { get; private set; }
@@ -19,7 +22,7 @@ namespace it
         {
             get
             {
-                lock(_lock)
+                lock (_lock)
                 {
                     if (!IsValueCreated)
                     {

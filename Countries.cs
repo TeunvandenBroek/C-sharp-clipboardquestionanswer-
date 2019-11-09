@@ -1,18 +1,22 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace it
+﻿namespace it
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
     internal static partial class Countries
     {
         public static class Offset
         {
             public const byte Hours = 4;
+
             public const byte HalfHours = 2;
+
             public const byte QuarterHours = 1;
+
             public const byte ThreeQuarters = 3 * QuarterHours;
         }
-        public static Dictionary<UtcOffset, string[]> CountriesByUtcOffset { get; } = new Dictionary<UtcOffset, string[]>
+
+        private static readonly Dictionary<UtcOffset, string[]> countriesByUtcOffset = new Dictionary<UtcOffset, string[]>
         {
             [UtcOffset.UtcMinusTwelve] = new[]
             {
@@ -160,77 +164,19 @@ namespace it
             },
         };
 
-        public static Dictionary<string, UtcOffset> UtcOffsetByCountry { get; } = CountriesByUtcOffset
+        public static Dictionary<UtcOffset, string[]> GetCountriesByUtcOffset()
+        {
+            return CountriesByUtcOffset;
+        }
+
+        private static readonly Dictionary<string, UtcOffset> utcOffsetByCountry = GetCountriesByUtcOffset()
             .SelectMany(x => x.Value.Select(c => { return (Offset: x.Key, Country: c); }))
             .ToDictionary(x => x.Country, x => x.Offset);
 
-        //UTC-12
-        public static IEnumerable<string> CountriesUTCmin12 => CountriesByUtcOffset[UtcOffset.UtcMinusTwelve];
-        //UTC-11
-        public static IEnumerable<string> CountriesUTCmin11 => CountriesByUtcOffset[UtcOffset.UtcMinusEleven];
-        //UTC-10
-        public static IEnumerable<string> CountriesUTCmin10 => CountriesByUtcOffset[UtcOffset.UtcMinusTen];
-        //UTC-9
-        public static IEnumerable<string> CountriesUTCmin9 => CountriesByUtcOffset[UtcOffset.UtcMinusNine];
-        //UTC-8
-        public static IEnumerable<string> CountriesUTCmin8 => CountriesByUtcOffset[UtcOffset.UtcMinusEight];
-        //UTC-7
-        public static IEnumerable<string> CountriesUTCmin7 => CountriesByUtcOffset[UtcOffset.UtcMinusSeven];
-        //UTC-6
-        public static IEnumerable<string> CountriesUTCmin6 => CountriesByUtcOffset[UtcOffset.UtcMinusSix];
-        //UTC-5
-        public static IEnumerable<string> CountriesUTCmin5 => CountriesByUtcOffset[UtcOffset.UtcMinusFive];
-        //UTC-4
-        public static IEnumerable<string> CountriesUTCmin4 => CountriesByUtcOffset[UtcOffset.UtcMinusFour];
-        //UTC-3.5
-        public static IEnumerable<string> CountriesUTCmin3point5 => CountriesByUtcOffset[UtcOffset.UtcMinusThreepoinfive];
-        //UTC-3
-        public static IEnumerable<string> CountriesUTCmin3 => CountriesByUtcOffset[UtcOffset.UtcMinusThree];
-        //UTC-2
-        public static IEnumerable<string> CountriesUTCmin2 => CountriesByUtcOffset[UtcOffset.UtcMinusTwo];
-        //UTC-1
-        public static IEnumerable<string> CountriesUTCmin1 => CountriesByUtcOffset[UtcOffset.UtcMinusOne];
-        //UTC+0
-        public static IEnumerable<string> CountriesUTC0 => CountriesByUtcOffset[UtcOffset.UtcZero];
-        //UTC+1
-        public static IEnumerable<string> CountriesUTC1 => CountriesByUtcOffset[UtcOffset.UtcPlusOne];
-
-        //lijst met landen met utc2
-        public static IEnumerable<string> CountriesUTC2 => CountriesByUtcOffset[UtcOffset.UtcPlusTwo];
-
-        //UTC3
-        public static IEnumerable<string> CountriesUTC3 => CountriesByUtcOffset[UtcOffset.UtcPlusThree];
-        //UTC3.5
-        public static IEnumerable<string> CountriesUTC3point5 => CountriesByUtcOffset[UtcOffset.UtcPlusThreepoinfive];
-        //UTC4
-        public static IEnumerable<string> CountriesUTC4 => CountriesByUtcOffset[UtcOffset.UtcPlusFour];
-
-        //UTC 4.5
-        public static IEnumerable<string> CountriesUTC4point5 => CountriesByUtcOffset[UtcOffset.UtcPlusFourpointfive];
-
-        //UTC5
-        public static IEnumerable<string> CountriesUTC5 => CountriesByUtcOffset[UtcOffset.UtcPlusFive];
-        //5.5
-        public static IEnumerable<string> CountriesUTC5point5 => CountriesByUtcOffset[UtcOffset.UtcPlusFivepointfive];
-        //utc5,75
-        public static IEnumerable<string> CountriesUTC5punt75 => CountriesByUtcOffset[UtcOffset.UtcPlusFivepointThreeQuarters];
-        //Utc6
-        public static IEnumerable<string> CountriesUTC6 => CountriesByUtcOffset[UtcOffset.UtcPlusSix];
-        //utc6,5
-        public static IEnumerable<string> CountriesUTC6punt5 => CountriesByUtcOffset[UtcOffset.UtcPlusSixpointfive];
-        //Utc7
-        public static IEnumerable<string> CountriesUTC7 => CountriesByUtcOffset[UtcOffset.UtcPlusSeven];
-        //Utc8
-        public static IEnumerable<string> CountriesUTC8 => CountriesByUtcOffset[UtcOffset.UtcPlusEight];
-        //Utc9
-        public static IEnumerable<string> CountriesUTC9 => CountriesByUtcOffset[UtcOffset.UtcPlusNine];
-        //Utc10
-        public static IEnumerable<string> CountriesUTC10 => CountriesByUtcOffset[UtcOffset.UtcPlusTen];
-        //Utc11
-        public static IEnumerable<string> CountriesUTC11 => CountriesByUtcOffset[UtcOffset.UtcPlusEleven];
-        //Utc12
-        public static IEnumerable<string> CountriesUTC12 => CountriesByUtcOffset[UtcOffset.UtcPlusTwelve];
-        //Utc13
-        public static IEnumerable<string> CountriesUTC13 => CountriesByUtcOffset[UtcOffset.UtcPlusThirteen];
+        public static Dictionary<string, UtcOffset> GetUtcOffsetByCountry()
+        {
+            return utcOffsetByCountry;
+        }
+        internal static Dictionary<UtcOffset, string[]> CountriesByUtcOffset => countriesByUtcOffset;
     }
 }

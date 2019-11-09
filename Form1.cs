@@ -28,8 +28,12 @@
         private readonly List<Question> questionList = Questions.LoadQuestions();
 
         private DateTime? PrevDate { get; set; }
+        public IPInterfaceProperties IPInterfaceProperties { get; set; }
 
-        private IPInterfaceProperties IPInterfaceProperties { get; set; }
+        private void SetIPInterfaceProperties(IPInterfaceProperties value)
+        {
+            IPInterfaceProperties = value;
+        }      
 
         [SecurityCritical]
         [DllImport("ntdll.dll", SetLastError = true)]
@@ -92,6 +96,10 @@
 
         private bool TryDoStopWatch(string clipboardText)
         {
+            if (string.IsNullOrWhiteSpace(clipboardText))
+            {
+                throw new ArgumentException("message", nameof(clipboardText));
+            }
             {
                 if (Clipboard.ContainsText())
                 {
@@ -173,11 +181,13 @@
         {
             if (clipboardText.StartsWith("timer") && TimeSpan.TryParse(clipboardText.Replace("timer ", ""), out TimeSpan ts))
             {
-                Task.Run(async () =>
+                async Task p()
                 {
                     await Task.Delay(ts).ConfigureAwait(false);
                     ShowNotification("Countdown timer", "time is over");
-                });
+                }
+                Func<Task> function = p;
+                Task.Run(function);
                 return true;
             }
             return false;
@@ -327,12 +337,12 @@
                 case "mac":
                     {
                         NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
-                        String sMacAddress = string.Empty;
+                        string sMacAddress = string.Empty;
                         foreach (NetworkInterface adapter in nics)
                         {
                             if (string.IsNullOrEmpty(sMacAddress))
                             {
-                                IPInterfaceProperties = adapter.GetIPProperties();
+                                SetIPInterfaceProperties(adapter.GetIPProperties());
                                 sMacAddress = adapter.GetPhysicalAddress().ToString();
                             }
                         }
@@ -381,7 +391,7 @@
         private bool TryTimeZonesActions(string clipboardText)
         {
             country = clipboardText.Trim().ToLowerInvariant();
-            KeyValuePair<string, Countries.UtcOffset> result = Countries.UtcOffsetByCountry.FirstOrDefault(x => x.Key.Contains(country));
+            KeyValuePair<string, Countries.UtcOffset> result = GetKeypair();
             if (result.Key == default)
             {
                 return false;
@@ -544,13 +554,23 @@
                         ShowNotification("Nepal Standard Time");
                         return true;
                     }
+
+                default:
+                    break;
             }
             return false;
         }
 
+        private KeyValuePair<string, Countries.UtcOffset> GetKeypair()
+        {
+            KeyValuePair<string, Countries.UtcOffset> result = Countries.GetUtcOffsetByCountry().FirstOrDefault(Predicate);
+            return result;
+        }
+
+        private bool Predicate(KeyValuePair<string, Countries.UtcOffset> x) => x.Key.Contains(country);
+
         private void ShowNotification(string timeZoneName)
         {
-            //  country copy zorgt ervoor dat het gekopieerde land als titel in de notificatie staat.
             string countrycopy = Clipboard.GetText();
             TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZoneName);
             DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo);
