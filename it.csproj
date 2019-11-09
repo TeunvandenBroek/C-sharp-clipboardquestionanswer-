@@ -84,6 +84,7 @@
     <Compile Include="Countries.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>

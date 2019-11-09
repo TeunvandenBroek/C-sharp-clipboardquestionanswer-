@@ -28,24 +28,30 @@
                     {
                         _value = _factory();
                         IsValueCreated = true;
-                    }
+                    }  
                 }
 
                 _cpuCounterLastAccessedTimestamp = Stopwatch.GetTimestamp();
 
-                Task.Run(async () =>
+                async Task function()
                 {
                     await Task.Delay(_time);
                     DoCleaningCheck();
-                });
+                }
+                Task task = Task.Run(function);
 
                 return _value;
             }
         }
-
+        
         public SmartPerformanceCounter(Func<PerformanceCounter> factory, TimeSpan time)
         {
             _factory = factory;
+            _time = time;
+        }
+
+        public SmartPerformanceCounter(TimeSpan time)
+        {
             _time = time;
         }
 

@@ -1,10 +1,10 @@
 ﻿namespace it
 {
     using System.Collections.Generic;
-
+     
     public static class Questions
     {
-        private  static Dictionary<string, string> questionDict = new Dictionary<string, string>
+        private static Dictionary<string, string> questionDict = new Dictionary<string, string>
         {
             //Add question/answer to list
             //hoofdstuk 3 it
@@ -106,7 +106,6 @@
             ["A user reports that images on a computer display are distorted. The technician sends an intern to look at the problem. What could the technician tell the intern to check first that does not involve hardware replacement or disassembly?"] = "display settings*",
 
             ["A user has connected an external monitor to a laptop VGA port. What is the next step the user should take?"] = "Use a Fn key along with a multi-purpose key to send video to the external display.*",
-            //hoofdstuk 5 it essentials
 
             ["What are two functions of an operating system? (Choose two.)"] = "controlling hardware access *managing applications *",
 

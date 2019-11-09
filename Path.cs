@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace it
 {
-    static class Path
+    internal static class Path
     {
         public static readonly string MyPath1 = @"C:\WINDOWS\system32\rundll32.exe";
     }

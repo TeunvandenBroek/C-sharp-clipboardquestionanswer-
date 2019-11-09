@@ -29,11 +29,12 @@
 
         private DateTime? PrevDate { get; set; }
         public IPInterfaceProperties IPInterfaceProperties { get; set; }
+        public IntPtr ClipboardViewerNext { get; set; }
 
         private void SetIPInterfaceProperties(IPInterfaceProperties value)
         {
             IPInterfaceProperties = value;
-        }      
+        }
 
         [SecurityCritical]
         [DllImport("ntdll.dll", SetLastError = true)]
@@ -48,11 +49,9 @@
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
         private static extern IntPtr SetClipboardViewer(IntPtr hWndNewViewer);
 
-        private IntPtr clipboardViewerNext;
-
         private void Form1_Load(object sender, EventArgs e)
         {
-            clipboardViewerNext = SetClipboardViewer(Handle);
+            ClipboardViewerNext = SetClipboardViewer(Handle);
         }
 
         private readonly Regex mathRegex = new Regex(@"^(?<lhs>\d+(?:[,.]{1}\d)*)(([ ]*(?<operator>[+\-\:x\%\*/])[ ]*(?<rhs>\d+(?:[,.]{1}\d)*)+)+)");
@@ -71,7 +70,7 @@
         private void GetAnswer(string clipboardText)
         {
             if (TryDeviceActions(clipboardText) || TryTimeZonesActions(clipboardText) || TryComputeTimeSpan(clipboardText)
-                || ConvertUnits(clipboardText) || TryDoMaths(clipboardText) || TryRandomActions(clipboardText)  || TryDoStopWatch(clipboardText) || TryDoCountdown(clipboardText))
+                || ConvertUnits(clipboardText) || TryDoMaths(clipboardText) || TryRandomActions(clipboardText) || TryDoStopWatch(clipboardText) || TryDoCountdown(clipboardText))
 
             {
                 Clipboard.Clear();
@@ -161,7 +160,7 @@
                             }
                         case "stop stopwatch": //stop
                             {
-                                if (lastClipboard != null)
+                                if (lastClipboard is object)
                                 {
                                     lastClipboard = null;
                                     myStopwatch.Stop();
@@ -176,7 +175,7 @@
 
             return false;
         }
-
+        
         private bool TryDoCountdown(string clipboardText)
         {
             if (clipboardText.StartsWith("timer") && TimeSpan.TryParse(clipboardText.Replace("timer ", ""), out TimeSpan ts))
@@ -262,10 +261,10 @@
         {
             if (DateTime.TryParseExact(clipboardText, DateFormats, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out DateTime newDate))
             {
-                if (PrevDate != null)
+                if (PrevDate is object)
                 {
                     TimeSpan? difference = newDate - PrevDate;
-                    if (difference != null)
+                    if (difference is object)
                     {
                         ShowNotification("Days between:", difference.Value.Days.ToString(CultureInfo.InvariantCulture));
                     }
@@ -391,11 +390,9 @@
         private bool TryTimeZonesActions(string clipboardText)
         {
             country = clipboardText.Trim().ToLowerInvariant();
-            KeyValuePair<string, Countries.UtcOffset> result = GetKeypair();
+            var result = Countries.UtcOffsetByCountry.FirstOrDefault(x => x.Key.Contains(country));
             if (result.Key == default)
-            {
                 return false;
-            }
 
             switch (result.Value)
             {
@@ -561,13 +558,7 @@
             return false;
         }
 
-        private KeyValuePair<string, Countries.UtcOffset> GetKeypair()
-        {
-            KeyValuePair<string, Countries.UtcOffset> result = Countries.GetUtcOffsetByCountry().FirstOrDefault(Predicate);
-            return result;
-        }
 
-        private bool Predicate(KeyValuePair<string, Countries.UtcOffset> x) => x.Key.Contains(country);
 
         private void ShowNotification(string timeZoneName)
         {
@@ -630,10 +621,7 @@
 
         private bool BerekenEenheden(string clipboardText, double number, string from, string to)
         {
-            double meter = 0;
-            double gram = 0;
-            double liter = 0;
-            double oppervlakte = 0;
+            Eenheden(out double meter, out double gram, out double liter, out double oppervlakte);
             switch (from)
             {
                 // lengte eenheden
@@ -897,6 +885,14 @@
             Clipboard.SetText(result.ToString(CultureInfo.CurrentCulture));
             ShowNotification(clipboardText, result.ToString() + to);
             return true;
+        }
+
+        private static void Eenheden(out double meter, out double gram, out double liter, out double oppervlakte)
+        {
+            meter = 0;
+            gram = 0;
+            liter = 0;
+            oppervlakte = 0;
         }
 
         private Process _vergrendel;

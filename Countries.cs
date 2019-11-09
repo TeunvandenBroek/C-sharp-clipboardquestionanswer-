@@ -164,19 +164,9 @@
             },
         };
 
-        public static Dictionary<UtcOffset, string[]> GetCountriesByUtcOffset()
-        {
-            return CountriesByUtcOffset;
-        }
-
-        private static readonly Dictionary<string, UtcOffset> utcOffsetByCountry = GetCountriesByUtcOffset()
-            .SelectMany(x => x.Value.Select(c => { return (Offset: x.Key, Country: c); }))
-            .ToDictionary(x => x.Country, x => x.Offset);
-
-        public static Dictionary<string, UtcOffset> GetUtcOffsetByCountry()
-        {
-            return utcOffsetByCountry;
-        }
+        public static Dictionary<string, UtcOffset> UtcOffsetByCountry { get; } = CountriesByUtcOffset
+     .SelectMany(x => x.Value.Select(c => (Offset: x.Key, Country: c))) // we use SelectMany, because we iterate through the country array
+     .ToDictionary(x => x.Country, x => x.Offset);
         internal static Dictionary<UtcOffset, string[]> CountriesByUtcOffset => countriesByUtcOffset;
     }
 }
