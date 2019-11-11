@@ -28,7 +28,9 @@
         private readonly List<Question> questionList = Questions.LoadQuestions();
 
         private DateTime? PrevDate { get; set; }
+
         public IPInterfaceProperties IPInterfaceProperties { get; set; }
+
         public IntPtr ClipboardViewerNext { get; set; }
 
         private void SetIPInterfaceProperties(IPInterfaceProperties value)
@@ -89,6 +91,7 @@
                 }
             }
         }
+
         private Stopwatch myStopwatch;
 
         private string lastClipboard;
@@ -175,7 +178,7 @@
 
             return false;
         }
-        
+
         private bool TryDoCountdown(string clipboardText)
         {
             if (clipboardText.StartsWith("timer") && TimeSpan.TryParse(clipboardText.Replace("timer ", ""), out TimeSpan ts))
@@ -390,7 +393,7 @@
         private bool TryTimeZonesActions(string clipboardText)
         {
             country = clipboardText.Trim().ToLowerInvariant();
-            var result = Countries.UtcOffsetByCountry.FirstOrDefault(x => x.Key.Contains(country));
+            KeyValuePair<string, Countries.UtcOffset> result = TryKeypair();
             if (result.Key == default)
                 return false;
 
@@ -558,7 +561,11 @@
             return false;
         }
 
-
+        private KeyValuePair<string, Countries.UtcOffset> TryKeypair()
+        {
+            bool predicate(KeyValuePair<string, Countries.UtcOffset> x) => x.Key.Contains(country);
+            return Countries.UtcOffsetByCountry.FirstOrDefault(predicate: predicate);
+        }
 
         private void ShowNotification(string timeZoneName)
         {
@@ -898,6 +905,7 @@
         private Process _vergrendel;
 
         private Process _afsluiten;
+
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             _vergrendel?.Dispose();

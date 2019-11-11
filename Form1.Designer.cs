@@ -1,14 +1,14 @@
 ﻿namespace it
 {
-    partial class Form1
+    /// <summary>
+    /// Defines the <see cref="Form1" />
+    /// </summary>
+    public partial class Form1
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
-
-
-        #region Windows Form Designer generated code
 
         /// <summary>
         /// Required method for Designer support - do not modify
@@ -43,14 +43,21 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
-
         }
 
-        #endregion
-
+        /// <summary>
+        /// Defines the notifyIcon1
+        /// </summary>
         public System.Windows.Forms.NotifyIcon notifyIcon1;
+
+        /// <summary>
+        /// Defines the InteractiveTimer
+        /// </summary>
         private System.Windows.Forms.Timer InteractiveTimer;
+
+        /// <summary>
+        /// Defines the ClipboardTimer
+        /// </summary>
         private System.Windows.Forms.Timer ClipboardTimer;
     }
 }
-

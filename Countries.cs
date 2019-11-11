@@ -3,19 +3,40 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    /// <summary>
+    /// Defines the <see cref="Countries" />
+    /// </summary>
     internal static partial class Countries
     {
+        /// <summary>
+        /// Defines the <see cref="Offset" />
+        /// </summary>
         public static class Offset
         {
+            /// <summary>
+            /// Defines the Hours
+            /// </summary>
             public const byte Hours = 4;
 
+            /// <summary>
+            /// Defines the HalfHours
+            /// </summary>
             public const byte HalfHours = 2;
 
+            /// <summary>
+            /// Defines the QuarterHours
+            /// </summary>
             public const byte QuarterHours = 1;
 
+            /// <summary>
+            /// Defines the ThreeQuarters
+            /// </summary>
             public const byte ThreeQuarters = 3 * QuarterHours;
         }
 
+        /// <summary>
+        /// Defines the countriesByUtcOffset
+        /// </summary>
         private static readonly Dictionary<UtcOffset, string[]> countriesByUtcOffset = new Dictionary<UtcOffset, string[]>
         {
             [UtcOffset.UtcMinusTwelve] = new[]
@@ -164,9 +185,16 @@
             },
         };
 
+        /// <summary>
+        /// Gets the UtcOffsetByCountry
+        /// </summary>
         public static Dictionary<string, UtcOffset> UtcOffsetByCountry { get; } = CountriesByUtcOffset
-     .SelectMany(x => x.Value.Select(c => (Offset: x.Key, Country: c))) // we use SelectMany, because we iterate through the country array
+        .SelectMany(x => x.Value.Select(c => (Offset: x.Key, Country: c))) // we use SelectMany, because we iterate through the country array
      .ToDictionary(x => x.Country, x => x.Offset);
+
+        /// <summary>
+        /// Gets the CountriesByUtcOffset
+        /// </summary>
         internal static Dictionary<UtcOffset, string[]> CountriesByUtcOffset => countriesByUtcOffset;
     }
 }

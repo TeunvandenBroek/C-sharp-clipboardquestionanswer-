@@ -13,7 +13,7 @@ namespace it
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            _disposable = new Form1();
+            Form1 form1 = _disposable = new Form1();
             Application.Run(_disposable);
         }
 

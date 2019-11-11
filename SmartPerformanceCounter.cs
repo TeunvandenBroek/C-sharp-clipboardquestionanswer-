@@ -28,7 +28,7 @@
                     {
                         _value = _factory();
                         IsValueCreated = true;
-                    }  
+                    }
                 }
 
                 _cpuCounterLastAccessedTimestamp = Stopwatch.GetTimestamp();
@@ -43,7 +43,7 @@
                 return _value;
             }
         }
-        
+
         public SmartPerformanceCounter(Func<PerformanceCounter> factory, TimeSpan time)
         {
             _factory = factory;
