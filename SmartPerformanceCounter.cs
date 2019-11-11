@@ -35,7 +35,7 @@
 
                 async Task function()
                 {
-                    await Task.Delay(_time);
+                    await Task.Delay(_time).ConfigureAwait(false);
                     DoCleaningCheck();
                 }
                 Task task = Task.Run(function);

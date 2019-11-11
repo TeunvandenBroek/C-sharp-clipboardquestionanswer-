@@ -98,85 +98,88 @@
 
         private bool TryDoStopWatch(string clipboardText)
         {
+            TryStopwatch(clipboardText);
+
+            return false;
+        }
+
+        private void TryStopwatch(string clipboardText)
+        {
             if (string.IsNullOrWhiteSpace(clipboardText))
             {
                 throw new ArgumentException("message", nameof(clipboardText));
             }
+            if (Clipboard.ContainsText())
             {
-                if (Clipboard.ContainsText())
+                string clipboard = Clipboard.GetText();
+                switch (clipboard)
                 {
-                    string clipboard = Clipboard.GetText();
-                    switch (clipboard)
-                    {
-                        case "start stopwatch": //start
+                    case "start stopwatch": //start
+                        {
+                            if (myStopwatch?.IsRunning == true)
                             {
-                                if (myStopwatch?.IsRunning == true)
-                                {
-                                    ShowNotification("Stopwatch", "Stopwatch already running");
-                                }
-                                if (clipboard != lastClipboard)
-                                {
-                                    InteractiveTimer.Enabled = false;
-                                    lastClipboard = clipboard;
-                                    myStopwatch = new Stopwatch();
-                                    myStopwatch.Start();
-                                }
-                                break;
+                                ShowNotification("Stopwatch", "Stopwatch already running");
                             }
-                        case "reset stopwatch": //reset
+                            if (clipboard != lastClipboard)
                             {
-                                if (clipboard != lastClipboard)
-                                {
-                                    InteractiveTimer.Enabled = false;
-                                    lastClipboard = clipboard;
-                                    myStopwatch.Reset();
-                                    myStopwatch = new Stopwatch();
-                                    myStopwatch.Start();
-                                    TimeSpan ts = myStopwatch.Elapsed;
-                                    ShowNotification("Stopwatch gereset naar", $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
-                                }
-                                break;
+                                InteractiveTimer.Enabled = false;
+                                lastClipboard = clipboard;
+                                myStopwatch = new Stopwatch();
+                                myStopwatch.Start();
                             }
-                        case "pauzeer stopwatch": //  pause
+                            break;
+                        }
+                    case "reset stopwatch": //reset
+                        {
+                            if (clipboard != lastClipboard)
                             {
-                                if (clipboard != lastClipboard)
-                                {
-                                    InteractiveTimer.Enabled = false;
-                                    lastClipboard = clipboard;
-                                    TimeSpan ts = myStopwatch.Elapsed;
-                                    ShowNotification("Stopwatch gepauzeerd op", $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
-                                    myStopwatch.Stop();
-                                }
-                                break;
+                                InteractiveTimer.Enabled = false;
+                                lastClipboard = clipboard;
+                                myStopwatch.Reset();
+                                myStopwatch = new Stopwatch();
+                                myStopwatch.Start();
+                                TimeSpan ts = myStopwatch.Elapsed;
+                                ShowNotification("Stopwatch gereset naar", $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
                             }
-                        case "resume stopwatch":
+                            break;
+                        }
+                    case "pauzeer stopwatch": //  pause
+                        {
+                            if (clipboard != lastClipboard)
                             {
-                                if (clipboard != lastClipboard)
-                                {
-                                    InteractiveTimer.Enabled = true;
-                                    lastClipboard = clipboard;
-                                    TimeSpan ts = myStopwatch.Elapsed;
-                                    ShowNotification("Stopwatch hervat vanaf", $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
-                                    myStopwatch.Start();
-                                }
-                                break;
+                                InteractiveTimer.Enabled = false;
+                                lastClipboard = clipboard;
+                                TimeSpan ts = myStopwatch.Elapsed;
+                                ShowNotification("Stopwatch gepauzeerd op", $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
+                                myStopwatch.Stop();
                             }
-                        case "stop stopwatch": //stop
+                            break;
+                        }
+                    case "resume stopwatch":
+                        {
+                            if (clipboard != lastClipboard)
                             {
-                                if (lastClipboard is object)
-                                {
-                                    lastClipboard = null;
-                                    myStopwatch.Stop();
-                                    TimeSpan ts = myStopwatch.Elapsed;
-                                    ShowNotification("Elapsed time", $"{ts.Hours} uur, {ts.Minutes} minuten, {ts.Seconds}secondes");
-                                }
-                                break;
+                                InteractiveTimer.Enabled = true;
+                                lastClipboard = clipboard;
+                                TimeSpan ts = myStopwatch.Elapsed;
+                                ShowNotification("Stopwatch hervat vanaf", $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
+                                myStopwatch.Start();
                             }
-                    }
+                            break;
+                        }
+                    case "stop stopwatch": //stop
+                        {
+                            if (lastClipboard is object)
+                            {
+                                lastClipboard = null;
+                                myStopwatch.Stop();
+                                TimeSpan ts = myStopwatch.Elapsed;
+                                ShowNotification("Elapsed time", $"{ts.Hours} uur, {ts.Minutes} minuten, {ts.Seconds}secondes");
+                            }
+                            break;
+                        }
                 }
             }
-
-            return false;
         }
 
         private bool TryDoCountdown(string clipboardText)
@@ -377,7 +380,7 @@
                                 {
                                     if (ipAddress.AddressFamily == AddressFamily.InterNetwork)
                                     {
-                                        ShowNotification("Ip adres", "Je public ip adres = " + (externalIp));
+                                        ShowNotification("Ip adres", "Je public ip adres = " + externalIp);
                                     }
                                 }
                             }
@@ -554,9 +557,6 @@
                         ShowNotification("Nepal Standard Time");
                         return true;
                     }
-
-                default:
-                    break;
             }
             return false;
         }
@@ -564,7 +564,7 @@
         private KeyValuePair<string, Countries.UtcOffset> TryKeypair()
         {
             bool predicate(KeyValuePair<string, Countries.UtcOffset> x) => x.Key.Contains(country);
-            return Countries.UtcOffsetByCountry.FirstOrDefault(predicate: predicate);
+            return Countries.UtcOffsetByCountry.FirstOrDefault(predicate);
         }
 
         private void ShowNotification(string timeZoneName)
@@ -622,8 +622,7 @@
             double number = double.Parse(matches.Groups["number"].Value);
             string from = matches.Groups["from"].Value;
             string to = matches.Groups["to"].Value;
-            bool success = BerekenEenheden(clipboardText, number, from, to);
-            return success;
+            return BerekenEenheden(clipboardText, number, from, to);
         }
 
         private bool BerekenEenheden(string clipboardText, double number, string from, string to)

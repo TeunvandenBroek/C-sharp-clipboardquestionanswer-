@@ -3,17 +3,17 @@ using System.Windows.Forms;
 
 namespace it
 {
-    internal sealed class Program : IDisposable
+    sealed class Program : IDisposable
     {
         /// <summary>
-        /// The main entry point for the appliation.
+        /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        private static void Main()
+        static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Form1 form1 = _disposable = new Form1();
+            _disposable = new Form1();
             Application.Run(_disposable);
         }
 

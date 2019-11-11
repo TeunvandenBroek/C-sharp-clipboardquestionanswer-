@@ -1,7 +1,7 @@
 ﻿namespace it
 {
     using System.Collections.Generic;
-     
+
     public static class Questions
     {
         private static Dictionary<string, string> questionDict = new Dictionary<string, string>
