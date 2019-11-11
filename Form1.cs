@@ -6,11 +6,7 @@
     using System.Drawing;
     using System.Globalization;
     using System.Linq;
-    using System.Net;
-    using System.Net.NetworkInformation;
-    using System.Net.Sockets;
     using System.Runtime.InteropServices;
-    using System.Security;
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
@@ -18,34 +14,20 @@
 
     public partial class Form1 : Form
     {
-        [DllImport("kernel32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool SetProcessWorkingSetSize(IntPtr process, UIntPtr minimumWorkingSetSize, UIntPtr maximumWorkingSetSize);
-
-        [DllImport("Shell32.dll", CharSet = CharSet.Unicode)]
-        private static extern uint SHEmptyRecycleBin(IntPtr hwnd, string pszRootPath, Recycle dwFlags);
+        private readonly DeviceActions deviceActions;
 
         private readonly List<Question> questionList = Questions.LoadQuestions();
 
-        private DateTime? PrevDate { get; set; }
+        private DateTime? prevDate;
 
-        public IPInterfaceProperties IPInterfaceProperties { get; set; }
+        private IntPtr clipboardViewerNext;
 
-        public IntPtr ClipboardViewerNext { get; set; }
-
-        private void SetIPInterfaceProperties(IPInterfaceProperties value)
-        {
-            IPInterfaceProperties = value;
-        }
-
-        [SecurityCritical]
-        [DllImport("ntdll.dll", SetLastError = true)]
-        internal static extern bool RtlGetVersion(ref Osversioninfoex versionInfo);
 
         public Form1()
         {
             InitializeComponent();
-            SetProcessWorkingSetSize(Process.GetCurrentProcess().Handle, (UIntPtr)0xFFFFFFFF, (UIntPtr)0xFFFFFFFF);
+
+            deviceActions = new DeviceActions(this);
         }
 
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
@@ -53,7 +35,7 @@
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            ClipboardViewerNext = SetClipboardViewer(Handle);
+            clipboardViewerNext = SetClipboardViewer(Handle);
         }
 
         private readonly Regex mathRegex = new Regex(@"^(?<lhs>\d+(?:[,.]{1}\d)*)(([ ]*(?<operator>[+\-\:x\%\*/])[ ]*(?<rhs>\d+(?:[,.]{1}\d)*)+)+)");
@@ -71,7 +53,7 @@
 
         private void GetAnswer(string clipboardText)
         {
-            if (TryDeviceActions(clipboardText) || TryTimeZonesActions(clipboardText) || TryComputeTimeSpan(clipboardText)
+            if (deviceActions.TryExecute(clipboardText) || TryTimeZonesActions(clipboardText) || TryComputeTimeSpan(clipboardText)
                 || ConvertUnits(clipboardText) || TryDoMaths(clipboardText) || TryRandomActions(clipboardText) || TryDoStopWatch(clipboardText) || TryDoCountdown(clipboardText))
 
             {
@@ -191,8 +173,7 @@
                     await Task.Delay(ts).ConfigureAwait(false);
                     ShowNotification("Countdown timer", "time is over");
                 }
-                Func<Task> function = p;
-                Task.Run(function);
+                Task.Run(p);
                 return true;
             }
             return false;
@@ -267,130 +248,25 @@
         {
             if (DateTime.TryParseExact(clipboardText, DateFormats, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out DateTime newDate))
             {
-                if (PrevDate is object)
+                if (prevDate is object)
                 {
-                    TimeSpan? difference = newDate - PrevDate;
+                    TimeSpan? difference = newDate - prevDate;
                     if (difference is object)
                     {
                         ShowNotification("Days between:", difference.Value.Days.ToString(CultureInfo.InvariantCulture));
                     }
-                    PrevDate = null;
+                    prevDate = null;
                 }
                 else
                 {
-                    PrevDate = newDate;
+                    prevDate = newDate;
                 }
                 return true;
             }
-            PrevDate = null;
+            prevDate = null;
             return false;
         }
-
-        private bool TryDeviceActions(string clipboardText)
-        {
-            switch (clipboardText)
-            {
-                case "sluit":
-                    {
-                        Close();
-                        return true;
-                    }
-                case "opnieuw opstarten":
-                case "reboot":
-                    {
-                        _reboot = Process.Start("shutdown", "/r /t 0");
-                        return true;
-                    }
-                case "slaapstand":
-                    {
-                        Application.SetSuspendState(PowerState.Hibernate, true, true);
-                        return true;
-                    }
-                case "leeg prullebak":
-                case "prullebak":
-                    {
-                        SHEmptyRecycleBin(IntPtr.Zero, null, Recycle.SHRB_NOCONFIRMATION);
-                        ShowNotification(clipboardText, "Prullebak succesvol leeg gemaakt");
-                        return true;
-                    }
-                case "vergrendel":
-                    {
-                        _vergrendel = Process.Start(@"C:\WINDOWS\system32\rundll32.exe", "user32.dll,LockWorkStation");
-                        return true;
-                    }
-                case "afsluiten":
-                    {
-                        _afsluiten = Process.Start("shutdown", "/s /t 0");
-                        return true;
-                    }
-                //om je momentele ram geheugen te laten zien
-                case "ram":
-                    {
-                        ShowNotification("Ram geheugen", ramCounter.Value.NextValue().ToString(CultureInfo.InvariantCulture) + " MB ram-geheugen over in je systeem");
-                        return true;
-                    }
-                case "windows versie":
-                    {
-                        Osversioninfoex osVersionInfo = default;
-                        if (!RtlGetVersion(ref osVersionInfo))
-                        {
-                            ShowNotification("Je windows versie", $"Windows Version {osVersionInfo.MajorVersion}..{osVersionInfo.BuildNumber}");
-                        }
-                        return true;
-                    }
-                case "mac-adres":
-                case "mac":
-                    {
-                        NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
-                        string sMacAddress = string.Empty;
-                        foreach (NetworkInterface adapter in nics)
-                        {
-                            if (string.IsNullOrEmpty(sMacAddress))
-                            {
-                                SetIPInterfaceProperties(adapter.GetIPProperties());
-                                sMacAddress = adapter.GetPhysicalAddress().ToString();
-                            }
-                        }
-                        ShowNotification("Je mac adres", sMacAddress);
-                        return true;
-                    }
-                case "computer naam":
-                    {
-                        string dnsName = Dns.GetHostName();
-                        ShowNotification("je computer naam is", dnsName);
-                        Clipboard.SetText(dnsName);
-                        return true;
-                    }
-                case "cpu":
-                    {
-                        // komt nu overeen met lezen van taakbeheer
-                        float secondValue = cpuCounter.Value.NextValue();
-                        ShowNotification("Processor verbruik", secondValue.ToString("###", CultureInfo.InvariantCulture) + "%");
-                        return true;
-                    }
-                case "ip":
-                    {
-                        using (WebClient webClient = new WebClient())
-                        {
-                            string externalIp = webClient.DownloadString("http://icanhazip.com");
-                            if (!string.IsNullOrEmpty(externalIp))
-                            {
-                                IPHostEntry iPHostEntry = Dns.GetHostEntry(Dns.GetHostName());
-                                foreach (IPAddress ipAddress in iPHostEntry.AddressList)
-                                {
-                                    if (ipAddress.AddressFamily == AddressFamily.InterNetwork)
-                                    {
-                                        ShowNotification("Ip adres", "Je public ip adres = " + externalIp);
-                                    }
-                                }
-                            }
-                        }
-                        return true;
-                    }
-            }
-            return false;
-        }
-
+        
         private string country;
 
         private bool TryTimeZonesActions(string clipboardText)
@@ -552,11 +428,11 @@
                         ShowNotification("India Standard Time");
                         return true;
                     }
-                case Countries.UtcOffset.UtcPlusFivepointThreeQuarters:
+                /*case Countries.UtcOffset.UtcPlusFivepointThreeQuarters:
                     {
                         ShowNotification("Nepal Standard Time");
                         return true;
-                    }
+                    }*/
             }
             return false;
         }
@@ -567,7 +443,7 @@
             return Countries.UtcOffsetByCountry.FirstOrDefault(predicate);
         }
 
-        private void ShowNotification(string timeZoneName)
+        public void ShowNotification(string timeZoneName)
         {
             string countrycopy = Clipboard.GetText();
             TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZoneName);
@@ -579,7 +455,7 @@
             notifyIcon1.ShowBalloonTip(1000);
         }
 
-        private void ShowNotification(string question, string answer)
+        public void ShowNotification(string question, string answer)
         {
             notifyIcon1.Icon = SystemIcons.Exclamation;
             notifyIcon1.BalloonTipTitle = question;
@@ -605,10 +481,6 @@
                     }
             }
         }
-
-        private readonly SmartPerformanceCounter ramCounter = new SmartPerformanceCounter(() => new PerformanceCounter("Memory", "Available MBytes"), TimeSpan.FromMinutes(1));
-
-        private readonly SmartPerformanceCounter cpuCounter = new SmartPerformanceCounter(() => new PerformanceCounter("Processor", "% Processor Time", "_Total"), TimeSpan.FromMinutes(1));
 
         private readonly Regex unitRegex = new Regex("(?<number>^[0-9]+([.,][0-9]{1,3})?)(\\s*)(?<from>[a-z]+[2-3]?) to (?<to>[a-z]+[2-3]?)");
 
@@ -889,7 +761,7 @@
             }
 
             Clipboard.SetText(result.ToString(CultureInfo.CurrentCulture));
-            ShowNotification(clipboardText, result.ToString() + to);
+            ShowNotification(clipboardText, result + to);
             return true;
         }
 
@@ -900,32 +772,10 @@
             liter = 0;
             oppervlakte = 0;
         }
-
-        private Process _vergrendel;
-
-        private Process _afsluiten;
-
+        
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            _vergrendel?.Dispose();
-            _afsluiten?.Dispose();
-            if (ramCounter.IsValueCreated)
-            {
-                ramCounter.Value.Dispose();
-            }
-            if (cpuCounter.IsValueCreated)
-            {
-                cpuCounter.Value.Dispose();
-            }
+            deviceActions.Dispose();
         }
-
-        public new void Dispose()
-        {
-            _afsluiten?.Dispose();
-            _vergrendel?.Dispose();
-            _reboot?.Dispose();
-        }
-
-        private Process _reboot;
     }
 }
