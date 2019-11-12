@@ -54,10 +54,13 @@
         private void GetAnswer(string clipboardText)
         {
             if (deviceActions.TryExecute(clipboardText) || timezoneActions.TryExecute(clipboardText) || timespanActions.TryExecute(clipboardText)
-                || convertActions.TryExecute(clipboardText) || mathActions.TryExecute(clipboardText) || randomActions.TryExecute(clipboardText) || stopwatchActions.TryExecute(clipboardText) || countdownActions.TryExecute(clipboardText))
-
+            || convertActions.TryExecute(clipboardText) || randomActions.TryExecute(clipboardText) || stopwatchActions.TryExecute(clipboardText) || countdownActions.TryExecute(clipboardText))
             {
                 Clipboard.Clear();
+                return;
+            }
+            if (mathActions.TryExecute(clipboardText))
+            {
                 return;
             }
             if (clipboardText.Length > 2)
@@ -118,7 +121,7 @@
             deviceActions.Dispose();
         }
 
-        new public void Dispose()
+        public void Dispose()
         {
             deviceActions?.Dispose();
         }
