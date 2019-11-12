@@ -2,23 +2,30 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Drawing;
     using System.Globalization;
-    using System.Linq;
     using System.Runtime.InteropServices;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
     using System.Windows.Forms;
 
     public partial class Form1 : Form
     {
         private readonly DeviceActions deviceActions;
 
-        private readonly List<Question> questionList = Questions.LoadQuestions();
+        private readonly TimezoneActions timezoneActions;
 
-        private DateTime? prevDate;
+        private readonly TimespanActions timespanActions;
+
+        private readonly MathActions mathActions;
+
+        private readonly StopwatchActions stopwatchActions;
+
+        private readonly RandomActions randomActions;
+
+        private readonly CountdownActions countdownActions;
+
+        private readonly ConvertActions convertActions;
+
+        private readonly List<Question> questionList = Questions.LoadQuestions();
 
         private IntPtr clipboardViewerNext;
 
@@ -28,6 +35,13 @@
             InitializeComponent();
 
             deviceActions = new DeviceActions(this);
+            timezoneActions = new TimezoneActions(this);
+            timespanActions = new TimespanActions(this);
+            mathActions = new MathActions(this);
+            stopwatchActions = new StopwatchActions(this);
+            randomActions = new RandomActions(this);
+            countdownActions = new CountdownActions(this);
+            convertActions = new ConvertActions(this);
         }
 
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
@@ -37,24 +51,10 @@
         {
             clipboardViewerNext = SetClipboardViewer(Handle);
         }
-
-        private readonly Regex mathRegex = new Regex(@"^(?<lhs>\d+(?:[,.]{1}\d)*)(([ ]*(?<operator>[+\-\:x\%\*/])[ ]*(?<rhs>\d+(?:[,.]{1}\d)*)+)+)");
-
-        private readonly Dictionary<string, Func<double, double, double>> binaryOperators = new Dictionary<string, Func<double, double, double>>
-            {
-               { "+", (a, b) => a + b},
-               { "x", (a, b) => a * b },
-               { "*", (a, b) => a * b },
-               { "-", (a, b) => a - b },
-               { "/", (a, b) => b == 0 ? double.NaN : a / b },
-               { ":", (a, b) => b == 0 ? double.NaN : a / b },
-               { "%", (a, b) => a / b * 100 },
-            };
-
         private void GetAnswer(string clipboardText)
         {
-            if (deviceActions.TryExecute(clipboardText) || TryTimeZonesActions(clipboardText) || TryComputeTimeSpan(clipboardText)
-                || ConvertUnits(clipboardText) || TryDoMaths(clipboardText) || TryRandomActions(clipboardText) || TryDoStopWatch(clipboardText) || TryDoCountdown(clipboardText))
+            if (deviceActions.TryExecute(clipboardText) || timezoneActions.TryExecute(clipboardText) || timespanActions.TryExecute(clipboardText)
+                || convertActions.TryExecute(clipboardText) || mathActions.TryExecute(clipboardText) || randomActions.TryExecute(clipboardText) || stopwatchActions.TryExecute(clipboardText) || countdownActions.TryExecute(clipboardText))
 
             {
                 Clipboard.Clear();
@@ -72,375 +72,6 @@
                     }
                 }
             }
-        }
-
-        private Stopwatch myStopwatch;
-
-        private string lastClipboard;
-
-        private bool TryDoStopWatch(string clipboardText)
-        {
-            TryStopwatch(clipboardText);
-
-            return false;
-        }
-
-        private void TryStopwatch(string clipboardText)
-        {
-            if (string.IsNullOrWhiteSpace(clipboardText))
-            {
-                throw new ArgumentException("message", nameof(clipboardText));
-            }
-            if (Clipboard.ContainsText())
-            {
-                string clipboard = Clipboard.GetText();
-                switch (clipboard)
-                {
-                    case "start stopwatch": //start
-                        {
-                            if (myStopwatch?.IsRunning == true)
-                            {
-                                ShowNotification("Stopwatch", "Stopwatch already running");
-                            }
-                            if (clipboard != lastClipboard)
-                            {
-                                InteractiveTimer.Enabled = false;
-                                lastClipboard = clipboard;
-                                myStopwatch = new Stopwatch();
-                                myStopwatch.Start();
-                            }
-                            break;
-                        }
-                    case "reset stopwatch": //reset
-                        {
-                            if (clipboard != lastClipboard)
-                            {
-                                InteractiveTimer.Enabled = false;
-                                lastClipboard = clipboard;
-                                myStopwatch.Reset();
-                                myStopwatch = new Stopwatch();
-                                myStopwatch.Start();
-                                TimeSpan ts = myStopwatch.Elapsed;
-                                ShowNotification("Stopwatch gereset naar", $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
-                            }
-                            break;
-                        }
-                    case "pauzeer stopwatch": //  pause
-                        {
-                            if (clipboard != lastClipboard)
-                            {
-                                InteractiveTimer.Enabled = false;
-                                lastClipboard = clipboard;
-                                TimeSpan ts = myStopwatch.Elapsed;
-                                ShowNotification("Stopwatch gepauzeerd op", $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
-                                myStopwatch.Stop();
-                            }
-                            break;
-                        }
-                    case "resume stopwatch":
-                        {
-                            if (clipboard != lastClipboard)
-                            {
-                                InteractiveTimer.Enabled = true;
-                                lastClipboard = clipboard;
-                                TimeSpan ts = myStopwatch.Elapsed;
-                                ShowNotification("Stopwatch hervat vanaf", $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
-                                myStopwatch.Start();
-                            }
-                            break;
-                        }
-                    case "stop stopwatch": //stop
-                        {
-                            if (lastClipboard is object)
-                            {
-                                lastClipboard = null;
-                                myStopwatch.Stop();
-                                TimeSpan ts = myStopwatch.Elapsed;
-                                ShowNotification("Elapsed time", $"{ts.Hours} uur, {ts.Minutes} minuten, {ts.Seconds}secondes");
-                            }
-                            break;
-                        }
-                }
-            }
-        }
-
-        private bool TryDoCountdown(string clipboardText)
-        {
-            if (clipboardText.StartsWith("timer") && TimeSpan.TryParse(clipboardText.Replace("timer ", ""), out TimeSpan ts))
-            {
-                async Task p()
-                {
-                    await Task.Delay(ts).ConfigureAwait(false);
-                    ShowNotification("Countdown timer", "time is over");
-                }
-                Task.Run(p);
-                return true;
-            }
-            return false;
-        }
-
-        private bool TryDoMaths(string clipboardText)
-        {
-            Match match = mathRegex.Match(clipboardText.Replace(',', '.'));
-            if (!match.Success)
-            {
-                return false;
-            }
-            string[] operators = (from Capture capture in match.Groups["operator"].Captures
-                                  select capture.Value).ToArray();
-            double lhs = double.Parse(match.Groups["lhs"].Value, CultureInfo.InvariantCulture);
-            double[] rhss = (from Capture capture in match.Groups["rhs"].Captures
-                             select double.Parse(capture.Value, CultureInfo.InvariantCulture)).ToArray();
-            double answer = lhs;
-            int i = 0;
-            for (int i2 = 0; i2 < rhss.Length; i2++)
-            {
-                answer = binaryOperators[operators[i++]](answer, rhss[i2]);
-            }
-            ShowNotification(clipboardText, answer.ToString(CultureInfo.CurrentCulture));
-            Clipboard.SetText(answer.ToString(CultureInfo.CurrentCulture));
-            return true;
-        }
-
-        private readonly string[] DateFormats =
-        {
-            "dd.MM.yyyy",
-            "dd-MM-yyyy"
-        };
-
-        private readonly Random _random = new Random();
-
-        private bool TryRandomActions(string clipboardText)
-        {
-            switch (clipboardText)
-            {
-                case "kop of munt":
-                    {
-                        if (_random.NextDouble() < 0.5)
-                        {
-                            ShowNotification("Kop of munt?", "Kop");
-                        }
-                        else
-                        {
-                            ShowNotification("Kop of munt?", "Munt");
-                        }
-                        return true;
-                    }
-                case "random password":
-                    {
-                        const int minLength = 8;
-                        const int maxLength = 12;
-                        const string charAvailable = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789-";
-                        StringBuilder password = new StringBuilder();
-                        int passwordLength = _random.Next(minLength, maxLength + 1);
-                        while (passwordLength-- > 0)
-                        {
-                            password.Append(charAvailable[_random.Next(charAvailable.Length)]);
-                            ShowNotification("Random password", password.ToString());
-                        }
-                        return true;
-                    }
-            }
-            return false;
-        }
-
-        private bool TryComputeTimeSpan(string clipboardText)
-        {
-            if (DateTime.TryParseExact(clipboardText, DateFormats, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out DateTime newDate))
-            {
-                if (prevDate is object)
-                {
-                    TimeSpan? difference = newDate - prevDate;
-                    if (difference is object)
-                    {
-                        ShowNotification("Days between:", difference.Value.Days.ToString(CultureInfo.InvariantCulture));
-                    }
-                    prevDate = null;
-                }
-                else
-                {
-                    prevDate = newDate;
-                }
-                return true;
-            }
-            prevDate = null;
-            return false;
-        }
-        
-        private string country;
-
-        private bool TryTimeZonesActions(string clipboardText)
-        {
-            country = clipboardText.Trim().ToLowerInvariant();
-            KeyValuePair<string, Countries.UtcOffset> result = TryKeypair();
-            if (result.Key == default)
-                return false;
-
-            switch (result.Value)
-            {
-                case Countries.UtcOffset.UtcMinusTwelve:
-                    {
-                        ShowNotification("Dateline Standard Time");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcMinusEleven:
-                    {
-                        ShowNotification("Samoa Standard Time");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcMinusTen:
-                    {
-                        ShowNotification("Hawaiian Standard Time");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcMinusNine:
-                    {
-                        ShowNotification("Alaskan Standard Time");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcMinusEight:
-                    {
-                        ShowNotification("Pacific Standard Time");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcMinusSeven:
-                    {
-                        ShowNotification("US Mountain Standard Time");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcMinusSix:
-                    {
-                        ShowNotification("Central America Standard Time");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcMinusFive:
-                    {
-                        ShowNotification("SA Pacific Standard Time");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcMinusFour:
-                    {
-                        ShowNotification("Atlantic Standard Time");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcMinusThreepoinfive:
-                    {
-                        ShowNotification("Newfoundland Standard Time");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcMinusThree:
-                    {
-                        ShowNotification("E. South America Standard Time");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcMinusTwo:
-                    {
-                        ShowNotification("Mid-Atlantic Standard Time");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcMinusOne:
-                    {
-                        ShowNotification("Cape Verde Standard Time");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcZero:
-                    {
-                        ShowNotification("GMT Standard Time");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcPlusOne:
-                    {
-                        ShowNotification(country, DateTime.Now.ToString("HH:mm", CultureInfo.CurrentCulture));
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcPlusTwo:
-                    {
-                        ShowNotification("Jordan Standard Time");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcPlusThree:
-                    {
-                        ShowNotification("Arabic Standard Time");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcPlusThreepoinfive:
-                    {
-                        ShowNotification("Iran Standard Time");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcPlusFour:
-                    {
-                        ShowNotification("Mauritius Standard Time");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcPlusFourpointfive:
-                    {
-                        ShowNotification("Afghanistan Standard Time");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcPlusFive:
-                    {
-                        ShowNotification("Ekaterinburg Standard Time");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcPlusSix:
-                    {
-                        ShowNotification("N. Central Asia Standard Time");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcPlusSeven:
-                    {
-                        ShowNotification("SE Asia Standard Time");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcPlusEight:
-                    {
-                        ShowNotification("China Standard Time ");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcPlusNine:
-                    {
-                        ShowNotification("Korea Standard Time");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcPlusTen:
-                    {
-                        ShowNotification("E. Australia Standard Time");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcPlusEleven:
-                    {
-                        ShowNotification("Central Pacific Standard Time");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcPlusTwelve:
-                    {
-                        ShowNotification("New Zealand Standard Time");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcPlusThirteen:
-                    {
-                        ShowNotification("Tonga Standard Time");
-                        return true;
-                    }
-                case Countries.UtcOffset.UtcPlusFivepointfive:
-                    {
-                        ShowNotification("India Standard Time");
-                        return true;
-                    }
-                /*case Countries.UtcOffset.UtcPlusFivepointThreeQuarters:
-                    {
-                        ShowNotification("Nepal Standard Time");
-                        return true;
-                    }*/
-            }
-            return false;
-        }
-
-        private KeyValuePair<string, Countries.UtcOffset> TryKeypair()
-        {
-            bool predicate(KeyValuePair<string, Countries.UtcOffset> x) => x.Key.Contains(country);
-            return Countries.UtcOffsetByCountry.FirstOrDefault(predicate);
         }
 
         public void ShowNotification(string timeZoneName)
@@ -482,300 +113,14 @@
             }
         }
 
-        private readonly Regex unitRegex = new Regex("(?<number>^[0-9]+([.,][0-9]{1,3})?)(\\s*)(?<from>[a-z]+[2-3]?) to (?<to>[a-z]+[2-3]?)");
-
-        private bool ConvertUnits(string clipboardText)
-        {
-            Match matches = unitRegex.Match(clipboardText);
-            if (!matches.Success)
-            {
-                return false;
-            }
-            double number = double.Parse(matches.Groups["number"].Value);
-            string from = matches.Groups["from"].Value;
-            string to = matches.Groups["to"].Value;
-            return BerekenEenheden(clipboardText, number, from, to);
-        }
-
-        private bool BerekenEenheden(string clipboardText, double number, string from, string to)
-        {
-            Eenheden(out double meter, out double gram, out double liter, out double oppervlakte);
-            switch (from)
-            {
-                // lengte eenheden
-                case "mm":
-                case "millimeter":
-                    meter = number / 1000;
-                    break;
-                case "cm":
-                case "centimer":
-                    meter = number / 100;
-                    break;
-                case "dm":
-                case "decimeter":
-                    meter = number / 10;
-                    break;
-                case "m":
-                case "meter":
-                    meter = number;
-                    break;
-                case "dam":
-                case "decameter":
-                    meter = number * 1;
-                    break;
-                case "hm":
-                case "hectometer":
-                    meter = number * 100;
-                    break;
-                case "km":
-                case "kilometer":
-                    meter = number * 1000;
-                    break;
-                case "feet":
-                case "ft":
-                    meter = number * 0.3048;
-                    break;
-                case "inch":
-                    meter = number * 0.0254;
-                    break;
-                case "mile":
-                case "miles":
-                    meter = number / 0.00062137;
-                    break;
-                case "yard":
-                case "yd":
-                    meter = number * 0.9144;
-                    break;
-                // gewicht eenheden
-                case "mg":
-                case "milligram":
-                    gram = number / 1000;
-                    break;
-                case "cg":
-                case "centigram":
-                    gram = number / 100;
-                    break;
-                case "dg":
-                case "decigram":
-                    gram = number / 10;
-                    break;
-                case "gr":
-                case "gram":
-                    gram = number;
-                    break;
-                case "dag":
-                case "decagram":
-                    gram = number * 10;
-                    break;
-                case "hg":
-                case "hectogram":
-                    gram = number * 100;
-                    break;
-                case "kg":
-                case "kilogram":
-                    gram = number * 1000;
-                    break;
-                case "ml":
-                case "milliliter":
-                    liter = number / 1000;
-                    break;
-                case "cl":
-                case "centiliter":
-                    liter = number / 100;
-                    break;
-                case "dl":
-                case "deciliter":
-                    liter = number / 10;
-                    break;
-                case "l":
-                case "liter":
-                    liter = number;
-                    break;
-                case "dal":
-                case "decaliter":
-                    liter = number * 10;
-                    break;
-                case "hl":
-                case "hectoliter":
-                    liter = number * 100;
-                    break;
-                case "kl":
-                case "kiloliter":
-                    liter = number * 1000;
-                    break;
-                // oppervlakte eenheden
-                case "mm2":
-                    oppervlakte = number / 1000000;
-                    break;
-                case "cm2":
-                    oppervlakte = number / 10000;
-                    break;
-                case "dm2":
-                    oppervlakte = number / 100;
-                    break;
-                case "m2":
-                    oppervlakte = number;
-                    break;
-                case "dam2":
-                    oppervlakte = number * 100;
-                    break;
-                case "hm2":
-                    oppervlakte = number * 10000;
-                    break;
-                case "km2":
-                    oppervlakte = number * 1000000;
-                    break;
-                default:
-                    return false;
-            }
-            // oppervlakte eenheden
-            double result;
-            switch (to) // naar
-            {
-                // lengte eenheden
-                case "mm":
-                case "millimeter":
-                    result = meter * 1000;
-                    break;
-                case "cm":
-                case "centimer":
-                    result = meter * 100;
-                    break;
-                case "dm":
-                case "decimeter":
-                    result = meter * 10;
-                    break;
-                case "m":
-                case "meter":
-                    result = meter;
-                    break;
-                case "dam":
-                case "decameter":
-                    result = meter / 1;
-                    break;
-                case "hm":
-                case "hectometer":
-                    result = meter / 100;
-                    break;
-                case "km":
-                case "kilometer":
-                    result = meter / 1000;
-                    break;
-                case "feet":
-                case "ft":
-                    result = meter / 0.3048;
-                    break;
-                case "inch":
-                    result = meter / 0.0254;
-                    break;
-                case "mile":
-                case "miles":
-                    result = meter * 0.00062137;
-                    break;
-                case "yard":
-                case "yd":
-                    result = meter * 0.9144;
-                    break;
-                // gewicht eenheden
-                case "mg":
-                case "milligram":
-                    result = gram * 1000;
-                    break;
-                case "cg":
-                case "centigram":
-                    result = gram * 100;
-                    break;
-                case "dg":
-                case "decigram":
-                    result = gram * 10;
-                    break;
-                case "gr":
-                case "gram":
-                    result = gram;
-                    break;
-                case "dag":
-                case "decagram":
-                    result = gram / 10;
-                    break;
-                case "hg":
-                case "hectogram":
-                    result = gram / 100;
-                    break;
-                case "kg":
-                case "kilogram":
-                    result = gram / 1000;
-                    break;
-                // inhoud
-                case "ml":
-                case "milliliter":
-                    result = liter * 1000;
-                    break;
-                case "cl":
-                case "centiliter":
-                    result = liter * 100;
-                    break;
-                case "dl":
-                case "deciliter":
-                    result = liter * 10;
-                    break;
-                case "l":
-                case "liter":
-                    result = liter;
-                    break;
-                case "dal":
-                case "decaliter":
-                    result = liter / 10;
-                    break;
-                case "hl":
-                case "hectoliter":
-                    result = liter / 100;
-                    break;
-                case "kl":
-                case "kiloliter":
-                    result = liter / 1000;
-                    break;
-                // oppervlakte eenheden
-                case "mm2":
-                    result = oppervlakte * 1000000;
-                    break;
-                case "cm2":
-                    result = oppervlakte * 10000;
-                    break;
-                case "dm2":
-                    result = oppervlakte * 100;
-                    break;
-                case "m2":
-                    result = oppervlakte;
-                    break;
-                case "dam2":
-                    result = oppervlakte / 100;
-                    break;
-                case "hm2":
-                    result = oppervlakte / 10000;
-                    break;
-                case "km2":
-                    result = oppervlakte / 1000000;
-                    break;
-                default:
-                    return false;
-            }
-
-            Clipboard.SetText(result.ToString(CultureInfo.CurrentCulture));
-            ShowNotification(clipboardText, result + to);
-            return true;
-        }
-
-        private static void Eenheden(out double meter, out double gram, out double liter, out double oppervlakte)
-        {
-            meter = 0;
-            gram = 0;
-            liter = 0;
-            oppervlakte = 0;
-        }
-        
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             deviceActions.Dispose();
+        }
+
+        public void Dispose()
+        {
+            deviceActions?.Dispose();
         }
     }
 }
