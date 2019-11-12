@@ -118,7 +118,7 @@
             deviceActions.Dispose();
         }
 
-        public void Dispose()
+        new public void Dispose()
         {
             deviceActions?.Dispose();
         }
