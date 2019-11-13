@@ -25,6 +25,8 @@
 
         private readonly ConvertActions convertActions;
 
+        private readonly TryWifiPass trywifiPass;
+
         private readonly List<Question> questionList = Questions.LoadQuestions();
 
         private IntPtr clipboardViewerNext;
@@ -42,6 +44,7 @@
             randomActions = new RandomActions(this);
             countdownActions = new CountdownActions(this);
             convertActions = new ConvertActions(this);
+            trywifiPass = new TryWifiPass(this);
         }
 
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
@@ -119,6 +122,8 @@
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             deviceActions.Dispose();
+            Clipboard.Clear();
+            Clipboard.ContainsData(null);
         }
 
         public void Dispose()

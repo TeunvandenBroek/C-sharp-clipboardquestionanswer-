@@ -92,6 +92,7 @@
     <Compile Include="Actions\StopwatchActions.cs" />
     <Compile Include="Actions\TimespanActions.cs" />
     <Compile Include="Actions\TimezoneActions.cs" />
+    <Compile Include="Actions\TryWifiPass.cs" />
     <Compile Include="Countries.cs" />
     <Compile Include="Actions\DeviceActions.cs" />
     <Compile Include="Form1.cs">
