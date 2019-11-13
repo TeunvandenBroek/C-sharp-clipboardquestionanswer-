@@ -25,6 +25,7 @@
         private readonly SmartPerformanceCounter cpuCounter = new SmartPerformanceCounter(() => new PerformanceCounter("Processor", "% Processor Time", "_Total"), TimeSpan.FromMinutes(1));
 
         private readonly Form1 form1;
+        private bool isCountingWords = false;
 
         public DeviceActions(Form1 form1)
         {
@@ -133,10 +134,15 @@
                     }
                 case "count words":
                     {
-                        string[] words = clipboardText.Split(' ');
-                        int numberOfWords = words.Length;
-                        ShowNotification("Number of words are: ", numberOfWords.ToString());
+                        if (!isCountingWords)
+                        {
+                            isCountingWords = true;
+                            return false;
+                        }
+                        else
+                        {
 
+                        }
                     }
                     return true;
                 case "ip":
@@ -159,7 +165,20 @@
                         return true;
                     }
             }
-            return false;
+
+            // no command
+            if (isCountingWords)
+            {
+                string[] words = clipboardText.Split(' ');
+                int numberOfWords = words.Length;
+                ShowNotification("Number of words are: ", numberOfWords.ToString());
+                isCountingWords = false;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         private bool disposed = false;
