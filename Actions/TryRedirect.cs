@@ -17,7 +17,7 @@
 
 
         private void ShowNotification(string question, string answer)
-        {
+        { 
             form1.ShowNotification(question, answer);
         }
         public bool TryExecute(string clipboardText)
