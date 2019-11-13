@@ -56,7 +56,7 @@ namespace it
                             }
                             break;
                         }
-                    case "pauzeer stopwatch": //  pause
+                    case "pause stopwatch": //  pause
                         {
                             if (clipboard != lastClipboard)
                             {
