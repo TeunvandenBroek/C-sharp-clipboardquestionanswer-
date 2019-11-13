@@ -32,12 +32,6 @@
                 }
 
                 _cpuCounterLastAccessedTimestamp = Stopwatch.GetTimestamp();
-
-                async Task function()
-                {
-                    await Task.Delay(_time).ConfigureAwait(false);
-                    DoCleaningCheck();
-                }
                 Task task = Task.Run(function);
 
                 return _value;
@@ -51,9 +45,7 @@
         }
 
         public SmartPerformanceCounter(TimeSpan time)
-        {
-            _time = time;
-        }
+        => _time = time;
 
         private void DoCleaningCheck()
         {
@@ -68,6 +60,12 @@
                     _value = null;
                 }
             }
+        }
+
+        private async Task function()
+        {
+            await Task.Delay(_time).ConfigureAwait(false);
+            DoCleaningCheck();
         }
     }
 }

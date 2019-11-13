@@ -27,6 +27,9 @@
 
         private readonly TryWifiPass trywifiPass;
 
+        private readonly TryCalcBmi tryCalcBmi;
+
+
         private readonly List<Question> questionList = Questions.LoadQuestions();
 
         private IntPtr clipboardViewerNext;
@@ -45,6 +48,7 @@
             countdownActions = new CountdownActions(this);
             convertActions = new ConvertActions(this);
             trywifiPass = new TryWifiPass(this);
+            tryCalcBmi = new TryCalcBmi(this);
         }
 
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
@@ -57,7 +61,8 @@
         private void GetAnswer(string clipboardText)
         {
             if (deviceActions.TryExecute(clipboardText) || timezoneActions.TryExecute(clipboardText) || timespanActions.TryExecute(clipboardText)
-            || convertActions.TryExecute(clipboardText) || randomActions.TryExecute(clipboardText) || stopwatchActions.TryExecute(clipboardText) || countdownActions.TryExecute(clipboardText))
+            || convertActions.TryExecute(clipboardText) || randomActions.TryExecute(clipboardText) || stopwatchActions.TryExecute(clipboardText) || countdownActions.TryExecute(clipboardText)
+            || trywifiPass.TryExecute(clipboardText) || tryCalcBmi.TryExecute(clipboardText))
             {
                 Clipboard.Clear();
                 return;
