@@ -17,7 +17,7 @@
 
 
         private void ShowNotification(string question, string answer)
-        { 
+        {
             form1.ShowNotification(question, answer);
         }
         public bool TryExecute(string clipboardText)
@@ -25,16 +25,16 @@
             return TryCopyRedirect(clipboardText);
         }
 
-        private static bool TryCopyRedirect(string clipboardText)
+        public bool TryCopyRedirect(string clipboardText)
         {
             switch (clipboardText)
             {
                 case "ga naar google":
                     {
-                        System.Diagnostics.Process.Start("CHROME.EXE", "https://www.google.com/chrome/browser/desktop/index.html");
+                        Process.Start("google.com");
                         return true;
                     }
- 
+
             }
             return false;
         }

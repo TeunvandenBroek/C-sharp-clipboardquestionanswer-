@@ -54,7 +54,7 @@ namespace it
             string err = processWifi.StandardError.ReadToEnd();
             processWifi.WaitForExit();
             return output;
-        } 
+        }
         public string wifipassword_single(string wifiname)
         {
             string get_password = wifipassword(wifiname);
@@ -70,7 +70,7 @@ namespace it
                     {
                         return match2.Groups["after"].Value;
                     }
-                } 
+                }
             }
             return "Open Network";
         }

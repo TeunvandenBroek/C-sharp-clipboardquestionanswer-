@@ -7,7 +7,7 @@
     using System.Text.RegularExpressions;
     using System.Windows.Forms;
 
-    public class MathActions : IAction
+    public class MathActions
     {
         private readonly Form1 form1;
 

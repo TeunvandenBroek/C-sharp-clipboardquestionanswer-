@@ -31,6 +31,7 @@
             this.form1 = form1;
         }
 
+
         public bool TryExecute(string clipboardText)
         {
             switch (clipboardText)
@@ -112,6 +113,32 @@
                         ShowNotification("Processor verbruik", secondValue.ToString("###", CultureInfo.InvariantCulture) + "%");
                         return true;
                     }
+                case "wifi check":
+                case "heb ik internet?":
+                    {
+                        try
+                        {
+                            using (var client = new WebClient())
+                            using (var stream = client.OpenRead("http://www.google.com"))
+                            {
+                                ShowNotification(clipboardText, "Je hebt internet");
+                                return true;
+                            }
+                        }
+                        catch
+                        {
+                            ShowNotification(clipboardText, "Je hebt geen internet");
+                            return false;
+                        }
+                    }
+                case "count words":
+                    {
+                        string[] words = clipboardText.Split(' ');
+                        int numberOfWords = words.Length;
+                        ShowNotification("Number of words are: ", numberOfWords.ToString());
+
+                    }
+                    return true;
                 case "ip":
                     {
                         using (WebClient webClient = new WebClient())
@@ -185,8 +212,17 @@
 
         private enum Recycle : uint
         {
+            /// <summary>
+            /// Defines the SHRB_NOCONFIRMATION
+            /// </summary>
             SHRB_NOCONFIRMATION = 0x00000001,
+            /// <summary>
+            /// Defines the SHRB_NOPROGRESSUI
+            /// </summary>
             SHRB_NOPROGRESSUI = 0x00000002,
+            /// <summary>
+            /// Defines the SHRB_NOSOUND
+            /// </summary>
             SHRB_NOSOUND = 0x00000004
         }
     }
