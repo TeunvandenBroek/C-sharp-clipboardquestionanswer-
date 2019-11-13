@@ -70,7 +70,7 @@ namespace it
                     {
                         return match2.Groups["after"].Value;
                     }
-                }
+                } 
             }
             return "Open Network";
         }
