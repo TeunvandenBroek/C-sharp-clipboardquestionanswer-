@@ -148,7 +148,9 @@
         protected virtual void Dispose(bool disposing)
         {
             if (disposed)
+            {
                 return;
+            }
 
             if (disposing)
             {
@@ -176,7 +178,10 @@
 
         private Process _reboot;
 
-        private void ShowNotification(string question, string answer) => form1.ShowNotification(question, answer);
+        private void ShowNotification(string question, string answer)
+        {
+            form1.ShowNotification(question, answer);
+        }
 
         private enum Recycle : uint
         {

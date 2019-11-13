@@ -13,7 +13,10 @@
             this.form1 = form1;
         }
 
-        private void ShowNotification(string question, string answer) => form1.ShowNotification(question, answer);
+        private void ShowNotification(string question, string answer)
+        {
+            form1.ShowNotification(question, answer);
+        }
 
         private readonly Regex unitRegex = new Regex("(?<number>^[0-9]+([.,][0-9]{1,3})?)(\\s*)(?<from>[a-z]+[2-3]?) to (?<to>[a-z]+[2-3]?)");
 

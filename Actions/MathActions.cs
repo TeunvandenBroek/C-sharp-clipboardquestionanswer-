@@ -16,7 +16,10 @@
             this.form1 = form1;
         }
 
-        private void ShowNotification(string question, string answer) => form1.ShowNotification(question, answer);
+        private void ShowNotification(string question, string answer)
+        {
+            form1.ShowNotification(question, answer);
+        }
 
         private readonly Regex mathRegex = new Regex(@"^(?<lhs>\d+(?:[,.]{1}\d)*)(([ ]*(?<operator>[+\-\:x\%\*/])[ ]*(?<rhs>\d+(?:[,.]{1}\d)*)+)+)");
 

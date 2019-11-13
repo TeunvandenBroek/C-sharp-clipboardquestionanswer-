@@ -11,7 +11,10 @@ namespace it
         {
             this.form1 = form1;
         }
-        private void ShowNotification(string question, string answer) => form1.ShowNotification(question, answer);
+        private void ShowNotification(string question, string answer)
+        {
+            form1.ShowNotification(question, answer);
+        }
 
         private readonly Random _random = new Random();
         public bool TryExecute(string clipboardText)

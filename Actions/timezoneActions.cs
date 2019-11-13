@@ -13,9 +13,15 @@
         {
             this.form1 = form1;
         }
-        private void ShowNotification(string timeZoneName) => form1.ShowNotification(timeZoneName);
+        private void ShowNotification(string timeZoneName)
+        {
+            form1.ShowNotification(timeZoneName);
+        }
 
-        private void ShowNotification(string question, string answer) => form1.ShowNotification(question, answer);
+        private void ShowNotification(string question, string answer)
+        {
+            form1.ShowNotification(question, answer);
+        }
 
         private string country;
 
@@ -186,7 +192,11 @@
 
         private KeyValuePair<string, Countries.UtcOffset> TryKeypair()
         {
-            bool predicate(KeyValuePair<string, Countries.UtcOffset> x) => x.Key.Contains(country);
+            bool predicate(KeyValuePair<string, Countries.UtcOffset> x)
+            {
+                return x.Key.Contains(country);
+            }
+
             return Countries.UtcOffsetByCountry.FirstOrDefault(predicate);
         }
     }

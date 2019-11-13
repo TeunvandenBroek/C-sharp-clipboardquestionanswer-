@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace it
 {
+    //TO DO
     public class TryWifiPass : IAction
     {
         private readonly Form1 form1;
@@ -18,8 +13,12 @@ namespace it
         {
             this.form1 = form1;
         }
-        private void ShowNotification(string question, string answer) => form1.ShowNotification(question, answer);
-        string wifilist()
+        private void ShowNotification(string question, string answer)
+        {
+            form1.ShowNotification(question, answer);
+        }
+
+        private string wifilist()
         {
             // netsh wlan show profile
             Process processWifi = new Process();
@@ -37,7 +36,8 @@ namespace it
             processWifi.WaitForExit();
             return output;
         }
-        string wifipassword(string wifiname)
+
+        private string wifipassword(string wifiname)
         {
             string argument = "wlan show profile name=\"" + wifiname + "\" key=clear";
             Process processWifi = new Process();
@@ -74,7 +74,8 @@ namespace it
             }
             return "Open Network";
         }
-        bool get_passwords() // Main Operation occurs here in this function
+
+        private bool get_passwords() // Main Operation occurs here in this function
         {
             string wifidata = wifilist();
             return true;
