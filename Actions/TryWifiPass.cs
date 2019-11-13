@@ -54,7 +54,7 @@ namespace it
             string err = processWifi.StandardError.ReadToEnd();
             processWifi.WaitForExit();
             return output;
-        }
+        } 
         public string wifipassword_single(string wifiname)
         {
             string get_password = wifipassword(wifiname);
