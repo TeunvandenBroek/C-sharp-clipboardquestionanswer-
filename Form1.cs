@@ -1,34 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Globalization;
-using System.Runtime.InteropServices;
-using System.Windows.Forms;
-
-namespace it
+﻿namespace it
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.Globalization;
+    using System.Runtime.InteropServices;
+    using System.Windows.Forms;
+
     public partial class Form1 : Form
     {
-        private readonly ConvertActions convertActions;
-
-        private readonly CountdownActions countdownActions;
-
         private readonly DeviceActions deviceActions;
-
-        private readonly MathActions mathActions;
-
-
-        private readonly List<Question> questionList = Questions.LoadQuestions();
-
-        private readonly RandomActions randomActions;
-
-        private readonly StopwatchActions stopwatchActions;
-
-        private readonly TimespanActions timespanActions;
 
         private readonly TimezoneActions timezoneActions;
 
-        private readonly TryCalcBmi tryCalcBmi;
+        private readonly TimespanActions timespanActions;
+
+        private readonly MathActions mathActions;
+
+        private readonly StopwatchActions stopwatchActions;
+
+        private readonly RandomActions randomActions;
+
+        private readonly CountdownActions countdownActions;
+
+        private readonly ConvertActions convertActions;
+
+        private readonly TryWifiPass trywifiPass;
+
+        private readonly List<Question> questionList = Questions.LoadQuestions();
 
         private IntPtr clipboardViewerNext;
 
@@ -45,7 +44,7 @@ namespace it
             randomActions = new RandomActions(this);
             countdownActions = new CountdownActions(this);
             convertActions = new ConvertActions(this);
-            tryCalcBmi = new TryCalcBmi(this);
+            trywifiPass = new TryWifiPass(this);
         }
 
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
@@ -55,35 +54,37 @@ namespace it
         {
             clipboardViewerNext = SetClipboardViewer(Handle);
         }
-
         private void GetAnswer(string clipboardText)
         {
-            if (deviceActions.TryExecute(clipboardText) || timezoneActions.TryExecute(clipboardText) ||
-                timespanActions.TryExecute(clipboardText)
-                || convertActions.TryExecute(clipboardText) || randomActions.TryExecute(clipboardText) ||
-                stopwatchActions.TryExecute(clipboardText) || countdownActions.TryExecute(clipboardText)
-                || tryCalcBmi.TryExecute(clipboardText))
+            if (deviceActions.TryExecute(clipboardText) || timezoneActions.TryExecute(clipboardText) || timespanActions.TryExecute(clipboardText)
+            || convertActions.TryExecute(clipboardText) || randomActions.TryExecute(clipboardText) || stopwatchActions.TryExecute(clipboardText) || countdownActions.TryExecute(clipboardText))
             {
                 Clipboard.Clear();
                 return;
             }
-
-            if (mathActions.TryExecute(clipboardText)) return;
+            if (mathActions.TryExecute(clipboardText))
+            {
+                return;
+            }
             if (clipboardText.Length > 2)
-                foreach (var question in questionList)
+            {
+                foreach (Question question in questionList)
+                {
                     if (question.Text.Contains(clipboardText))
                     {
                         ShowNotification(question.Text, question.Answer);
                         Clipboard.Clear();
                         return;
                     }
+                }
+            }
         }
 
         public void ShowNotification(string timeZoneName)
         {
-            var countrycopy = Clipboard.GetText();
-            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZoneName);
-            var dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo);
+            string countrycopy = Clipboard.GetText();
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZoneName);
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo);
             notifyIcon1.Icon = SystemIcons.Exclamation;
             notifyIcon1.BalloonTipTitle = countrycopy;
             notifyIcon1.BalloonTipText = dateTime.ToString("HH:mm", CultureInfo.CurrentCulture);
@@ -107,11 +108,14 @@ namespace it
             switch (m.Msg)
             {
                 case WM_DRAWCLIPBOARD:
-                {
-                    var text = Clipboard.GetText(TextDataFormat.UnicodeText);
-                    if (!string.IsNullOrEmpty(text)) GetAnswer(text);
-                    break;
-                }
+                    {
+                        string text = Clipboard.GetText(TextDataFormat.UnicodeText);
+                        if (!string.IsNullOrEmpty(text))
+                        {
+                            GetAnswer(text);
+                        }
+                        break;
+                    }
             }
         }
 
