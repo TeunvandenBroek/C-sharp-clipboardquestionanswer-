@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Windows.Forms;
 using Microsoft.Win32.SafeHandles;
+using static System.Diagnostics.Process;
 
 namespace it
 {
@@ -50,7 +52,7 @@ namespace it
                 case "opnieuw opstarten":
                 case "reboot":
                 {
-                    _reboot = Process.Start("shutdown", "/r /t 0");
+                    _reboot = Start("shutdown", "/r /t 0");
                     return true;
                 }
                 case "slaapstand":
@@ -67,20 +69,21 @@ namespace it
                 }
                 case "vergrendel":
                 {
-                    _vergrendel = Process.Start(@"C:\WINDOWS\system32\rundll32.exe", "user32.dll,LockWorkStation");
+                    _vergrendel = Start(@"C:\WINDOWS\system32\rundll32.exe", "user32.dll,LockWorkStation");
                     return true;
                 }
                 case "afsluiten":
                 {
-                    _afsluiten = Process.Start("shutdown", "/s /t 0");
+                    _afsluiten = Start("shutdown", "/s /t 0");
                     return true;
                 }
                 //om je momentele ram geheugen te laten zien
                 case "ram":
                 {
-                    ShowNotification("Ram geheugen",
-                        ramCounter.Value.NextValue().ToString(CultureInfo.InvariantCulture) +
-                        " MB ram-geheugen over in je systeem");
+                    if (ramCounter != null)
+                        ShowNotification("Ram geheugen",
+                            ramCounter.Value.NextValue().ToString(CultureInfo.InvariantCulture) +
+                            " MB ram-geheugen over in je systeem");
                     return true;
                 }
                 case "windows versie":
@@ -114,31 +117,37 @@ namespace it
                 }
                 case "cpu":
                 {
-                    // komt nu overeen met lezen van taakbeheer
+                    if (cpuCounter == null) return true;
                     var secondValue = cpuCounter.Value.NextValue();
                     ShowNotification("Processor verbruik",
                         secondValue.ToString("###", CultureInfo.InvariantCulture) + "%");
+
                     return true;
                 }
                 case "wifi check":
                 case "heb ik internet?":
                 {
+                    var client = new WebClient();
+                    Stream stream;
                     try
                     {
-                        using (var client = new WebClient())
-                        using (var stream = client.OpenRead("http://www.google.com"))
-                        {
-                            ShowNotification(clipboardText, "Je hebt internet");
-                            return true;
-                        }
+                        stream = client.OpenRead("http://www.google.com");
+                        stream.Dispose();
+                        client.Dispose();
+                        ShowNotification(clipboardText, "Je hebt internet");
+                        return true;
                     }
                     catch
                     {
                         ShowNotification(clipboardText, "Je hebt geen internet");
+                        stream = client.OpenRead("http://www.google.com");
+                        stream.Dispose();
+                        client.Dispose();
                         return false;
                     }
                 }
                 case "count words":
+                case "tel woorden":
                 {
                     if (!isCountingWords)
                     {
@@ -163,16 +172,17 @@ namespace it
                 }
             }
 
-            if (isCountingWords)
+            if (!isCountingWords) return false;
+            if (clipboardText != null)
             {
                 var words = clipboardText.Split(' ');
                 var numberOfWords = words.Length;
                 ShowNotification("Number of words are: ", numberOfWords.ToString());
-                isCountingWords = false;
-                return true;
             }
 
-            return false;
+            isCountingWords = false;
+            return true;
+
         }
 
         public void Dispose()
@@ -213,19 +223,8 @@ namespace it
 
         private enum Recycle : uint
         {
-            /// <summary>
-            ///     Defines the SHRB_NOCONFIRMATION
-            /// </summary>
             SHRB_NOCONFIRMATION = 0x00000001,
-
-            /// <summary>
-            ///     Defines the SHRB_NOPROGRESSUI
-            /// </summary>
             SHRB_NOPROGRESSUI = 0x00000002,
-
-            /// <summary>
-            ///     Defines the SHRB_NOSOUND
-            /// </summary>
             SHRB_NOSOUND = 0x00000004
         }
     }

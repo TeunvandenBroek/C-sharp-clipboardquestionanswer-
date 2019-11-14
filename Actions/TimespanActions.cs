@@ -26,25 +26,27 @@
 
         public bool TryExecute(string clipboardText)
         {
-            if (DateTime.TryParseExact(clipboardText, DateFormats, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out DateTime newDate))
+            if (!DateTime.TryParseExact(clipboardText, DateFormats, CultureInfo.CurrentCulture,
+                DateTimeStyles.AssumeLocal, out var newDate))
             {
-                if (prevDate is object)
-                {
-                    TimeSpan? difference = newDate - prevDate;
-                    if (difference is object)
-                    {
-                        ShowNotification("Days between:", difference.Value.Days.ToString(CultureInfo.InvariantCulture));
-                    }
-                    prevDate = null;
-                }
-                else
-                {
-                    prevDate = newDate;
-                }
-                return true;
+                prevDate = null;
+                return false;
             }
-            prevDate = null;
-            return false;
+
+            if (prevDate != null)
+            {
+                var difference = newDate - prevDate;
+                if (difference != null)
+                {
+                    ShowNotification("Days between:", difference.Value.Days.ToString(CultureInfo.InvariantCulture));
+                }
+                prevDate = null;
+            }
+            else
+            {
+                prevDate = newDate;
+            }
+            return true;
         }
     }
 }

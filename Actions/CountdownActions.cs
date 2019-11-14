@@ -23,17 +23,16 @@ namespace it
         }
         private bool TryCountDown(string clipboardText)
         {
-            if (clipboardText.StartsWith("timer") && TimeSpan.TryParse(clipboardText.Replace("timer ", ""), out TimeSpan ts))
+            if (!clipboardText.StartsWith("timer") ||
+                !TimeSpan.TryParse(clipboardText.Replace("timer ", ""), out TimeSpan ts)) return false;
+
+            async Task p()
             {
-                async Task p()
-                {
-                    await Task.Delay(ts).ConfigureAwait(false);
-                    ShowNotification("Countdown timer", "time is over");
-                }
-                Task.Run(p);
-                return true;
+                await Task.Delay(ts).ConfigureAwait(false);
+                ShowNotification("Countdown timer", "time is over");
             }
-            return false;
+            Task.Run(p);
+            return true;
         }
     }
 }
