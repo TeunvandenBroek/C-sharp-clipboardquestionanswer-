@@ -1,31 +1,36 @@
-﻿namespace it
-{
-    using Microsoft.Win32.SafeHandles;
-    using System;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.Net;
-    using System.Net.NetworkInformation;
-    using System.Net.Sockets;
-    using System.Runtime.InteropServices;
-    using System.Security;
-    using System.Windows.Forms;
+﻿using System;
+using System.Diagnostics;
+using System.Globalization;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Runtime.InteropServices;
+using System.Security;
+using System.Windows.Forms;
+using Microsoft.Win32.SafeHandles;
 
+namespace it
+{
     public class DeviceActions : IAction, IDisposable
     {
-        [DllImport("Shell32.dll", CharSet = CharSet.Unicode)]
-        private static extern uint SHEmptyRecycleBin(IntPtr hwnd, string pszRootPath, Recycle dwFlags);
-
-        [SecurityCritical]
-        [DllImport("ntdll.dll", SetLastError = true)]
-        internal static extern bool RtlGetVersion(ref Form1.Osversioninfoex versionInfo);
-
-        private readonly SmartPerformanceCounter ramCounter = new SmartPerformanceCounter(() => new PerformanceCounter("Memory", "Available MBytes"), TimeSpan.FromMinutes(1));
-
-        private readonly SmartPerformanceCounter cpuCounter = new SmartPerformanceCounter(() => new PerformanceCounter("Processor", "% Processor Time", "_Total"), TimeSpan.FromMinutes(1));
+        private readonly SmartPerformanceCounter cpuCounter = new SmartPerformanceCounter(
+            () => new PerformanceCounter("Processor", "% Processor Time", "_Total"), TimeSpan.FromMinutes(1));
 
         private readonly Form1 form1;
-        private bool isCountingWords = false;
+
+        private readonly SafeHandle handle = new SafeFileHandle(IntPtr.Zero, true);
+
+        private readonly SmartPerformanceCounter ramCounter =
+            new SmartPerformanceCounter(() => new PerformanceCounter("Memory", "Available MBytes"),
+                TimeSpan.FromMinutes(1));
+
+        private Process _afsluiten;
+
+        private Process _reboot;
+
+        private Process _vergrendel;
+
+        private bool disposed;
+        private bool isCountingWords;
 
         public DeviceActions(Form1 form1)
         {
@@ -38,152 +43,137 @@
             switch (clipboardText)
             {
                 case "sluit":
-                    {
-                        form1.Close();
-                        return true;
-                    }
+                {
+                    form1.Close();
+                    return true;
+                }
                 case "opnieuw opstarten":
                 case "reboot":
-                    {
-                        _reboot = Process.Start("shutdown", "/r /t 0");
-                        return true;
-                    }
+                {
+                    _reboot = Process.Start("shutdown", "/r /t 0");
+                    return true;
+                }
                 case "slaapstand":
-                    {
-                        Application.SetSuspendState(PowerState.Hibernate, true, true);
-                        return true;
-                    }
+                {
+                    Application.SetSuspendState(PowerState.Hibernate, true, true);
+                    return true;
+                }
                 case "leeg prullebak":
                 case "prullebak":
-                    {
-                        SHEmptyRecycleBin(IntPtr.Zero, null, Recycle.SHRB_NOCONFIRMATION);
-                        ShowNotification(clipboardText, "Prullebak succesvol leeg gemaakt");
-                        return true;
-                    }
+                {
+                    SHEmptyRecycleBin(IntPtr.Zero, null, Recycle.SHRB_NOCONFIRMATION);
+                    ShowNotification(clipboardText, "Prullebak succesvol leeg gemaakt");
+                    return true;
+                }
                 case "vergrendel":
-                    {
-                        _vergrendel = Process.Start(@"C:\WINDOWS\system32\rundll32.exe", "user32.dll,LockWorkStation");
-                        return true;
-                    }
+                {
+                    _vergrendel = Process.Start(@"C:\WINDOWS\system32\rundll32.exe", "user32.dll,LockWorkStation");
+                    return true;
+                }
                 case "afsluiten":
-                    {
-                        _afsluiten = Process.Start("shutdown", "/s /t 0");
-                        return true;
-                    }
+                {
+                    _afsluiten = Process.Start("shutdown", "/s /t 0");
+                    return true;
+                }
                 //om je momentele ram geheugen te laten zien
                 case "ram":
-                    {
-                        ShowNotification("Ram geheugen", ramCounter.Value.NextValue().ToString(CultureInfo.InvariantCulture) + " MB ram-geheugen over in je systeem");
-                        return true;
-                    }
+                {
+                    ShowNotification("Ram geheugen",
+                        ramCounter.Value.NextValue().ToString(CultureInfo.InvariantCulture) +
+                        " MB ram-geheugen over in je systeem");
+                    return true;
+                }
                 case "windows versie":
-                    {
-                        Form1.Osversioninfoex osVersionInfo = default;
-                        if (!RtlGetVersion(ref osVersionInfo))
-                        {
-                            ShowNotification("Je windows versie", $"Windows Version {osVersionInfo.MajorVersion}..{osVersionInfo.BuildNumber}");
-                        }
-                        return true;
-                    }
+                {
+                    Form1.Osversioninfoex osVersionInfo = default;
+                    if (!RtlGetVersion(ref osVersionInfo))
+                        ShowNotification("Je windows versie",
+                            $"Windows Version {osVersionInfo.MajorVersion}..{osVersionInfo.BuildNumber}");
+                    return true;
+                }
                 case "mac-adres":
                 case "mac":
-                    {
-                        string sMacAddress = string.Empty;
-                        foreach (NetworkInterface adapter in NetworkInterface.GetAllNetworkInterfaces())
+                {
+                    var sMacAddress = string.Empty;
+                    foreach (var adapter in NetworkInterface.GetAllNetworkInterfaces())
+                        if (string.IsNullOrEmpty(sMacAddress))
                         {
-                            if (string.IsNullOrEmpty(sMacAddress))
-                            {
-                                sMacAddress = adapter.GetPhysicalAddress().ToString();
-                                break;
-                            }
+                            sMacAddress = adapter.GetPhysicalAddress().ToString();
+                            break;
                         }
-                        ShowNotification("Je mac adres", sMacAddress);
-                        return true;
-                    }
+
+                    ShowNotification("Je mac adres", sMacAddress);
+                    return true;
+                }
                 case "computer naam":
-                    {
-                        string dnsName = Dns.GetHostName();
-                        ShowNotification("je computer naam is", dnsName);
-                        Clipboard.SetText(dnsName);
-                        return true;
-                    }
+                {
+                    var dnsName = Dns.GetHostName();
+                    ShowNotification("je computer naam is", dnsName);
+                    Clipboard.SetText(dnsName);
+                    return true;
+                }
                 case "cpu":
-                    {
-                        // komt nu overeen met lezen van taakbeheer
-                        float secondValue = cpuCounter.Value.NextValue();
-                        ShowNotification("Processor verbruik", secondValue.ToString("###", CultureInfo.InvariantCulture) + "%");
-                        return true;
-                    }
+                {
+                    // komt nu overeen met lezen van taakbeheer
+                    var secondValue = cpuCounter.Value.NextValue();
+                    ShowNotification("Processor verbruik",
+                        secondValue.ToString("###", CultureInfo.InvariantCulture) + "%");
+                    return true;
+                }
                 case "wifi check":
                 case "heb ik internet?":
+                {
+                    try
                     {
-                        try
+                        using (var client = new WebClient())
+                        using (var stream = client.OpenRead("http://www.google.com"))
                         {
-                            using (var client = new WebClient())
-                            using (var stream = client.OpenRead("http://www.google.com"))
-                            {
-                                ShowNotification(clipboardText, "Je hebt internet");
-                                return true;
-                            }
-                        }
-                        catch
-                        {
-                            ShowNotification(clipboardText, "Je hebt geen internet");
-                            return false;
+                            ShowNotification(clipboardText, "Je hebt internet");
+                            return true;
                         }
                     }
+                    catch
+                    {
+                        ShowNotification(clipboardText, "Je hebt geen internet");
+                        return false;
+                    }
+                }
                 case "count words":
+                {
+                    if (!isCountingWords)
                     {
-                        if (!isCountingWords)
-                        {
-                            isCountingWords = true;
-                            return false;
-                        }
-                        else
-                        {
-
-                        }
+                        isCountingWords = true;
+                        return false;
                     }
+                }
                     return true;
                 case "ip":
+                {
+                    using (var webClient = new WebClient())
                     {
-                        using (WebClient webClient = new WebClient())
+                        var externalIp = webClient.DownloadString("http://icanhazip.com");
+                        if (!string.IsNullOrEmpty(externalIp))
                         {
-                            string externalIp = webClient.DownloadString("http://icanhazip.com");
-                            if (!string.IsNullOrEmpty(externalIp))
-                            {
-                                IPHostEntry iPHostEntry = Dns.GetHostEntry(Dns.GetHostName());
-                                foreach (IPAddress ipAddress in iPHostEntry.AddressList)
-                                {
-                                    if (ipAddress.AddressFamily == AddressFamily.InterNetwork)
-                                    {
-                                        ShowNotification("Ip adres", "Je public ip adres = " + externalIp);
-                                    }
-                                }
-                            }
+                            ShowNotification("Ip adres", "Je public ip adres = " + externalIp);
+                            return true;
                         }
-                        return true;
+
+                        return false;
                     }
+                }
             }
 
-            // no command
             if (isCountingWords)
             {
-                string[] words = clipboardText.Split(' ');
-                int numberOfWords = words.Length;
+                var words = clipboardText.Split(' ');
+                var numberOfWords = words.Length;
                 ShowNotification("Number of words are: ", numberOfWords.ToString());
                 isCountingWords = false;
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
-
-        private bool disposed = false;
-
-        private readonly SafeHandle handle = new SafeFileHandle(IntPtr.Zero, true);
 
         public void Dispose()
         {
@@ -191,24 +181,22 @@
             GC.SuppressFinalize(this);
         }
 
+        [DllImport("Shell32.dll", CharSet = CharSet.Unicode)]
+        private static extern uint SHEmptyRecycleBin(IntPtr hwnd, string pszRootPath, Recycle dwFlags);
+
+        [SecurityCritical]
+        [DllImport("ntdll.dll", SetLastError = true)]
+        internal static extern bool RtlGetVersion(ref Form1.Osversioninfoex versionInfo);
+
         protected virtual void Dispose(bool disposing)
         {
-            if (disposed)
-            {
-                return;
-            }
+            if (disposed) return;
 
             if (disposing)
             {
                 handle.Dispose();
-                if (ramCounter.IsValueCreated)
-                {
-                    ramCounter.Value.Dispose();
-                }
-                if (cpuCounter.IsValueCreated)
-                {
-                    cpuCounter.Value.Dispose();
-                }
+                if (ramCounter.IsValueCreated) ramCounter.Value.Dispose();
+                if (cpuCounter.IsValueCreated) cpuCounter.Value.Dispose();
 
                 _afsluiten?.Dispose();
                 _vergrendel?.Dispose();
@@ -218,12 +206,6 @@
             disposed = true;
         }
 
-        private Process _afsluiten;
-
-        private Process _vergrendel;
-
-        private Process _reboot;
-
         private void ShowNotification(string question, string answer)
         {
             form1.ShowNotification(question, answer);
@@ -232,15 +214,17 @@
         private enum Recycle : uint
         {
             /// <summary>
-            /// Defines the SHRB_NOCONFIRMATION
+            ///     Defines the SHRB_NOCONFIRMATION
             /// </summary>
             SHRB_NOCONFIRMATION = 0x00000001,
+
             /// <summary>
-            /// Defines the SHRB_NOPROGRESSUI
+            ///     Defines the SHRB_NOPROGRESSUI
             /// </summary>
             SHRB_NOPROGRESSUI = 0x00000002,
+
             /// <summary>
-            /// Defines the SHRB_NOSOUND
+            ///     Defines the SHRB_NOSOUND
             /// </summary>
             SHRB_NOSOUND = 0x00000004
         }
