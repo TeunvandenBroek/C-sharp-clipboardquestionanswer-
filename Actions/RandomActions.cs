@@ -1,42 +1,34 @@
 ﻿using System;
+using System.Globalization;
 using System.Text;
+using System.Threading;
 
-namespace it
+namespace it.Actions
 {
-    public class RandomActions : IAction
+    internal class RandomActions : IAction
     {
-        private readonly Form1 form1;
-
-        public RandomActions(Form1 form1)
-        {
-            this.form1 = form1;
-        }
-        private void ShowNotification(string question, string answer)
-        {
-            form1.ShowNotification(question, answer);
-        }
-
         private readonly Random _random = new Random();
-        public bool TryExecute(string clipboardText)
+        QuestionAnswer IAction.TryExecute(string clipboardText)
         {
-            return TryRandomActions(clipboardText);
-        }
+            CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
 
-        private bool TryRandomActions(string clipboardText)
-        {
             switch (clipboardText)
             {
                 case "kop of munt":
+                case "heads or tails":
                     {
-                        if (_random.NextDouble() < 0.5)
+                        bool isHeads = (int)(_random.NextDouble()) % 2 > 0;
+
+                        switch (currentCulture.LCID)
                         {
-                            ShowNotification("Kop of munt?", "Kop");
+                            case 1033: // english-us
+                                return new QuestionAnswer("heads or tails?", isHeads ? "Heads" : "Tails");
+                            case 1043: // dutch
+                                return new QuestionAnswer("Kop of munt?", isHeads ? "Kop" : "Munt");
+                            default:
+                                return null;
                         }
-                        else
-                        {
-                            ShowNotification("Kop of munt?", "Munt");
-                        }
-                        return true;
+
                     }
                 case "random password":
                     {
@@ -48,12 +40,11 @@ namespace it
                         while (passwordLength-- > 0)
                         {
                             password.Append(charAvailable[_random.Next(charAvailable.Length)]);
-                            ShowNotification("Random password", password.ToString());
                         }
-                        return true;
+                        return new QuestionAnswer("Random password", password.ToString());
                     }
             }
-            return false;
+            return new QuestionAnswer(isSuccessful: true);
         }
     }
 }

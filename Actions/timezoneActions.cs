@@ -1,4 +1,4 @@
-﻿namespace it
+﻿namespace it.Actions
 {
     using System;
     using System.Collections.Generic;
@@ -7,25 +7,10 @@
 
     public class TimezoneActions : IAction
     {
-        private readonly Form1 form1;
-
-        public TimezoneActions(Form1 form1)
-        {
-            this.form1 = form1;
-        }
-        private void ShowNotification(string timeZoneName)
-        {
-            form1.ShowNotification(timeZoneName);
-        }
-
-        private void ShowNotification(string question, string answer)
-        {
-            form1.ShowNotification(question, answer);
-        }
 
         private string country;
 
-        public bool TryExecute(string clipboardText)
+        QuestionAnswer IAction.TryExecute(string clipboardText)
         {
             country = clipboardText.Trim().ToLowerInvariant();
             KeyValuePair<string, Countries.UtcOffset> keyValuePair = TryKeypair();
@@ -35,159 +20,134 @@
                 {
                     case Countries.UtcOffset.UtcMinusTwelve:
                         {
-                            ShowNotification("Dateline Standard Time");
-                            return true;
+                            return new QuestionAnswer("Dateline Standard Time");
                         }
                     case Countries.UtcOffset.UtcMinusEleven:
                         {
-                            ShowNotification("Samoa Standard Time");
-                            return true;
+                            return new QuestionAnswer("Samoa Standard Time");
                         }
                     case Countries.UtcOffset.UtcMinusTen:
                         {
-                            ShowNotification("Hawaiian Standard Time");
-                            return true;
+                            return new QuestionAnswer("Hawaiian Standard Time");
                         }
                     case Countries.UtcOffset.UtcMinusNine:
                         {
-                            ShowNotification("Alaskan Standard Time");
-                            return true;
+                            return new QuestionAnswer("Alaskan Standard Time");
                         }
                     case Countries.UtcOffset.UtcMinusEight:
                         {
-                            ShowNotification("Pacific Standard Time");
-                            return true;
+                            return new QuestionAnswer("Pacific Standard Time");
                         }
                     case Countries.UtcOffset.UtcMinusSeven:
                         {
-                            ShowNotification("US Mountain Standard Time");
-                            return true;
+                            return new QuestionAnswer("US Mountain Standard Time");
                         }
                     case Countries.UtcOffset.UtcMinusSix:
                         {
-                            ShowNotification("Central America Standard Time");
-                            return true;
+                            return new QuestionAnswer("Central America Standard Time");
                         }
                     case Countries.UtcOffset.UtcMinusFive:
                         {
-                            ShowNotification("SA Pacific Standard Time");
-                            return true;
+                            return new QuestionAnswer("SA Pacific Standard Time");
                         }
                     case Countries.UtcOffset.UtcMinusFour:
                         {
-                            ShowNotification("Atlantic Standard Time");
-                            return true;
+                            return new QuestionAnswer("Atlantic Standard Time");
                         }
                     case Countries.UtcOffset.UtcMinusThreepoinfive:
                         {
-                            ShowNotification("Newfoundland Standard Time");
-                            return true;
+                            return new QuestionAnswer("Newfoundland Standard Time");
                         }
                     case Countries.UtcOffset.UtcMinusThree:
                         {
-                            ShowNotification("E. South America Standard Time");
-                            return true;
+                            return new QuestionAnswer("E. South America Standard Time");
                         }
                     case Countries.UtcOffset.UtcMinusTwo:
                         {
-                            ShowNotification("Mid-Atlantic Standard Time");
-                            return true;
+                            return new QuestionAnswer("Mid-Atlantic Standard Time");
                         }
                     case Countries.UtcOffset.UtcMinusOne:
                         {
-                            ShowNotification("Cape Verde Standard Time");
-                            return true;
+                            return new QuestionAnswer("Cape Verde Standard Time");
                         }
                     case Countries.UtcOffset.UtcZero:
                         {
-                            ShowNotification("GMT Standard Time");
-                            return true;
+                            return new QuestionAnswer("GMT Standard Time");
                         }
                     case Countries.UtcOffset.UtcPlusOne:
                         {
-                            ShowNotification(country, DateTime.Now.ToString("HH:mm", CultureInfo.CurrentCulture));
-                            return true;
+                            return new QuestionAnswer(country, DateTime.Now.ToString("HH:mm", CultureInfo.CurrentCulture));
                         }
                     case Countries.UtcOffset.UtcPlusTwo:
                         {
-                            ShowNotification("Jordan Standard Time");
-                            return true;
+                            return new QuestionAnswer("Jordan Standard Time");
                         }
                     case Countries.UtcOffset.UtcPlusThree:
                         {
-                            ShowNotification("Arabic Standard Time");
-                            return true;
+                            return new QuestionAnswer("Arabic Standard Time");
                         }
                     case Countries.UtcOffset.UtcPlusThreepoinfive:
                         {
-                            ShowNotification("Iran Standard Time");
-                            return true;
+                            return new QuestionAnswer("Iran Standard Time");
                         }
                     case Countries.UtcOffset.UtcPlusFour:
                         {
-                            ShowNotification("Mauritius Standard Time");
-                            return true;
+                            return new QuestionAnswer("Mauritius Standard Time");
                         }
                     case Countries.UtcOffset.UtcPlusFourpointfive:
                         {
-                            ShowNotification("Afghanistan Standard Time");
-                            return true;
+                            return new QuestionAnswer("Afghanistan Standard Time");
                         }
                     case Countries.UtcOffset.UtcPlusFive:
                         {
-                            ShowNotification("Ekaterinburg Standard Time");
-                            return true;
+                            return new QuestionAnswer("Ekaterinburg Standard Time");
                         }
                     case Countries.UtcOffset.UtcPlusSix:
                         {
-                            ShowNotification("N. Central Asia Standard Time");
-                            return true;
+                            return new QuestionAnswer("N. Central Asia Standard Time");
                         }
                     case Countries.UtcOffset.UtcPlusSeven:
                         {
-                            ShowNotification("SE Asia Standard Time");
-                            return true;
+                            return new QuestionAnswer("SE Asia Standard Time");
                         }
                     case Countries.UtcOffset.UtcPlusEight:
                         {
-                            ShowNotification("China Standard Time ");
-                            return true;
+                            return new QuestionAnswer("China Standard Time ");
                         }
                     case Countries.UtcOffset.UtcPlusNine:
                         {
-                            ShowNotification("Korea Standard Time");
-                            return true;
+                            return new QuestionAnswer("Korea Standard Time");
                         }
                     case Countries.UtcOffset.UtcPlusTen:
                         {
-                            ShowNotification("E. Australia Standard Time");
-                            return true;
+                            return new QuestionAnswer("E. Australia Standard Time");
                         }
                     case Countries.UtcOffset.UtcPlusEleven:
                         {
-                            ShowNotification("Central Pacific Standard Time");
-                            return true;
+                            return new QuestionAnswer("Central Pacific Standard Time");
                         }
                     case Countries.UtcOffset.UtcPlusTwelve:
                         {
-                            ShowNotification("New Zealand Standard Time");
-                            return true;
+                            return new QuestionAnswer("New Zealand Standard Time");
                         }
                     case Countries.UtcOffset.UtcPlusThirteen:
                         {
-                            ShowNotification("Tonga Standard Time");
-                            return true;
+                            return new QuestionAnswer("Tonga Standard Time");
                         }
                     case Countries.UtcOffset.UtcPlusFivepointfive:
                         {
-                            ShowNotification("India Standard Time");
-                            return true;
+                            return new QuestionAnswer("India Standard Time");
+                        }
+                    default:
+                        {
+                            return new QuestionAnswer("Unknown");
                         }
                 }
-                return true;
             }
-
-            return false;
+            else
+            {
+                return new QuestionAnswer(isSuccessful: true);
+            }
         }
 
         private KeyValuePair<string, Countries.UtcOffset> TryKeypair()

@@ -2,22 +2,11 @@
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace it
+namespace it.Actions
 {
     //TO DO
     public class TryWifiPass : IAction
     {
-        private readonly Form1 form1;
-
-        public TryWifiPass(Form1 form1)
-        {
-            this.form1 = form1;
-        }
-        private void ShowNotification(string question, string answer)
-        {
-            form1.ShowNotification(question, answer);
-        }
-
         private string wifilist()
         {
             // netsh wlan show profile
@@ -80,17 +69,16 @@ namespace it
             string wifidata = wifilist();
             return true;
         }
-        public bool TryExecute(string clipboardText)
+        QuestionAnswer IAction.TryExecute(string clipboardText)
         {
             switch (clipboardText)
             {
                 case "wifi password":
                     {
-                        ShowNotification("Your wifi password is", get_passwords().ToString());
-                        return true;
+                        return new QuestionAnswer("Your wifi password is", get_passwords().ToString());
                     }
             }
-            return false;
+            return new QuestionAnswer(isSuccessful: true);
         }
     }
 }

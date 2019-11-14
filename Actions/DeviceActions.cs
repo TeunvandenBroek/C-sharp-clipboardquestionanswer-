@@ -1,92 +1,114 @@
-﻿namespace it
-{
-    using Microsoft.Win32.SafeHandles;
-    using System;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.Net;
-    using System.Net.NetworkInformation;
-    using System.Net.Sockets;
-    using System.Runtime.InteropServices;
-    using System.Security;
-    using System.Windows.Forms;
+﻿using Microsoft.Win32.SafeHandles;
+using System;
+using System.Diagnostics;
+using System.Globalization;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
+using System.Runtime.InteropServices;
+using System.Security;
+using System.Threading;
+using System.Windows.Forms;
 
-    public class DeviceActions : IAction, IDisposable
+namespace it.Actions
+{
+    internal class DeviceActions : IAction, IDisposable
     {
         [DllImport("Shell32.dll", CharSet = CharSet.Unicode)]
         private static extern uint SHEmptyRecycleBin(IntPtr hwnd, string pszRootPath, Recycle dwFlags);
 
-        [SecurityCritical]
-        [DllImport("ntdll.dll", SetLastError = true)]
-        internal static extern bool RtlGetVersion(ref Form1.Osversioninfoex versionInfo);
+        //[SecurityCritical]
+        //[DllImport("ntdll.dll", SetLastError = true)]
+        //internal static extern bool RtlGetVersion(ref Form1.Osversioninfoex versionInfo);
 
         private readonly SmartPerformanceCounter ramCounter = new SmartPerformanceCounter(() => new PerformanceCounter("Memory", "Available MBytes"), TimeSpan.FromMinutes(1));
 
         private readonly SmartPerformanceCounter cpuCounter = new SmartPerformanceCounter(() => new PerformanceCounter("Processor", "% Processor Time", "_Total"), TimeSpan.FromMinutes(1));
 
-        private readonly Form1 form1;
         private bool isCountingWords = false;
 
-        public DeviceActions(Form1 form1)
-        {
-            this.form1 = form1;
-        }
 
-
-        public bool TryExecute(string clipboardText)
+        QuestionAnswer IAction.TryExecute(string clipboardText)
         {
+            CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
+
             switch (clipboardText)
             {
                 case "sluit":
                     {
-                        form1.Close();
-                        return true;
+                        Environment.Exit(0);
+                        break;
                     }
                 case "opnieuw opstarten":
                 case "reboot":
                     {
                         _reboot = Process.Start("shutdown", "/r /t 0");
-                        return true;
+                        return new QuestionAnswer(isSuccessful: true);
                     }
                 case "slaapstand":
+                case "sleep":
                     {
                         Application.SetSuspendState(PowerState.Hibernate, true, true);
-                        return true;
+                        return new QuestionAnswer(isSuccessful: true);
                     }
                 case "leeg prullebak":
                 case "prullebak":
+                case "empty recycle bin":
+                case "empty bin":
+                case "empty recycling bin":
                     {
                         SHEmptyRecycleBin(IntPtr.Zero, null, Recycle.SHRB_NOCONFIRMATION);
-                        ShowNotification(clipboardText, "Prullebak succesvol leeg gemaakt");
-                        return true;
+                        switch (currentCulture.LCID)
+                        {
+                            case 1033: // english-us
+                                return new QuestionAnswer(clipboardText, "Recycling bin emptied successfully");
+                            case 1043: // dutch
+                                return new QuestionAnswer(clipboardText, "Prullebak succesvol leeg gemaakt");
+                            default:
+                                return null;
+                        }
                     }
                 case "vergrendel":
+                case "lock":
                     {
                         _vergrendel = Process.Start(@"C:\WINDOWS\system32\rundll32.exe", "user32.dll,LockWorkStation");
-                        return true;
+                        return new QuestionAnswer(isSuccessful: true);
                     }
                 case "afsluiten":
+                case "shut down":
                     {
                         _afsluiten = Process.Start("shutdown", "/s /t 0");
-                        return true;
+                        return new QuestionAnswer(isSuccessful: true);
                     }
-                //om je momentele ram geheugen te laten zien
+                //om je momentele ram geheugen te laten zien (To display your momentary RAM memory)
                 case "ram":
                     {
-                        ShowNotification("Ram geheugen", ramCounter.Value.NextValue().ToString(CultureInfo.InvariantCulture) + " MB ram-geheugen over in je systeem");
-                        return true;
+                        switch (currentCulture.LCID)
+                        {
+                            case 1033: // english-us
+                                return new QuestionAnswer("RAM Memory", ramCounter.Value.NextValue().ToString(CultureInfo.InvariantCulture) + " MB of RAM in your system");
+                            case 1043: // dutch
+                                return new QuestionAnswer("Ram geheugen", ramCounter.Value.NextValue().ToString(CultureInfo.InvariantCulture) + " MB ram-geheugen over in je systeem");
+                            default:
+                                return null;
+                        }
                     }
                 case "windows versie":
+                case "windows version":
                     {
-                        Form1.Osversioninfoex osVersionInfo = default;
-                        if (!RtlGetVersion(ref osVersionInfo))
+                        switch (currentCulture.LCID)
                         {
-                            ShowNotification("Je windows versie", $"Windows Version {osVersionInfo.MajorVersion}..{osVersionInfo.BuildNumber}");
+                            case 1033: // english-us
+                                return new QuestionAnswer("Your Windows version", $"Windows Version {Environment.OSVersion.Version}");
+                            case 1043: // dutch
+                                return new QuestionAnswer("Je windows versie", $"Windows Version {Environment.OSVersion.Version}");
+                            default:
+                                return null;
                         }
-                        return true;
                     }
                 case "mac-adres":
                 case "mac":
+                case "mac address":
                     {
                         string sMacAddress = string.Empty;
                         foreach (NetworkInterface adapter in NetworkInterface.GetAllNetworkInterfaces())
@@ -97,22 +119,46 @@
                                 break;
                             }
                         }
-                        ShowNotification("Je mac adres", sMacAddress);
-                        return true;
+
+                        switch (currentCulture.LCID)
+                        {
+                            case 1033: // english-us
+                                return new QuestionAnswer("Your MAC Address", sMacAddress);
+                            case 1043: // dutch
+                                return new QuestionAnswer("Je mac adres", sMacAddress);
+                            default:
+                                return new QuestionAnswer(isSuccessful: true);
+                        }
                     }
                 case "computer naam":
+                case "computer name":
                     {
                         string dnsName = Dns.GetHostName();
-                        ShowNotification("je computer naam is", dnsName);
                         Clipboard.SetText(dnsName);
-                        return true;
+
+                        switch (currentCulture.LCID)
+                        {
+                            case 1033: // english-us
+                                return new QuestionAnswer("Your MAC Address", dnsName);
+                            case 1043: // dutch
+                                return new QuestionAnswer("je computer naam is", dnsName);
+                            default:
+                                return new QuestionAnswer(isSuccessful: true); ;
+                        }
                     }
                 case "cpu":
                     {
-                        // komt nu overeen met lezen van taakbeheer
+                        // komt nu overeen met lezen van taakbeheer (Now matches read Task Manager)
                         float secondValue = cpuCounter.Value.NextValue();
-                        ShowNotification("Processor verbruik", secondValue.ToString("###", CultureInfo.InvariantCulture) + "%");
-                        return true;
+                        switch (currentCulture.LCID)
+                        {
+                            case 1033: // english-us
+                                return new QuestionAnswer("Processor consumption", secondValue.ToString("###", CultureInfo.InvariantCulture) + "%");
+                            case 1043: // dutch
+                                return new QuestionAnswer("Processor verbruik", secondValue.ToString("###", CultureInfo.InvariantCulture) + "%");
+                            default:
+                                return new QuestionAnswer(isSuccessful: true); ;
+                        }
                     }
                 case "wifi check":
                 case "heb ik internet?":
@@ -122,31 +168,39 @@
                             using (var client = new WebClient())
                             using (var stream = client.OpenRead("http://www.google.com"))
                             {
-                                ShowNotification(clipboardText, "Je hebt internet");
-                                return true;
+                                switch (currentCulture.LCID)
+                                {
+                                    case 1033: // english-us
+                                        return new QuestionAnswer(clipboardText, "You have Internet");
+                                    case 1043: // dutch
+                                        return new QuestionAnswer(clipboardText, "Je hebt internet");
+                                    default:
+                                        return new QuestionAnswer(isSuccessful: true); ;
+                                }
                             }
+
                         }
                         catch
                         {
-                            ShowNotification(clipboardText, "Je hebt geen internet");
-                            return false;
+                            switch (currentCulture.LCID)
+                            {
+                                case 1033: // english-us
+                                    return new QuestionAnswer(clipboardText, "You do not have Internet");
+                                case 1043: // dutch
+                                    return new QuestionAnswer(clipboardText, "Je hebt geen internet");
+                                default:
+                                    return new QuestionAnswer(isSuccessful: true); ;
+                            }
                         }
                     }
                 case "count words":
                     {
-                        if (!isCountingWords)
-                        {
-                            isCountingWords = true;
-                            return false;
-                        }
-                        else
-                        {
-
-                        }
+                        if (!isCountingWords) isCountingWords = true;
+                        return new QuestionAnswer(isSuccessful: true);
                     }
-                    return true;
                 case "ip":
                     {
+                        string externalIpAddress = null;
                         using (WebClient webClient = new WebClient())
                         {
                             string externalIp = webClient.DownloadString("http://icanhazip.com");
@@ -157,12 +211,21 @@
                                 {
                                     if (ipAddress.AddressFamily == AddressFamily.InterNetwork)
                                     {
-                                        ShowNotification("Ip adres", "Je public ip adres = " + externalIp);
+                                        externalIpAddress = externalIp;
                                     }
                                 }
                             }
                         }
-                        return true;
+
+                        switch (currentCulture.LCID)
+                        {
+                            case 1033: // english-us
+                                return new QuestionAnswer("IPAddress Address", "Your public IP Address = " + externalIpAddress);
+                            case 1043: // dutch
+                                return new QuestionAnswer("Ip adres", "Je public ip adres = " + externalIpAddress);
+                            default:
+                                return new QuestionAnswer(isSuccessful: true); ;
+                        }
                     }
             }
 
@@ -171,14 +234,13 @@
             {
                 string[] words = clipboardText.Split(' ');
                 int numberOfWords = words.Length;
-                ShowNotification("Number of words are: ", numberOfWords.ToString());
                 isCountingWords = false;
-                return true;
+                return new QuestionAnswer("Number of words are: ", numberOfWords.ToString());
+
             }
-            else
-            {
-                return false;
-            }
+
+
+            return null;
         }
 
         private bool disposed = false;
@@ -223,11 +285,6 @@
         private Process _vergrendel;
 
         private Process _reboot;
-
-        private void ShowNotification(string question, string answer)
-        {
-            form1.ShowNotification(question, answer);
-        }
 
         private enum Recycle : uint
         {

@@ -13,15 +13,19 @@ namespace it
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            _disposable = new Form1();
-            Application.Run(_disposable);
+
+            Bootstrap bootstrap = new Bootstrap();
+            bootstrap.Startup();
+
+            //_disposable = new Form1();
+            Application.Run();
         }
 
-        private static Form1 _disposable;
+        //private static Form1 _disposable;
 
         public void Dispose()
         {
-            _disposable?.Dispose();
+            //_disposable?.Dispose();
         }
     }
 }
