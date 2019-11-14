@@ -1,110 +1,128 @@
-﻿using System;
+using System;
 using System.Diagnostics;
+using System.Globalization;
+using System.Threading;
 using System.Windows.Forms;
 
-namespace it
+namespace it.Actions
 {
     public class StopwatchActions : IAction
     {
-        private readonly Form1 form1;
-
-        public StopwatchActions(Form1 form1)
-        {
-            this.form1 = form1;
-        }
         private Stopwatch myStopwatch;
-
         private string lastClipboard;
 
-        private void ShowNotification(string question, string answer)
-        {
-            form1.ShowNotification(question, answer);
-        }
-
-
-        public bool TryExecute(string clipboardText)
+        QuestionAnswer IAction.TryExecute(string clipboardText)
         {
             if (string.IsNullOrWhiteSpace(clipboardText))
             {
                 throw new ArgumentException("message", nameof(clipboardText));
             }
-
-            if (!Clipboard.ContainsText()) return false;
-            var clipboard = Clipboard.GetText();
-            switch (clipboard)
+            if (Clipboard.ContainsText())
             {
-                case "start stopwatch":
+                CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
+
+                string clipboard = Clipboard.GetText();
+                switch (clipboard)
                 {
-                    if (myStopwatch?.IsRunning == true)
-                    {
-                        ShowNotification("Stopwatch", "Stopwatch already running");
-                    }
+                    case "start stopwatch": //start
+                        {
+                            if (myStopwatch?.IsRunning == true)
+                            {
+                                return new QuestionAnswer("Stopwatch", "Stopwatch already running");
+                            }
+                            if (clipboard != lastClipboard)
+                            {
+                                lastClipboard = clipboard;
+                                myStopwatch = new Stopwatch();
+                                myStopwatch.Start();
+                            }
+                            break;
+                        }
+                    case "reset stopwatch": //reset
+                        {
+                            if (clipboard != lastClipboard)
+                            {
+                                lastClipboard = clipboard;
+                                myStopwatch.Reset();
+                                myStopwatch = new Stopwatch();
+                                myStopwatch.Start();
+                                TimeSpan ts = myStopwatch.Elapsed;
+                                switch (currentCulture.LCID)
+                                {
+                                    case 1033: // english-us
+                                        return new QuestionAnswer("Stopwatch reset to", $"{ts.Hours} hours, {ts.Minutes} minutes,  {ts.Seconds} seconds");
+                                    case 1043: // dutch
+                                        return new QuestionAnswer("Stopwatch gereset naar", $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
+                                    default:
+                                        return null;
+                                }
+                            }
+                            break;
+                        }
+                    case "pause stopwatch": //  pause
+                        {
+                            if (clipboard != lastClipboard)
+                            {
+                                lastClipboard = clipboard;
+                                TimeSpan ts = myStopwatch.Elapsed;
+                                myStopwatch.Stop();
 
-                    if (clipboard != lastClipboard)
-                    {
-                        lastClipboard = clipboard;
-                        myStopwatch = new Stopwatch();
-                        myStopwatch.Start();
-                    }
+                                switch (currentCulture.LCID)
+                                {
+                                    case 1033: // english-us
+                                        return new QuestionAnswer("Stopwatch paused on", $"{ts.Hours} hours, {ts.Minutes} minutes,  {ts.Seconds} seconds");
+                                    case 1043: // dutch
+                                        return new QuestionAnswer("Stopwatch gepauzeerd op", $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
+                                    default:
+                                        return null;
+                                }
+                            }
+                            break;
+                        }
+                    case "resume stopwatch":
+                        {
+                            if (clipboard != lastClipboard)
+                            {
+                                lastClipboard = clipboard;
+                                TimeSpan ts = myStopwatch.Elapsed;
+                                myStopwatch.Start();
+                                switch (currentCulture.LCID)
+                                {
+                                    case 1033: // english-us
+                                        return new QuestionAnswer("Stopwatch resumed from", $"{ts.Hours} hours, {ts.Minutes} minutes,  {ts.Seconds} seconds");
+                                    case 1043: // dutch
+                                        return new QuestionAnswer("Stopwatch gepauzeerd op", $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
+                                    default:
+                                        return null;
+                                }
+                            }
+                            break;
+                        }
+                    case "stop stopwatch": //stop
+                        {
+                            if (lastClipboard is object)
+                            {
+                                lastClipboard = null;
+                                myStopwatch.Stop();
+                                TimeSpan ts = myStopwatch.Elapsed;
+                                switch (currentCulture.LCID)
+                                {
+                                    case 1033: // english-us
+                                        return new QuestionAnswer("Elapsed time", $"{ts.Hours} hours, {ts.Minutes} minutes,  {ts.Seconds} seconds");
+                                    case 1043: // dutch
+                                        return new QuestionAnswer("Elapsed time", $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
+                                    default:
+                                        return null;
+                                }
+                            }
+                            else
+                                return new QuestionAnswer(isSuccessful: false);
 
-                    return false;
+                        }
                 }
-                case "reset stopwatch":
-                {
-                    if (clipboard != lastClipboard)
-                    {
-                        lastClipboard = clipboard;
-                        myStopwatch.Reset();
-                        myStopwatch = new Stopwatch();
-                        myStopwatch.Start();
-                        TimeSpan ts = myStopwatch.Elapsed;
-                        ShowNotification("Stopwatch gereset naar",
-                            $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
-                    }
-
-                    return false;
-                }
-                case "pause stopwatch":
-                {
-                    if (clipboard != lastClipboard)
-                    {
-                        lastClipboard = clipboard;
-                        TimeSpan ts = myStopwatch.Elapsed;
-                        ShowNotification("Stopwatch gepauzeerd op",
-                            $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
-                        myStopwatch.Stop();
-                    }
-
-                    return false;
-                }
-                case "resume stopwatch":
-                {
-                    if (clipboard != lastClipboard)
-                    {
-                        lastClipboard = clipboard;
-                        TimeSpan ts = myStopwatch.Elapsed;
-                        ShowNotification("Stopwatch hervat vanaf",
-                            $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
-                        myStopwatch.Start();
-                    }
-
-                    return false;
-                }
-                case "stop stopwatch":
-                {
-                    if (lastClipboard is object)
-                    {
-                        lastClipboard = null;
-                        myStopwatch.Stop();
-                        TimeSpan ts = myStopwatch.Elapsed;
-                        ShowNotification("Elapsed time", $"{ts.Hours} uur, {ts.Minutes} minuten, {ts.Seconds}secondes");
-                    }
-
-                    return false;
-                }
-                default:
-                    return false;
             }
+
+            return new QuestionAnswer(isSuccessful: true);
         }
     }
 }

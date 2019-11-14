@@ -1,52 +1,38 @@
-﻿namespace it
+namespace it.Actions
 {
     using System;
     using System.Globalization;
 
     public class TimespanActions : IAction
     {
-        private readonly Form1 form1;
-
         private DateTime? prevDate;
-
-        public TimespanActions(Form1 form1)
-        {
-            this.form1 = form1;
-        }
-
         private readonly string[] DateFormats =
         {
             "dd.MM.yyyy",
             "dd-MM-yyyy"
         };
-        private void ShowNotification(string question, string answer)
-        {
-            form1.ShowNotification(question, answer);
-        }
 
-        public bool TryExecute(string clipboardText)
+        QuestionAnswer IAction.TryExecute(string clipboardText)
         {
-            if (!DateTime.TryParseExact(clipboardText, DateFormats, CultureInfo.CurrentCulture,
-                DateTimeStyles.AssumeLocal, out var newDate))
+            if (DateTime.TryParseExact(clipboardText, DateFormats, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out DateTime newDate))
             {
-                prevDate = null;
-                return false;
-            }
-
-            if (prevDate != null)
-            {
-                var difference = newDate - prevDate;
-                if (difference != null)
+                if (prevDate is object)
                 {
-                    ShowNotification("Days between:", difference.Value.Days.ToString(CultureInfo.InvariantCulture));
+                    TimeSpan? difference = newDate - prevDate;
+                    if (difference is object)
+                    {
+                        return new QuestionAnswer("Days between:", difference.Value.Days.ToString(CultureInfo.InvariantCulture));
+                    }
+                    prevDate = null;
                 }
-                prevDate = null;
+                else
+                {
+                    prevDate = newDate;
+                }
+                return new QuestionAnswer(isSuccessful: true);
             }
-            else
-            {
-                prevDate = newDate;
-            }
-            return true;
+            prevDate = null;
+            return new QuestionAnswer(isSuccessful: true);
         }
     }
 }

@@ -1,39 +1,50 @@
-﻿using System;
+using System;
+using System.Globalization;
+using System.Text;
+using System.Threading;
 
-namespace it
+namespace it.Actions
 {
-    public class RandomActions : IAction
+    internal class RandomActions : IAction
     {
-        private readonly Form1 form1;
-
-        public RandomActions(Form1 form1)
-        {
-            this.form1 = form1;
-        }
-        private void ShowNotification(string question, string answer)
-        {
-            form1.ShowNotification(question, answer);
-        }
-
-        public bool TryExecute(string clipboardText)
-        {
-            return TryRandomActions(clipboardText);
-        }
-
         private readonly Random _random = new Random();
-        private bool TryRandomActions(string clipboardText)
+        QuestionAnswer IAction.TryExecute(string clipboardText)
         {
+            CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
+
             switch (clipboardText)
             {
                 case "kop of munt":
-                {
-                    ShowNotification("Kop of munt?", _random.NextDouble() < 0.5 ? "Kop" : "Munt");
+                case "heads or tails":
+                    {
+                        bool isHeads = (int)(_random.NextDouble()) % 2 > 0;
 
-                    return true;
-                }
-                default:
-                    return false;
+                        switch (currentCulture.LCID)
+                        {
+                            case 1033: // english-us
+                                return new QuestionAnswer("heads or tails?", isHeads ? "Heads" : "Tails");
+                            case 1043: // dutch
+                                return new QuestionAnswer("Kop of munt?", isHeads ? "Kop" : "Munt");
+                            default:
+                                return null;
+                        }
+
+                    }
+                case "random password":
+                    {
+                        const int minLength = 8;
+                        const int maxLength = 12;
+                        const string charAvailable = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789-";
+                        StringBuilder password = new StringBuilder();
+                        int passwordLength = _random.Next(minLength, maxLength + 1);
+                        while (passwordLength-- > 0)
+                        {
+                            password.Append(charAvailable[_random.Next(charAvailable.Length)]);
+                        }
+                        return new QuestionAnswer("Random password", password.ToString());
+                    }
             }
+            return new QuestionAnswer(isSuccessful: true);
         }
     }
 }

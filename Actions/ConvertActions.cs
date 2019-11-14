@@ -1,36 +1,23 @@
-﻿namespace it
+﻿using System.Globalization;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
+
+namespace it.Actions
 {
-    using System.Globalization;
-    using System.Text.RegularExpressions;
-    using System.Windows.Forms;
 
-    public class ConvertActions : IAction
+    internal class ConvertActions : IAction
     {
-        private readonly Form1 form1;
-
-        public ConvertActions(Form1 form1)
-        {
-            this.form1 = form1;
-        }
-
-        private void ShowNotification(string question, string answer)
-        {
-            form1.ShowNotification(question, answer);
-        }
-
         private readonly Regex unitRegex = new Regex("(?<number>^[0-9]+([.,][0-9]{1,3})?)(\\s*)(?<from>[a-z]+[2-3]?) to (?<to>[a-z]+[2-3]?)");
 
-        public bool TryExecute(string clipboardText)
-        {
-            return ConvertUnits(clipboardText);
-        }
-        private bool ConvertUnits(string clipboardText)
+        QuestionAnswer IAction.TryExecute(string clipboardText)
         {
             Match matches = unitRegex.Match(clipboardText);
+
             if (!matches.Success)
             {
-                return false;
+                return new QuestionAnswer();
             }
+
             double number = double.Parse(matches.Groups["number"].Value);
             string from = matches.Groups["from"].Value;
             string to = matches.Groups["to"].Value;
@@ -161,11 +148,13 @@
                     oppervlakte = number * 1000000;
                     break;
                 default:
-                    return false;
+                    return null;
             }
-            // oppervlakte eenheden
+
+            // oppervlakte eenheden (area units)
             double result;
-            switch (to) // naar
+
+            switch (to) // naar (to)
             {
                 // lengte eenheden
                 case "mm":
@@ -211,7 +200,7 @@
                 case "yd":
                     result = meter * 0.9144;
                     break;
-                // gewicht eenheden
+                // gewicht eenheden (Weight Units)
                 case "mg":
                 case "milligram":
                     result = gram * 1000;
@@ -240,7 +229,7 @@
                 case "kilogram":
                     result = gram / 1000;
                     break;
-                // inhoud
+                // inhoud (volume units)
                 case "ml":
                 case "milliliter":
                     result = liter * 1000;
@@ -269,7 +258,7 @@
                 case "kiloliter":
                     result = liter / 1000;
                     break;
-                // oppervlakte eenheden
+                // oppervlakte eenheden (Area Units)
                 case "mm2":
                     result = oppervlakte * 1000000;
                     break;
@@ -292,12 +281,12 @@
                     result = oppervlakte / 1000000;
                     break;
                 default:
-                    return false;
+                    return null;
             }
 
             Clipboard.SetText(result.ToString(CultureInfo.CurrentCulture));
-            ShowNotification(clipboardText, result + to);
-            return true;
+            return new QuestionAnswer(clipboardText, result + to);
         }
+
     }
 }

@@ -1,38 +1,26 @@
-﻿using System;
-using System.Threading.Tasks;
+using System;
+using System.Threading;
 
-namespace it
+namespace it.Actions
 {
-    public class CountdownActions : IAction
+    internal class CountdownActions : IAction
     {
-        private readonly Form1 form1;
-
-        public CountdownActions(Form1 form1)
+        QuestionAnswer IAction.TryExecute(string clipboardText)
         {
-            this.form1 = form1;
-        }
 
-        private void ShowNotification(string question, string answer)
-        {
-            form1.ShowNotification(question, answer);
-        }
-
-        public bool TryExecute(string clipboardText)
-        {
-            return TryCountDown(clipboardText);
-        }
-        private bool TryCountDown(string clipboardText)
-        {
-            if (!clipboardText.StartsWith("timer") ||
-                !TimeSpan.TryParse(clipboardText.Replace("timer ", ""), out TimeSpan ts)) return false;
-
-            async Task p()
+            if (clipboardText.StartsWith("timer") && TimeSpan.TryParse(clipboardText.Replace("timer ", ""), out TimeSpan ts))
             {
-                await Task.Delay(ts).ConfigureAwait(false);
-                ShowNotification("Countdown timer", "time is over");
+                Thread.Sleep((int)ts.TotalMilliseconds);
+                // using async here may cause a dead lock. Since we are not using a UI thread, we can just sleep a thread.
+                //async Task p()
+                //{
+                //    await Task.Delay(ts).ConfigureAwait(false);
+                //    ShowNotification("Countdown timer", "time is over");
+                //}
+                //Task.Run(p);
+                return new QuestionAnswer("Countdown timer", "time is over");
             }
-            Task.Run(p);
-            return true;
+            return new QuestionAnswer();
         }
     }
 }
