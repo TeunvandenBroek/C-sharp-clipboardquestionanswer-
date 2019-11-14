@@ -5,8 +5,15 @@ namespace it
 {
     internal sealed class Program : IDisposable
     {
+        private static Form1 _disposable;
+
+        public void Dispose()
+        {
+            _disposable?.Dispose();
+        }
+
         /// <summary>
-        /// The main entry point for the application.
+        ///     The main entry point for the application.
         /// </summary>
         [STAThread]
         private static void Main()
@@ -15,13 +22,6 @@ namespace it
             Application.SetCompatibleTextRenderingDefault(false);
             _disposable = new Form1();
             Application.Run(_disposable);
-        }
-
-        private static Form1 _disposable;
-
-        public void Dispose()
-        {
-            _disposable?.Dispose();
         }
     }
 }
