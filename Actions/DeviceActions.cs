@@ -69,7 +69,7 @@ namespace it
                 }
                 case "vergrendel":
                 {
-                    _vergrendel = Start(@"C:\WINDOWS\system32\rundll32.exe", "user32.dll,LockWorkStation");
+                    _vergrendel = Start($@"C:\WINDOWS\system32\rundll32.exe", "user32.dll,LockWorkStation");
                     return true;
                 }
                 case "afsluiten":
@@ -149,6 +149,7 @@ namespace it
                 case "count words":
                 case "tel woorden":
                 {
+                    ShowNotification(clipboardText,"Kopieer woorden om het aantal woorden te weten.");
                     if (!isCountingWords)
                     {
                         isCountingWords = true;
@@ -175,9 +176,9 @@ namespace it
             if (!isCountingWords) return false;
             if (clipboardText != null)
             {
-                var words = clipboardText.Split(' ');
+                var words = clipboardText.Split(new char[] { ' ' });
                 var numberOfWords = words.Length;
-                ShowNotification("Number of words are: ", numberOfWords.ToString());
+                ShowNotification("Totaal aantal woorden zijn: ", numberOfWords.ToString());
             }
 
             isCountingWords = false;
