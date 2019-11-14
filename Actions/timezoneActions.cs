@@ -1,4 +1,4 @@
-﻿namespace it.Actions
+namespace it.Actions
 {
     using System;
     using System.Collections.Generic;
