@@ -30,39 +30,30 @@
                         IsValueCreated = true;
                     }
                 }
-
                 _cpuCounterLastAccessedTimestamp = Stopwatch.GetTimestamp();
-                Task task = Task.Run(function);
-
                 return _value;
             }
         }
-
         public SmartPerformanceCounter(Func<PerformanceCounter> factory, TimeSpan time)
         {
             _factory = factory;
             _time = time;
         }
 
-        public SmartPerformanceCounter(TimeSpan time)
-        => _time = time;
-
         private void DoCleaningCheck()
         {
             long now = Stopwatch.GetTimestamp();
-            if (now - _cpuCounterLastAccessedTimestamp > _time.Ticks)
+            if (now - _cpuCounterLastAccessedTimestamp <= _time.Ticks) return;
+            lock (_lock)
             {
-                lock (_lock)
-                {
-                    IsValueCreated = false;
-                    _value.Close();
-                    _value.Dispose();
-                    _value = null;
-                }
+                IsValueCreated = false;
+                _value.Close();
+                _value.Dispose();
+                _value = null;
             }
         }
 
-        private async Task function()
+        public async Task Function()
         {
             await Task.Delay(_time).ConfigureAwait(false);
             DoCleaningCheck();

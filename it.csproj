@@ -171,8 +171,6 @@
     <Compile Include="Actions\TimespanActions.cs" />
     <Compile Include="Actions\TimezoneActions.cs" />
     <Compile Include="Actions\TryCalcBMI.cs" />
-    <Compile Include="Actions\TryRedirect.cs" />
-    <Compile Include="Actions\TryWifiPass.cs" />
     <Compile Include="Countries.cs" />
     <Compile Include="Actions\DeviceActions.cs" />
     <Compile Include="Form1.cs">
@@ -215,7 +213,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Translator\languages.json" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.8">
