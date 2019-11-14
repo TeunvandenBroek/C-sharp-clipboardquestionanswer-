@@ -8,98 +8,95 @@ namespace it
     {
         private readonly Form1 form1;
 
-        private string lastClipboard;
-        private Stopwatch myStopwatch;
-
         public StopwatchActions(Form1 form1)
         {
             this.form1 = form1;
+        }
+        private Stopwatch myStopwatch;
+
+        private string lastClipboard;
+
+        private void ShowNotification(string question, string answer)
+        {
+            form1.ShowNotification(question, answer);
         }
 
 
         public bool TryExecute(string clipboardText)
         {
-            if (string.IsNullOrWhiteSpace(clipboardText)) throw new ArgumentException("message", nameof(clipboardText));
+            if (string.IsNullOrWhiteSpace(clipboardText))
+            {
+                throw new ArgumentException("message", nameof(clipboardText));
+            }
             if (Clipboard.ContainsText())
             {
-                var clipboard = Clipboard.GetText();
+                string clipboard = Clipboard.GetText();
                 switch (clipboard)
                 {
-                    case "start stopwatch":
-                    {
-                        if (myStopwatch?.IsRunning == true) ShowNotification("Stopwatch", "Stopwatch already running");
-                        if (clipboard != lastClipboard)
+                    case "start stopwatch": //start
                         {
-                            lastClipboard = clipboard;
-                            myStopwatch = new Stopwatch();
-                            myStopwatch.Start();
+                            if (myStopwatch?.IsRunning == true)
+                            {
+                                ShowNotification("Stopwatch", "Stopwatch already running");
+                            }
+                            if (clipboard != lastClipboard)
+                            {
+                                lastClipboard = clipboard;
+                                myStopwatch = new Stopwatch();
+                                myStopwatch.Start();
+                            }
+                            break;
                         }
-
-                        break;
-                    }
-                    case "reset stopwatch":
-                    {
-                        if (clipboard != lastClipboard)
+                    case "reset stopwatch": //reset
                         {
-                            lastClipboard = clipboard;
-                            myStopwatch.Reset();
-                            myStopwatch = new Stopwatch();
-                            myStopwatch.Start();
-                            var ts = myStopwatch.Elapsed;
-                            ShowNotification("Stopwatch gereset naar",
-                                $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
+                            if (clipboard != lastClipboard)
+                            {
+                                lastClipboard = clipboard;
+                                myStopwatch.Reset();
+                                myStopwatch = new Stopwatch();
+                                myStopwatch.Start();
+                                TimeSpan ts = myStopwatch.Elapsed;
+                                ShowNotification("Stopwatch gereset naar", $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
+                            }
+                            break;
                         }
-
-                        break;
-                    }
-                    case "pause stopwatch":
-                    {
-                        if (clipboard != lastClipboard)
+                    case "pause stopwatch": //  pause
                         {
-                            lastClipboard = clipboard;
-                            var ts = myStopwatch.Elapsed;
-                            ShowNotification("Stopwatch gepauzeerd op",
-                                $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
-                            myStopwatch.Stop();
+                            if (clipboard != lastClipboard)
+                            {
+                                lastClipboard = clipboard;
+                                TimeSpan ts = myStopwatch.Elapsed;
+                                ShowNotification("Stopwatch gepauzeerd op", $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
+                                myStopwatch.Stop();
+                            }
+                            break;
                         }
-
-                        break;
-                    }
                     case "resume stopwatch":
-                    {
-                        if (clipboard != lastClipboard)
                         {
-                            lastClipboard = clipboard;
-                            var ts = myStopwatch.Elapsed;
-                            ShowNotification("Stopwatch hervat vanaf",
-                                $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
-                            myStopwatch.Start();
+                            if (clipboard != lastClipboard)
+                            {
+                                lastClipboard = clipboard;
+                                TimeSpan ts = myStopwatch.Elapsed;
+                                ShowNotification("Stopwatch hervat vanaf", $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
+                                myStopwatch.Start();
+                            }
+                            break;
                         }
-
-                        break;
-                    }
-                    case "stop stopwatch":
-                    {
-                        if (lastClipboard is object)
+                    case "stop stopwatch": //stop
                         {
-                            lastClipboard = null;
-                            myStopwatch.Stop();
-                            var ts = myStopwatch.Elapsed;
-                            ShowNotification("Elapsed time",
-                                $"{ts.Hours} uur, {ts.Minutes} minuten, {ts.Seconds}secondes");
+                            if (lastClipboard is object)
+                            {
+                                lastClipboard = null;
+                                myStopwatch.Stop();
+                                TimeSpan ts = myStopwatch.Elapsed;
+                                ShowNotification("Elapsed time", $"{ts.Hours} uur, {ts.Minutes} minuten, {ts.Seconds}secondes");
+                            }
+                            break;
                         }
-
-                        break;
-                    }
                 }
             }
 
             return false;
-        }
-
-        private void ShowNotification(string question, string answer)
-        {
-            form1.ShowNotification(question, answer);
         }
     }
 }

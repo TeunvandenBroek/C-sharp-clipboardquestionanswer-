@@ -1,24 +1,16 @@
-﻿using System.Globalization;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
-
-namespace it
+﻿namespace it
 {
+    using System.Globalization;
+    using System.Text.RegularExpressions;
+    using System.Windows.Forms;
+
     public class ConvertActions : IAction
     {
         private readonly Form1 form1;
 
-        private readonly Regex unitRegex =
-            new Regex("(?<number>^[0-9]+([.,][0-9]{1,3})?)(\\s*)(?<from>[a-z]+[2-3]?) to (?<to>[a-z]+[2-3]?)");
-
         public ConvertActions(Form1 form1)
         {
             this.form1 = form1;
-        }
-
-        public bool TryExecute(string clipboardText)
-        {
-            return ConvertUnits(clipboardText);
         }
 
         private void ShowNotification(string question, string answer)
@@ -26,13 +18,22 @@ namespace it
             form1.ShowNotification(question, answer);
         }
 
+        private readonly Regex unitRegex = new Regex("(?<number>^[0-9]+([.,][0-9]{1,3})?)(\\s*)(?<from>[a-z]+[2-3]?) to (?<to>[a-z]+[2-3]?)");
+
+        public bool TryExecute(string clipboardText)
+        {
+            return ConvertUnits(clipboardText);
+        }
         private bool ConvertUnits(string clipboardText)
         {
-            var matches = unitRegex.Match(clipboardText);
-            if (!matches.Success) return false;
-            var number = double.Parse(matches.Groups["number"].Value);
-            var from = matches.Groups["from"].Value;
-            var to = matches.Groups["to"].Value;
+            Match matches = unitRegex.Match(clipboardText);
+            if (!matches.Success)
+            {
+                return false;
+            }
+            double number = double.Parse(matches.Groups["number"].Value);
+            string from = matches.Groups["from"].Value;
+            string to = matches.Groups["to"].Value;
             double meter = 0, gram = 0, liter = 0, oppervlakte = 0;
             switch (from)
             {
@@ -162,7 +163,6 @@ namespace it
                 default:
                     return false;
             }
-
             // oppervlakte eenheden
             double result;
             switch (to) // naar
