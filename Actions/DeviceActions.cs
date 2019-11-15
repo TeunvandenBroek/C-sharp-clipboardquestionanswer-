@@ -6,7 +6,6 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
-using System.Security;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -252,7 +251,7 @@ namespace it.Actions
             }
 
 
-            return null;
+            return new QuestionAnswer();
         }
 
         private bool disposed = false;
