@@ -15,7 +15,7 @@ namespace it
     {
         // notify icon
         ControlContainer container = new ControlContainer();
-        private NotifyIcon notifyIcon = null;
+        private readonly NotifyIcon notifyIcon = null;
         private readonly List<Question> questionList = Questions.LoadQuestions();
 
         public Bootstrap()
