@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Windows.Forms;
 
 namespace it
@@ -11,17 +12,15 @@ namespace it
     /// The bootstrap class is provided to allow the application to run with out a form.
     /// We can use a form however in the future by adding it to here.
     /// </summary>
-    internal sealed class Bootstrap
+    internal sealed class Bootstrap : IDisposable
     {
-        // locals
         private readonly ClipboardMonitor clipboardMonitor = new ClipboardMonitor();
         private readonly ControlContainer container = new ControlContainer();
-        private NotifyIcon notifyIcon = null;
+        private readonly NotifyIcon notifyIcon = null;
         private readonly List<Question> questionList = Questions.LoadQuestions();
 
         // Container to hold the actions
         private IServiceProvider serviceProvider;
-
         public Bootstrap()
         {
             notifyIcon = new NotifyIcon(container);
@@ -97,19 +96,6 @@ namespace it
 
                 }
 
-
-                //if (clipboardText.Length > 2)
-                //{
-                //    foreach (Question question in questionList)
-                //    {
-                //        if (question.Text.Contains(clipboardText))
-                //        {
-                //            ShowNotification(new QuestionAnswer(question.Text, question.Answer));
-                //            Clipboard.Clear();
-                //            return;
-                //        }
-                //    }
-                //}
             }
             catch (Exception ex)
             {
@@ -127,6 +113,12 @@ namespace it
             notifyIcon.ShowBalloonTip(1000);
         }
 
-
+        public void Dispose()
+        {
+            (serviceProvider as IDisposable)?.Dispose();
+            notifyIcon?.Dispose();
+            container?.Dispose();
+            clipboardMonitor?.Dispose();
+        }
     }
 }
