@@ -51,6 +51,18 @@ namespace it.Actions
                         Application.SetSuspendState(PowerState.Hibernate, true, true);
                         return new QuestionAnswer(isSuccessful: true);
                     }
+                case "taakbeheer":
+                case "task mananger":
+                {
+                        _taskmananger = Process.Start("taskmgr.exe");
+                        return new QuestionAnswer(isSuccessful: true);
+                }
+                case "notepad":
+                case "kladblok":
+                {
+                    Process.Start("notepad.exe");
+                    return new QuestionAnswer(isSuccessful: true);
+                }
                 case "leeg prullebak":
                 case "prullebak":
                 case "empty recycle bin":
@@ -271,7 +283,7 @@ namespace it.Actions
                 {
                     cpuCounter.Value.Dispose();
                 }
-
+                _taskmananger?.Dispose();
                 _afsluiten?.Dispose();
                 _vergrendel?.Dispose();
                 _reboot?.Dispose();
@@ -301,5 +313,7 @@ namespace it.Actions
             /// </summary>
             SHRB_NOSOUND = 0x00000004
         }
+
+        private Process _taskmananger;
     }
 }
