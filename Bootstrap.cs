@@ -14,7 +14,7 @@ namespace it
     internal sealed class Bootstrap
     {
         // notify icon
-        ControlContainer container = new ControlContainer();
+        private readonly ControlContainer container = new ControlContainer();
         private readonly NotifyIcon notifyIcon = null;
         private readonly List<Question> questionList = Questions.LoadQuestions();
 
@@ -52,10 +52,9 @@ namespace it
                 Type actionInterfaceType = typeof(IAction);
 
                 // get all the classes that implement the interface
-                IEnumerable<Type> actionImplementedTypes = AppDomain.CurrentDomain.GetAssemblies()
+                     IEnumerable<Type> actionImplementedTypes = AppDomain.CurrentDomain.GetAssemblies()
                     .SelectMany(s => s.GetTypes())
-                    .Where(p => p != actionInterfaceType)
-                    .Where(p => actionInterfaceType.IsAssignableFrom(p));
+                    .Where(p => p != actionInterfaceType && actionInterfaceType.IsAssignableFrom(p));
 
                 foreach (Type type in actionImplementedTypes)
                 {
