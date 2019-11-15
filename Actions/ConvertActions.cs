@@ -5,17 +5,18 @@ using System.Windows.Forms;
 namespace it.Actions
 {
 
-    internal class ConvertActions : IAction
+    internal class ConvertActions : ActionBase
     {
         private readonly Regex unitRegex = new Regex("(?<number>^[0-9]+([.,][0-9]{1,3})?)(\\s*)(?<from>[a-z]+[2-3]?) to (?<to>[a-z]+[2-3]?)");
 
-        QuestionAnswer IAction.TryExecute(string clipboardText)
+
+        override public QuestionAnswer TryExecute(string clipboardText)
         {
             Match matches = unitRegex.Match(clipboardText);
 
             if (!matches.Success)
             {
-                return new QuestionAnswer();
+                return new QuestionAnswer(isProcessed: false);
             }
 
             double number = double.Parse(matches.Groups["number"].Value);
@@ -148,7 +149,7 @@ namespace it.Actions
                     oppervlakte = number * 1000000;
                     break;
                 default:
-                    return null;
+                    return new QuestionAnswer();
             }
 
             // oppervlakte eenheden (area units)
@@ -281,7 +282,7 @@ namespace it.Actions
                     result = oppervlakte / 1000000;
                     break;
                 default:
-                    return null;
+                    return new QuestionAnswer();
             }
 
             Clipboard.SetText(result.ToString(CultureInfo.CurrentCulture));

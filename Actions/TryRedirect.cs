@@ -4,7 +4,7 @@
 
     public class TryRedirect : IAction
     {
-        QuestionAnswer IAction.TryExecute(string clipboardText)
+        public QuestionAnswer TryExecute(string clipboardText)
         {
             switch (clipboardText)
             {
@@ -15,7 +15,7 @@
                     }
 
             }
-            return new QuestionAnswer(isSuccessful: true);
+            return new QuestionAnswer(isProcessed: false);
         }
     }
 }

@@ -23,12 +23,12 @@ namespace it.Actions
                { "%", (a, b) => a / b * 100 },
             };
 
-        QuestionAnswer IAction.TryExecute(string clipboardText)
+        public QuestionAnswer TryExecute(string clipboardText)
         {
             Match match = mathRegex.Match(clipboardText.Replace(',', '.'));
             if (!match.Success)
             {
-                return new QuestionAnswer(isSuccessful: true);
+                return new QuestionAnswer(isProcessed: false);
             }
 
             string[] operators = (from Capture capture

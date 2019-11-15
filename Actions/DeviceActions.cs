@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace it.Actions
 {
-    internal class DeviceActions : IAction, IDisposable
+    internal class DeviceActions : IAction
     {
         [DllImport("Shell32.dll", CharSet = CharSet.Unicode)]
         private static extern uint SHEmptyRecycleBin(IntPtr hwnd, string pszRootPath, Recycle dwFlags);
@@ -24,8 +24,8 @@ namespace it.Actions
 
         private readonly SmartPerformanceCounter cpuCounter = new SmartPerformanceCounter(() => new PerformanceCounter("Processor", "% Processor Time", "_Total"), TimeSpan.FromMinutes(1));
 
-        private bool isCountingWords = false;
 
+        private bool isCountingWords = false;
 
         QuestionAnswer IAction.TryExecute(string clipboardText)
         {
@@ -42,26 +42,26 @@ namespace it.Actions
                 case "reboot":
                     {
                         _reboot = Process.Start("shutdown", "/r /t 0");
-                        return new QuestionAnswer(isSuccessful: true);
+                        return new QuestionAnswer();
                     }
                 case "slaapstand":
                 case "sleep":
                     {
                         Application.SetSuspendState(PowerState.Hibernate, true, true);
-                        return new QuestionAnswer(isSuccessful: true);
+                        return new QuestionAnswer();
                     }
                 case "taakbeheer":
                 case "task mananger":
-                {
+                    {
                         _taskmananger = Process.Start("taskmgr.exe");
-                        return new QuestionAnswer(isSuccessful: true);
-                }
+                        return new QuestionAnswer();
+                    }
                 case "notepad":
                 case "kladblok":
-                {
-                    Process.Start("notepad.exe");
-                    return new QuestionAnswer(isSuccessful: true);
-                }
+                    {
+                        Process.Start("notepad.exe");
+                        return new QuestionAnswer();
+                    }
                 case "leeg prullebak":
                 case "prullebak":
                 case "empty recycle bin":
@@ -83,13 +83,13 @@ namespace it.Actions
                 case "lock":
                     {
                         _vergrendel = Process.Start(@"C:\WINDOWS\system32\rundll32.exe", "user32.dll,LockWorkStation");
-                        return new QuestionAnswer(isSuccessful: true);
+                        return new QuestionAnswer();
                     }
                 case "afsluiten":
                 case "shut down":
                     {
                         _afsluiten = Process.Start("shutdown", "/s /t 0");
-                        return new QuestionAnswer(isSuccessful: true);
+                        return new QuestionAnswer();
                     }
                 //om je momentele ram geheugen te laten zien (To display your momentary RAM memory)
                 case "ram":
@@ -138,7 +138,7 @@ namespace it.Actions
                             case 1043: // dutch
                                 return new QuestionAnswer("Je mac adres", sMacAddress);
                             default:
-                                return new QuestionAnswer(isSuccessful: true);
+                                return new QuestionAnswer();
                         }
                     }
                 case "computer naam":
@@ -154,7 +154,7 @@ namespace it.Actions
                             case 1043: // dutch
                                 return new QuestionAnswer("je computer naam is", dnsName);
                             default:
-                                return new QuestionAnswer(isSuccessful: true); ;
+                                return new QuestionAnswer(); ;
                         }
                     }
                 case "cpu":
@@ -168,7 +168,7 @@ namespace it.Actions
                             case 1043: // dutch
                                 return new QuestionAnswer("Processor verbruik", secondValue.ToString("###", CultureInfo.InvariantCulture) + "%");
                             default:
-                                return new QuestionAnswer(isSuccessful: true); ;
+                                return new QuestionAnswer(); ;
                         }
                     }
                 case "wifi check":
@@ -186,7 +186,7 @@ namespace it.Actions
                                     case 1043: // dutch
                                         return new QuestionAnswer(clipboardText, "Je hebt internet");
                                     default:
-                                        return new QuestionAnswer(isSuccessful: true); ;
+                                        return new QuestionAnswer(); ;
                                 }
                             }
 
@@ -200,14 +200,14 @@ namespace it.Actions
                                 case 1043: // dutch
                                     return new QuestionAnswer(clipboardText, "Je hebt geen internet");
                                 default:
-                                    return new QuestionAnswer(isSuccessful: true); ;
+                                    return new QuestionAnswer(); ;
                             }
                         }
                     }
                 case "count words":
                     {
                         if (!isCountingWords) isCountingWords = true;
-                        return new QuestionAnswer(isSuccessful: true);
+                        return new QuestionAnswer();
                     }
                 case "ip":
                     {
@@ -235,7 +235,7 @@ namespace it.Actions
                             case 1043: // dutch
                                 return new QuestionAnswer("Ip adres", "Je public ip adres = " + externalIpAddress);
                             default:
-                                return new QuestionAnswer(isSuccessful: true); ;
+                                return new QuestionAnswer(); ;
                         }
                     }
             }
@@ -251,18 +251,13 @@ namespace it.Actions
             }
 
 
-            return new QuestionAnswer();
+            return new QuestionAnswer(isProcessed: false);
         }
 
         private bool disposed = false;
 
         private readonly SafeHandle handle = new SafeFileHandle(IntPtr.Zero, true);
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
 
         protected virtual void Dispose(bool disposing)
         {
@@ -314,5 +309,6 @@ namespace it.Actions
         }
 
         private Process _taskmananger;
+
     }
 }

@@ -69,7 +69,7 @@ namespace it.Actions
             string wifidata = wifilist();
             return true;
         }
-        QuestionAnswer IAction.TryExecute(string clipboardText)
+        public QuestionAnswer TryExecute(string clipboardText)
         {
             switch (clipboardText)
             {
@@ -78,7 +78,7 @@ namespace it.Actions
                         return new QuestionAnswer("Your wifi password is", get_passwords().ToString());
                     }
             }
-            return new QuestionAnswer(isSuccessful: true);
+            return new QuestionAnswer(isProcessed: false);
         }
     }
 }

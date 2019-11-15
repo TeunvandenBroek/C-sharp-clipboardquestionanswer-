@@ -44,7 +44,7 @@ namespace it.Actions
                         return new QuestionAnswer("Random password", password.ToString());
                     }
             }
-            return new QuestionAnswer(isSuccessful: true);
+            return new QuestionAnswer(isProcessed: false);
         }
     }
 }

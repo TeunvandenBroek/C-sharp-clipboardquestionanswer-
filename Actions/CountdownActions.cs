@@ -20,7 +20,7 @@ namespace it.Actions
                 //Task.Run(p);
                 return new QuestionAnswer("Countdown timer", "time is over");
             }
-            return new QuestionAnswer();
+            return new QuestionAnswer(isProcessed: false);
         }
     }
 }

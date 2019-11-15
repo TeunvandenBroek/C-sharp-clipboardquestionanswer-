@@ -11,28 +11,33 @@ namespace it.Actions
             "dd.MM.yyyy",
             "dd-MM-yyyy"
         };
+        public int Priority => 0;
 
-        QuestionAnswer IAction.TryExecute(string clipboardText)
+        public QuestionAnswer TryExecute(string clipboardText)
         {
+            QuestionAnswer questionAnswer = new QuestionAnswer(isProcessed: false);
+
             if (DateTime.TryParseExact(clipboardText, DateFormats, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out DateTime newDate))
             {
-                if (prevDate is object)
+                questionAnswer.IsProcessed = true;
+
+                if (prevDate.HasValue)
                 {
                     TimeSpan? difference = newDate - prevDate;
-                    if (difference is object)
+                    if (difference.HasValue)
                     {
-                        return new QuestionAnswer("Days between:", difference.Value.Days.ToString(CultureInfo.InvariantCulture));
+                        prevDate = null;
+                        questionAnswer.Question = "Days between:";
+                        questionAnswer.Answer = difference.Value.Days.ToString(CultureInfo.InvariantCulture);
                     }
-                    prevDate = null;
                 }
                 else
                 {
                     prevDate = newDate;
                 }
-                return new QuestionAnswer(isSuccessful: true);
             }
-            prevDate = null;
-            return new QuestionAnswer(isSuccessful: true);
+
+            return questionAnswer;
         }
     }
 }
