@@ -62,7 +62,7 @@ namespace it
                     IAction action = (IAction)Activator.CreateInstance(type);
                     QuestionAnswer questionAnswer = action.TryExecute(clipboardText);
                     if (!questionAnswer.IsSuccessful) break;
-                    if (!String.IsNullOrWhiteSpace(questionAnswer.Answer) || !String.IsNullOrWhiteSpace(questionAnswer.Answer))
+                    if (!String.IsNullOrWhiteSpace(questionAnswer.Question) || !String.IsNullOrWhiteSpace(questionAnswer.Answer))
                     {
                         ShowNotification(questionAnswer);
                         Clipboard.Clear();
