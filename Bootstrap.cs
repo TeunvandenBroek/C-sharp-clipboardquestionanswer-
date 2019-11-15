@@ -13,8 +13,9 @@ namespace it
     /// </summary>
     internal sealed class Bootstrap
     {
-        // notify icon
-        ControlContainer container = new ControlContainer();
+        // locals
+        private readonly ClipboardMonitor clipboardMonitor = new ClipboardMonitor();
+        private readonly ControlContainer container = new ControlContainer();
         private NotifyIcon notifyIcon = null;
         private readonly List<Question> questionList = Questions.LoadQuestions();
 
@@ -27,7 +28,10 @@ namespace it
             notifyIcon.Visible = true;
 
             ConfigureDependancies();
+
+            clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
         }
+
 
         private void ConfigureDependancies()
         {
@@ -53,8 +57,7 @@ namespace it
         internal void Startup()
         {
             // monitor the clipboard
-            ClipboardMonitor clipboardMonitor = new ClipboardMonitor();
-            clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
+
         }
 
         private void ClipboardMonitor_ClipboardChanged(object sender, ClipboardChangedEventArgs e)
@@ -74,17 +77,24 @@ namespace it
             {
                 foreach (IAction action in serviceProvider.GetServices<IAction>())
                 {
-                    QuestionAnswer questionAnswer = action.TryExecute(clipboardText);
+                    // disconnect events from the clipboard.
+                    clipboardMonitor.ClipboardChanged -= ClipboardMonitor_ClipboardChanged;
+                    // run the action
+                    ActionResult actionResult = action.TryExecute(clipboardText);
+                    // re attach the event
+                    clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
+
                     // if this action processed the command, exit the loop.
-                    if (questionAnswer.IsProcessed)
+                    if (actionResult.IsProcessed)
                     {
-                        if (!String.IsNullOrWhiteSpace(questionAnswer.Question) || !String.IsNullOrWhiteSpace(questionAnswer.Answer))
+                        if (!String.IsNullOrWhiteSpace(actionResult.Title) || !String.IsNullOrWhiteSpace(actionResult.Description))
                         {
-                            ShowNotification(questionAnswer);
+                            ShowNotification(actionResult);
                             Clipboard.Clear();
                         }
                         break;
                     }
+
                 }
 
 
@@ -108,11 +118,11 @@ namespace it
 
         }
 
-        private void ShowNotification(Actions.QuestionAnswer questionAnswer)
+        private void ShowNotification(ActionResult actionResult)
         {
             notifyIcon.Icon = SystemIcons.Exclamation;
-            notifyIcon.BalloonTipTitle = questionAnswer.Question;
-            notifyIcon.BalloonTipText = questionAnswer.Answer;
+            notifyIcon.BalloonTipTitle = actionResult.Title;
+            notifyIcon.BalloonTipText = actionResult.Description;
             notifyIcon.BalloonTipIcon = ToolTipIcon.Error;
             notifyIcon.ShowBalloonTip(1000);
         }

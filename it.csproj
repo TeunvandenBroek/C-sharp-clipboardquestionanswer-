@@ -174,7 +174,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Actions\ActionNotificationEventHandler.cs" />
     <Compile Include="Actions\ConvertActions.cs" />
     <Compile Include="Actions\CountdownActions.cs" />
     <Compile Include="Actions\IAction.cs" />

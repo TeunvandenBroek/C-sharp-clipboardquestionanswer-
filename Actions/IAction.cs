@@ -1,28 +1,26 @@
 ﻿namespace it.Actions
 {
-    public class QuestionAnswer
+    public class ActionResult
     {
-        internal string Question { get; set; }
-        internal string Answer { get; set; }
+        internal string Title { get; set; }
+        internal string Description { get; set; }
         internal bool IsProcessed { get; set; }
-        internal string ClipboardText { get; set; }
 
-        public QuestionAnswer(string quesiton = null, string answer = null, string clipboardText = null, bool isProcessed = false)
+        public ActionResult(string title = null, string description = null, bool isProcessed = true)
         {
-            Question = quesiton;
-            Answer = answer;
-            ClipboardText = clipboardText;
+            Title = title;
+            Description = description;
             IsProcessed = isProcessed;
         }
     }
 
     internal interface IAction
     {
-        public QuestionAnswer TryExecute(string clipboardText);
+        public ActionResult TryExecute(string clipboardText);
     }
 
     internal abstract class ActionBase : IAction
     {
-        public abstract QuestionAnswer TryExecute(string clipboardText);
+        public abstract ActionResult TryExecute(string clipboardText);
     }
 }

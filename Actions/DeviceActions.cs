@@ -13,6 +13,8 @@ namespace it.Actions
 {
     internal class DeviceActions : IAction
     {
+        #region DLLImports
+
         [DllImport("Shell32.dll", CharSet = CharSet.Unicode)]
         private static extern uint SHEmptyRecycleBin(IntPtr hwnd, string pszRootPath, Recycle dwFlags);
 
@@ -20,16 +22,16 @@ namespace it.Actions
         //[DllImport("ntdll.dll", SetLastError = true)]
         //internal static extern bool RtlGetVersion(ref Form1.Osversioninfoex versionInfo);
 
+        #endregion DLLImports
+
         private readonly SmartPerformanceCounter ramCounter = new SmartPerformanceCounter(() => new PerformanceCounter("Memory", "Available MBytes"), TimeSpan.FromMinutes(1));
-
         private readonly SmartPerformanceCounter cpuCounter = new SmartPerformanceCounter(() => new PerformanceCounter("Processor", "% Processor Time", "_Total"), TimeSpan.FromMinutes(1));
-
-
         private bool isCountingWords = false;
 
-        QuestionAnswer IAction.TryExecute(string clipboardText)
+        ActionResult IAction.TryExecute(string clipboardText)
         {
             CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
+            ActionResult actionResult = new ActionResult(title: clipboardText);
 
             switch (clipboardText)
             {
@@ -42,25 +44,25 @@ namespace it.Actions
                 case "reboot":
                     {
                         _reboot = Process.Start("shutdown", "/r /t 0");
-                        return new QuestionAnswer();
+                        break;
                     }
                 case "slaapstand":
                 case "sleep":
                     {
                         Application.SetSuspendState(PowerState.Hibernate, true, true);
-                        return new QuestionAnswer();
+                        break;
                     }
                 case "taakbeheer":
                 case "task mananger":
                     {
                         _taskmananger = Process.Start("taskmgr.exe");
-                        return new QuestionAnswer();
+                        break;
                     }
                 case "notepad":
                 case "kladblok":
                     {
                         Process.Start("notepad.exe");
-                        return new QuestionAnswer();
+                        break;
                     }
                 case "leeg prullebak":
                 case "prullebak":
@@ -72,24 +74,25 @@ namespace it.Actions
                         switch (currentCulture.LCID)
                         {
                             case 1033: // english-us
-                                return new QuestionAnswer(clipboardText, "Recycling bin emptied successfully");
+                                actionResult.Description = "Recycling bin emptied successfully";
+                                break;
                             case 1043: // dutch
-                                return new QuestionAnswer(clipboardText, "Prullebak succesvol leeg gemaakt");
-                            default:
-                                return null;
+                                actionResult.Description = "Prullebak succesvol leeg gemaakt";
+                                break;
                         }
+                        break;
                     }
                 case "vergrendel":
                 case "lock":
                     {
                         _vergrendel = Process.Start(@"C:\WINDOWS\system32\rundll32.exe", "user32.dll,LockWorkStation");
-                        return new QuestionAnswer();
+                        break;
                     }
                 case "afsluiten":
                 case "shut down":
                     {
                         _afsluiten = Process.Start("shutdown", "/s /t 0");
-                        return new QuestionAnswer();
+                        break;
                     }
                 //om je momentele ram geheugen te laten zien (To display your momentary RAM memory)
                 case "ram":
@@ -97,12 +100,15 @@ namespace it.Actions
                         switch (currentCulture.LCID)
                         {
                             case 1033: // english-us
-                                return new QuestionAnswer("RAM Memory", ramCounter.Value.NextValue().ToString(CultureInfo.InvariantCulture) + " MB of RAM in your system");
+                                actionResult.Title = "RAM Memory";
+                                actionResult.Description = ramCounter.Value.NextValue().ToString(CultureInfo.InvariantCulture) + " MB of RAM in your system";
+                                break;
                             case 1043: // dutch
-                                return new QuestionAnswer("Ram geheugen", ramCounter.Value.NextValue().ToString(CultureInfo.InvariantCulture) + " MB ram-geheugen over in je systeem");
-                            default:
-                                return null;
+                                actionResult.Title = "Ram geheugen";
+                                actionResult.Description = ramCounter.Value.NextValue().ToString(CultureInfo.InvariantCulture) + " MB ram-geheugen over in je systeem";
+                                break;
                         }
+                        break;
                     }
                 case "windows versie":
                 case "windows version":
@@ -110,12 +116,15 @@ namespace it.Actions
                         switch (currentCulture.LCID)
                         {
                             case 1033: // english-us
-                                return new QuestionAnswer("Your Windows version", $"Windows Version {Environment.OSVersion.Version}");
+                                actionResult.Title = "Your Windows version";
+                                actionResult.Description = $"Windows Version {Environment.OSVersion.Version}";
+                                break;
                             case 1043: // dutch
-                                return new QuestionAnswer("Je windows versie", $"Windows Version {Environment.OSVersion.Version}");
-                            default:
-                                return null;
+                                actionResult.Title = "Je windows versie";
+                                actionResult.Description = $"Windows Version {Environment.OSVersion.Version}";
+                                break;
                         }
+                        break;
                     }
                 case "mac-adres":
                 case "mac":
@@ -134,12 +143,15 @@ namespace it.Actions
                         switch (currentCulture.LCID)
                         {
                             case 1033: // english-us
-                                return new QuestionAnswer("Your MAC Address", sMacAddress);
+                                actionResult.Title = "Your MAC Address";
+                                actionResult.Description = sMacAddress;
+                                break;
                             case 1043: // dutch
-                                return new QuestionAnswer("Je mac adres", sMacAddress);
-                            default:
-                                return new QuestionAnswer();
+                                actionResult.Title = "Je mac adres";
+                                actionResult.Description = sMacAddress;
+                                break;
                         }
+                        break;
                     }
                 case "computer naam":
                 case "computer name":
@@ -150,12 +162,15 @@ namespace it.Actions
                         switch (currentCulture.LCID)
                         {
                             case 1033: // english-us
-                                return new QuestionAnswer("Your MAC Address", dnsName);
+                                actionResult.Title = "Your MAC Address";
+                                actionResult.Description = dnsName;
+                                break;
                             case 1043: // dutch
-                                return new QuestionAnswer("je computer naam is", dnsName);
-                            default:
-                                return new QuestionAnswer(); ;
+                                actionResult.Title = "je computer naam is";
+                                actionResult.Description = dnsName;
+                                break;
                         }
+                        break;
                     }
                 case "cpu":
                     {
@@ -164,12 +179,15 @@ namespace it.Actions
                         switch (currentCulture.LCID)
                         {
                             case 1033: // english-us
-                                return new QuestionAnswer("Processor consumption", secondValue.ToString("###", CultureInfo.InvariantCulture) + "%");
+                                actionResult.Title = "Processor consumption";
+                                actionResult.Description = secondValue.ToString("###", CultureInfo.InvariantCulture) + "%";
+                                break;
                             case 1043: // dutch
-                                return new QuestionAnswer("Processor verbruik", secondValue.ToString("###", CultureInfo.InvariantCulture) + "%");
-                            default:
-                                return new QuestionAnswer(); ;
+                                actionResult.Title = "Processor verbruik";
+                                actionResult.Description = secondValue.ToString("###", CultureInfo.InvariantCulture) + "%";
+                                break;
                         }
+                        break;
                     }
                 case "wifi check":
                 case "heb ik internet?":
@@ -182,32 +200,33 @@ namespace it.Actions
                                 switch (currentCulture.LCID)
                                 {
                                     case 1033: // english-us
-                                        return new QuestionAnswer(clipboardText, "You have Internet");
+                                        actionResult.Description = "You have Internet";
+                                        break;
                                     case 1043: // dutch
-                                        return new QuestionAnswer(clipboardText, "Je hebt internet");
-                                    default:
-                                        return new QuestionAnswer(); ;
+                                        actionResult.Description = "Je hebt internet";
+                                        break;
                                 }
                             }
-
+                            break;
                         }
                         catch
                         {
                             switch (currentCulture.LCID)
                             {
                                 case 1033: // english-us
-                                    return new QuestionAnswer(clipboardText, "You do not have Internet");
+                                    actionResult.Description = "You do not have Internet";
+                                    break;
                                 case 1043: // dutch
-                                    return new QuestionAnswer(clipboardText, "Je hebt geen internet");
-                                default:
-                                    return new QuestionAnswer(); ;
+                                    actionResult.Description = "Je hebt geen internet";
+                                    break;
                             }
                         }
+                        break;
                     }
                 case "count words":
                     {
                         if (!isCountingWords) isCountingWords = true;
-                        return new QuestionAnswer();
+                        break;
                     }
                 case "ip":
                     {
@@ -231,27 +250,38 @@ namespace it.Actions
                         switch (currentCulture.LCID)
                         {
                             case 1033: // english-us
-                                return new QuestionAnswer("IPAddress Address", "Your public IP Address = " + externalIpAddress);
+                                actionResult.Title = "IPAddress Address";
+                                actionResult.Description = "Your public IP Address = " + externalIpAddress;
+                                break;
                             case 1043: // dutch
-                                return new QuestionAnswer("Ip adres", "Je public ip adres = " + externalIpAddress);
-                            default:
-                                return new QuestionAnswer(); ;
+                                actionResult.Title = "Ip adres";
+                                actionResult.Description = "Je public ip adres = " + externalIpAddress;
+                                break;
+                        }
+                        break;
+                    }
+                default:
+                    {           // no command
+                        if (isCountingWords)
+                        {
+                            string[] words = clipboardText.Split(' ');
+                            int numberOfWords = words.Length;
+                            isCountingWords = false;
+                            actionResult.Title = "Number of words are: ";
+                            actionResult.Description = numberOfWords.ToString();
+
+                        }
+                        else
+                        {
+                            actionResult.IsProcessed = false;
                         }
                     }
-            }
-
-            // no command
-            if (isCountingWords)
-            {
-                string[] words = clipboardText.Split(' ');
-                int numberOfWords = words.Length;
-                isCountingWords = false;
-                return new QuestionAnswer("Number of words are: ", numberOfWords.ToString());
+                    break;
 
             }
 
+            return actionResult;
 
-            return new QuestionAnswer(isProcessed: false);
         }
 
         private bool disposed = false;

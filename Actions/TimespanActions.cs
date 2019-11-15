@@ -13,13 +13,13 @@ namespace it.Actions
         };
         public int Priority => 0;
 
-        public QuestionAnswer TryExecute(string clipboardText)
+        public ActionResult TryExecute(string clipboardText)
         {
-            QuestionAnswer questionAnswer = new QuestionAnswer(isProcessed: false);
+            ActionResult actionResult = new ActionResult(isProcessed: false);
 
             if (DateTime.TryParseExact(clipboardText, DateFormats, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out DateTime newDate))
             {
-                questionAnswer.IsProcessed = true;
+                actionResult.IsProcessed = true;
 
                 if (prevDate.HasValue)
                 {
@@ -27,8 +27,8 @@ namespace it.Actions
                     if (difference.HasValue)
                     {
                         prevDate = null;
-                        questionAnswer.Question = "Days between:";
-                        questionAnswer.Answer = difference.Value.Days.ToString(CultureInfo.InvariantCulture);
+                        actionResult.Title = "Days between:";
+                        actionResult.Description = difference.Value.Days.ToString(CultureInfo.InvariantCulture);
                     }
                 }
                 else
@@ -37,7 +37,7 @@ namespace it.Actions
                 }
             }
 
-            return questionAnswer;
+            return actionResult;
         }
     }
 }

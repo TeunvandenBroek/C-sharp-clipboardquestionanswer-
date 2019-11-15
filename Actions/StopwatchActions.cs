@@ -11,8 +11,9 @@ namespace it.Actions
         private Stopwatch myStopwatch;
         private string lastClipboard;
 
-        public QuestionAnswer TryExecute(string clipboardText)
+        public ActionResult TryExecute(string clipboardText)
         {
+            ActionResult actionResult = new ActionResult();
 
             CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
 
@@ -23,7 +24,8 @@ namespace it.Actions
                     {
                         if (myStopwatch?.IsRunning == true)
                         {
-                            return new QuestionAnswer("Stopwatch", "Stopwatch already running");
+                            actionResult.Title = "Stopwatch";
+                            actionResult.Description = "Stopwatch already running";
                         }
                         if (clipboard != lastClipboard)
                         {
@@ -45,11 +47,13 @@ namespace it.Actions
                             switch (currentCulture.LCID)
                             {
                                 case 1033: // english-us
-                                    return new QuestionAnswer("Stopwatch reset to", $"{ts.Hours} hours, {ts.Minutes} minutes,  {ts.Seconds} seconds");
+                                    actionResult.Title = "Stopwatch reset to";
+                                    actionResult.Description = $"{ts.Hours} hours, {ts.Minutes} minutes,  {ts.Seconds} seconds";
+                                    break;
                                 case 1043: // dutch
-                                    return new QuestionAnswer("Stopwatch gereset naar", $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
-                                default:
-                                    return new QuestionAnswer();
+                                    actionResult.Title = "Stopwatch gereset naar";
+                                    actionResult.Description = $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes";
+                                    break;
                             }
                         }
                         break;
@@ -65,11 +69,13 @@ namespace it.Actions
                             switch (currentCulture.LCID)
                             {
                                 case 1033: // english-us
-                                    return new QuestionAnswer("Stopwatch paused on", $"{ts.Hours} hours, {ts.Minutes} minutes,  {ts.Seconds} seconds");
+                                    actionResult.Title = "Stopwatch paused on";
+                                    actionResult.Description = $"{ts.Hours} hours, {ts.Minutes} minutes,  {ts.Seconds} seconds";
+                                    break;
                                 case 1043: // dutch
-                                    return new QuestionAnswer("Stopwatch gepauzeerd op", $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
-                                default:
-                                    return new QuestionAnswer();
+                                    actionResult.Title = "Stopwatch gepauzeerd op";
+                                    actionResult.Description = $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes";
+                                    break;
                             }
                         }
                         break;
@@ -84,11 +90,13 @@ namespace it.Actions
                             switch (currentCulture.LCID)
                             {
                                 case 1033: // english-us
-                                    return new QuestionAnswer("Stopwatch resumed from", $"{ts.Hours} hours, {ts.Minutes} minutes,  {ts.Seconds} seconds");
+                                    actionResult.Title = "Stopwatch resumed from";
+                                    actionResult.Description = $"{ts.Hours} hours, {ts.Minutes} minutes,  {ts.Seconds} seconds";
+                                    break;
                                 case 1043: // dutch
-                                    return new QuestionAnswer("Stopwatch gepauzeerd op", $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
-                                default:
-                                    return new QuestionAnswer();
+                                    actionResult.Title = "Stopwatch gepauzeerd op";
+                                    actionResult.Description = $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes";
+                                    break;
                             }
                         }
                         break;
@@ -103,21 +111,27 @@ namespace it.Actions
                             switch (currentCulture.LCID)
                             {
                                 case 1033: // english-us
-                                    return new QuestionAnswer("Elapsed time", $"{ts.Hours} hours, {ts.Minutes} minutes,  {ts.Seconds} seconds");
+                                    actionResult.Title = "Elapsed time";
+                                    actionResult.Description = $"{ts.Hours} hours, {ts.Minutes} minutes,  {ts.Seconds} seconds";
+                                    break;
                                 case 1043: // dutch
-                                    return new QuestionAnswer("Elapsed time", $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes");
-                                default:
-                                    return new QuestionAnswer();
+                                    actionResult.Title = "Elapsed time";
+                                    actionResult.Description = $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes";
+                                    break;
                             }
                         }
                         else
-                            return new QuestionAnswer(isProcessed: false);
+                            actionResult.IsProcessed = false;
 
+                        break;
                     }
+                default:
+                    actionResult.IsProcessed = false;
+                    break;
             }
 
 
-            return new QuestionAnswer(isProcessed: false);
+            return actionResult;
         }
     }
 }
