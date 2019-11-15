@@ -1,8 +1,8 @@
-﻿using it.Actions;
+using it.Actions;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace it
@@ -13,23 +13,50 @@ namespace it
     /// </summary>
     internal sealed class Bootstrap
     {
-        // notify icon
+        // locals
+        private readonly ClipboardMonitor clipboardMonitor = new ClipboardMonitor();
         private readonly ControlContainer container = new ControlContainer();
-        private readonly NotifyIcon notifyIcon = null;
+        private NotifyIcon notifyIcon = null;
         private readonly List<Question> questionList = Questions.LoadQuestions();
+
+        // Container to hold the actions
+        private IServiceProvider serviceProvider;
 
         public Bootstrap()
         {
             notifyIcon = new NotifyIcon(container);
             notifyIcon.Visible = true;
+
+            ConfigureDependancies();
+
+            clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
+        }
+
+
+        private void ConfigureDependancies()
+        {
+            // Add configure services
+            IServiceCollection serviceDescriptors = new ServiceCollection();
+
+            serviceDescriptors.AddSingleton<IAction, ConvertActions>();
+            serviceDescriptors.AddSingleton<IAction, CountdownActions>();
+            serviceDescriptors.AddSingleton<IAction, DeviceActions>();
+            serviceDescriptors.AddSingleton<IAction, RandomActions>();
+            serviceDescriptors.AddSingleton<IAction, StopwatchActions>();
+            serviceDescriptors.AddSingleton<IAction, TimespanActions>();
+            serviceDescriptors.AddSingleton<IAction, TimezoneActions>();
+            serviceDescriptors.AddSingleton<IAction, TryCalcBmi>();
+            serviceDescriptors.AddSingleton<IAction, TryRedirect>();
+            serviceDescriptors.AddSingleton<IAction, TryWifiPass>();
+            serviceDescriptors.AddSingleton<IAction, MathActions>();
+
+            serviceProvider = serviceDescriptors.BuildServiceProvider();
         }
 
 
         internal void Startup()
         {
             // monitor the clipboard
-            ClipboardMonitor clipboardMonitor = new ClipboardMonitor();
-            clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
 
         }
 
@@ -48,40 +75,41 @@ namespace it
         {
             try
             {
-                // get the interface type
-                Type actionInterfaceType = typeof(IAction);
-
-                // get all the classes that implement the interface
-                     IEnumerable<Type> actionImplementedTypes = AppDomain.CurrentDomain.GetAssemblies()
-                    .SelectMany(s => s.GetTypes())
-                    .Where(p => p != actionInterfaceType && actionInterfaceType.IsAssignableFrom(p));
-
-                foreach (Type type in actionImplementedTypes)
+                foreach (IAction action in serviceProvider.GetServices<IAction>())
                 {
-                    IAction action = (IAction)Activator.CreateInstance(type);
-                    QuestionAnswer questionAnswer = action.TryExecute(clipboardText);
-                    if (!questionAnswer.IsSuccessful) break;
-                    if (!String.IsNullOrWhiteSpace(questionAnswer.Question) || !String.IsNullOrWhiteSpace(questionAnswer.Answer))
-                    {
-                        ShowNotification(questionAnswer);
-                        Clipboard.Clear();
-                        return;
-                    }
-                }
+                    // disconnect events from the clipboard.
+                    clipboardMonitor.ClipboardChanged -= ClipboardMonitor_ClipboardChanged;
+                    // run the action
+                    ActionResult actionResult = action.TryExecute(clipboardText);
+                    // re attach the event
+                    clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
 
-
-                if (clipboardText.Length > 2)
-                {
-                    foreach (Question question in questionList)
+                    // if this action processed the command, exit the loop.
+                    if (actionResult.IsProcessed)
                     {
-                        if (question.Text.Contains(clipboardText))
+                        if (!String.IsNullOrWhiteSpace(actionResult.Title) || !String.IsNullOrWhiteSpace(actionResult.Description))
                         {
-                            ShowNotification(new QuestionAnswer(question.Text, question.Answer));
+                            ShowNotification(actionResult);
                             Clipboard.Clear();
-                            return;
                         }
+                        break;
                     }
+
                 }
+
+
+                //if (clipboardText.Length > 2)
+                //{
+                //    foreach (Question question in questionList)
+                //    {
+                //        if (question.Text.Contains(clipboardText))
+                //        {
+                //            ShowNotification(new QuestionAnswer(question.Text, question.Answer));
+                //            Clipboard.Clear();
+                //            return;
+                //        }
+                //    }
+                //}
             }
             catch (Exception ex)
             {
@@ -90,11 +118,11 @@ namespace it
 
         }
 
-        private void ShowNotification(Actions.QuestionAnswer questionAnswer)
+        private void ShowNotification(ActionResult actionResult)
         {
             notifyIcon.Icon = SystemIcons.Exclamation;
-            notifyIcon.BalloonTipTitle = questionAnswer.Question;
-            notifyIcon.BalloonTipText = questionAnswer.Answer;
+            notifyIcon.BalloonTipTitle = actionResult.Title;
+            notifyIcon.BalloonTipText = actionResult.Description;
             notifyIcon.BalloonTipIcon = ToolTipIcon.Error;
             notifyIcon.ShowBalloonTip(1000);
         }

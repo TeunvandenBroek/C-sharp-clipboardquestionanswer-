@@ -4,18 +4,18 @@
 
     public class TryRedirect : IAction
     {
-        QuestionAnswer IAction.TryExecute(string clipboardText)
+        public ActionResult TryExecute(string clipboardText)
         {
             switch (clipboardText)
             {
                 case "ga naar google":
                     {
                         Process.Start("google.com");
-                        return new QuestionAnswer();
+                        return new ActionResult(isProcessed: true);
                     }
 
             }
-            return new QuestionAnswer(isSuccessful: true);
+            return new ActionResult(isProcessed: false);
         }
     }
 }

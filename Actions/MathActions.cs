@@ -23,35 +23,42 @@ namespace it.Actions
                { "%", (a, b) => a / b * 100 },
             };
 
-        QuestionAnswer IAction.TryExecute(string clipboardText)
+        public ActionResult TryExecute(string clipboardText)
         {
+            ActionResult actionResult = new ActionResult(title: clipboardText);
+
             Match match = mathRegex.Match(clipboardText.Replace(',', '.'));
             if (!match.Success)
             {
-                return new QuestionAnswer(isSuccessful: true);
+                actionResult.IsProcessed = false;
             }
-
-            string[] operators = (from Capture capture
-                                  in match.Groups["operator"].Captures
-                                  select capture.Value).ToArray();
-
-            double lhs = double.Parse(match.Groups["lhs"].Value, CultureInfo.InvariantCulture);
-
-            double[] rhss = (from Capture capture
-                             in match.Groups["rhs"].Captures
-                             select double.Parse(capture.Value, CultureInfo.InvariantCulture)).ToArray();
-
-            double answer = lhs;
-
-            int i = 0;
-
-            for (int i2 = 0; i2 < rhss.Length; i2++)
+            else
             {
-                answer = binaryOperators[operators[i++]](answer, rhss[i2]);
+
+                string[] operators = (from Capture capture
+                                      in match.Groups["operator"].Captures
+                                      select capture.Value).ToArray();
+
+                double lhs = double.Parse(match.Groups["lhs"].Value, CultureInfo.InvariantCulture);
+
+                double[] rhss = (from Capture capture
+                                 in match.Groups["rhs"].Captures
+                                 select double.Parse(capture.Value, CultureInfo.InvariantCulture)).ToArray();
+
+                double answer = lhs;
+
+                int i = 0;
+
+                for (int i2 = 0; i2 < rhss.Length; i2++)
+                {
+                    answer = binaryOperators[operators[i++]](answer, rhss[i2]);
+                }
+
+                Clipboard.SetText(answer.ToString(CultureInfo.CurrentCulture));
+                actionResult.Description = answer.ToString(CultureInfo.CurrentCulture);
             }
 
-            Clipboard.SetText(answer.ToString(CultureInfo.CurrentCulture));
-            return new QuestionAnswer(clipboardText, answer.ToString(CultureInfo.CurrentCulture));
+            return actionResult;
         }
     }
 }

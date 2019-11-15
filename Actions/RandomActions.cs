@@ -8,9 +8,10 @@ namespace it.Actions
     internal class RandomActions : IAction
     {
         private readonly Random _random = new Random();
-        QuestionAnswer IAction.TryExecute(string clipboardText)
+        ActionResult IAction.TryExecute(string clipboardText)
         {
             CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
+            ActionResult actionResult = new ActionResult();
 
             switch (clipboardText)
             {
@@ -22,13 +23,15 @@ namespace it.Actions
                         switch (currentCulture.LCID)
                         {
                             case 1033: // english-us
-                                return new QuestionAnswer("heads or tails?", isHeads ? "Heads" : "Tails");
+                                actionResult.Title = "heads or tails?";
+                                actionResult.Description = isHeads ? "Heads" : "Tails";
+                                break;
                             case 1043: // dutch
-                                return new QuestionAnswer("Kop of munt?", isHeads ? "Kop" : "Munt");
-                            default:
-                                return null;
+                                actionResult.Title = "Kop of munt?";
+                                actionResult.Description = isHeads ? "Kop" : "Munt";
+                                break;
                         }
-
+                        break;
                     }
                 case "random password":
                     {
@@ -41,10 +44,16 @@ namespace it.Actions
                         {
                             password.Append(charAvailable[_random.Next(charAvailable.Length)]);
                         }
-                        return new QuestionAnswer("Random password", password.ToString());
+                        actionResult.Title = "Random password";
+                        actionResult.Description = password.ToString();
                     }
+                    break;
+                default:
+                    actionResult.IsProcessed = false;
+                    break;
             }
-            return new QuestionAnswer(isSuccessful: true);
+
+            return actionResult;
         }
     }
 }

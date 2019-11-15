@@ -5,8 +5,9 @@ namespace it.Actions
 {
     internal class CountdownActions : IAction
     {
-        QuestionAnswer IAction.TryExecute(string clipboardText)
+        ActionResult IAction.TryExecute(string clipboardText)
         {
+            ActionResult actionResult = new ActionResult();
 
             if (clipboardText.StartsWith("timer") && TimeSpan.TryParse(clipboardText.Replace("timer ", ""), out TimeSpan ts))
             {
@@ -18,9 +19,14 @@ namespace it.Actions
                 //    ShowNotification("Countdown timer", "time is over");
                 //}
                 //Task.Run(p);
-                return new QuestionAnswer("Countdown timer", "time is over");
+                actionResult.Title = "Countdown timer";
+                actionResult.Description = "time is over";
             }
-            return new QuestionAnswer();
+            else
+            {
+                actionResult.IsProcessed = false;
+            }
+            return actionResult;
         }
     }
 }

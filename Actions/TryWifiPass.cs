@@ -69,16 +69,24 @@ namespace it.Actions
             string wifidata = wifilist();
             return true;
         }
-        QuestionAnswer IAction.TryExecute(string clipboardText)
+        public ActionResult TryExecute(string clipboardText)
         {
+            ActionResult actionResult = new ActionResult();
+
             switch (clipboardText)
             {
                 case "wifi password":
                     {
-                        return new QuestionAnswer("Your wifi password is", get_passwords().ToString());
+                        actionResult.Title = "Your wifi password is";
+                        actionResult.Description = get_passwords().ToString();
+                        break;
                     }
+                default:
+                    actionResult.IsProcessed = false;
+                    break;
             }
-            return new QuestionAnswer(isSuccessful: true);
+
+            return actionResult;
         }
     }
 }

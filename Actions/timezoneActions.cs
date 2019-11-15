@@ -1,8 +1,6 @@
 namespace it.Actions
 {
-    using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
 
     public class TimezoneActions : IAction
@@ -10,144 +8,181 @@ namespace it.Actions
 
         private string country;
 
-        QuestionAnswer IAction.TryExecute(string clipboardText)
+        ActionResult IAction.TryExecute(string clipboardText)
         {
+            ActionResult actionResult = new ActionResult();
+
             country = clipboardText.Trim().ToLowerInvariant();
             KeyValuePair<string, Countries.UtcOffset> keyValuePair = TryKeypair();
-            if (keyValuePair.Key != (default))
+            if (keyValuePair.Key == (default))
             {
+                actionResult.IsProcessed = false;
+            }
+            else
+            {
+                actionResult.Title = country;
+
                 switch (keyValuePair.Value)
                 {
                     case Countries.UtcOffset.UtcMinusTwelve:
                         {
-                            return new QuestionAnswer(country, "Dateline Standard Time");
+                            actionResult.Description = "Dateline Standard Time";
+                            break;
                         }
                     case Countries.UtcOffset.UtcMinusEleven:
                         {
-                            return new QuestionAnswer(country, "Samoa Standard Time");
+                            actionResult.Description = "Samoa Standard Time";
+                            break;
                         }
                     case Countries.UtcOffset.UtcMinusTen:
                         {
-                            return new QuestionAnswer(country, "Hawaiian Standard Time");
+                            actionResult.Description = "Hawaiian Standard Time";
+                            break;
                         }
                     case Countries.UtcOffset.UtcMinusNine:
                         {
-                            return new QuestionAnswer(country, "Alaskan Standard Time");
+                            actionResult.Description = "Alaskan Standard Time";
+                            break;
                         }
                     case Countries.UtcOffset.UtcMinusEight:
                         {
-                            return new QuestionAnswer(country, "Pacific Standard Time");
+                            actionResult.Description = "Pacific Standard Time";
+                            break;
                         }
                     case Countries.UtcOffset.UtcMinusSeven:
                         {
-                            return new QuestionAnswer(country, "US Mountain Standard Time");
+                            actionResult.Description = "US Mountain Standard Time";
+                            break;
                         }
                     case Countries.UtcOffset.UtcMinusSix:
                         {
-                            return new QuestionAnswer(country, "Central America Standard Time");
+                            actionResult.Description = "Central America Standard Time";
+                            break;
                         }
                     case Countries.UtcOffset.UtcMinusFive:
                         {
-                            return new QuestionAnswer(country, "SA Pacific Standard Time");
+                            actionResult.Description = "SA Pacific Standard Time";
+                            break;
                         }
                     case Countries.UtcOffset.UtcMinusFour:
                         {
-                            return new QuestionAnswer(country, "Atlantic Standard Time");
+                            actionResult.Description = "Atlantic Standard Time";
+                            break;
                         }
                     case Countries.UtcOffset.UtcMinusThreepoinfive:
                         {
-                            return new QuestionAnswer(country, "Newfoundland Standard Time");
+                            actionResult.Description = "Newfoundland Standard Time";
+                            break;
                         }
                     case Countries.UtcOffset.UtcMinusThree:
                         {
-                            return new QuestionAnswer(country, "E. South America Standard Time");
+                            actionResult.Description = "E. South America Standard Time";
+                            break;
                         }
                     case Countries.UtcOffset.UtcMinusTwo:
                         {
-                            return new QuestionAnswer(country, "Mid-Atlantic Standard Time");
+                            actionResult.Description = "Mid-Atlantic Standard Time";
+                            break;
                         }
                     case Countries.UtcOffset.UtcMinusOne:
                         {
-                            return new QuestionAnswer(country, "Cape Verde Standard Time");
+                            actionResult.Description = "Cape Verde Standard Time";
+                            break;
                         }
                     case Countries.UtcOffset.UtcZero:
                         {
-                            return new QuestionAnswer(country, "GMT Standard Time");
+                            actionResult.Description = "GMT Standard Time";
+                            break;
                         }
                     case Countries.UtcOffset.UtcPlusOne:
                         {
-                            return new QuestionAnswer(country, DateTime.Now.ToString("HH:mm", CultureInfo.CurrentCulture));
+                            actionResult.Description = "Central European Time";
+                            break;
                         }
                     case Countries.UtcOffset.UtcPlusTwo:
                         {
-                            return new QuestionAnswer(country, "Jordan Standard Time");
+                            actionResult.Description = "Jordan Standard Time";
+                            break;
                         }
                     case Countries.UtcOffset.UtcPlusThree:
                         {
-                            return new QuestionAnswer(country, "Arabic Standard Time");
+                            actionResult.Description = "Arabic Standard Time";
+                            break;
                         }
                     case Countries.UtcOffset.UtcPlusThreepoinfive:
                         {
-                            return new QuestionAnswer(country, "Iran Standard Time");
+                            actionResult.Description = "Iran Standard Time";
+                            break;
                         }
                     case Countries.UtcOffset.UtcPlusFour:
                         {
-                            return new QuestionAnswer(country, "Mauritius Standard Time");
+                            actionResult.Description = "Mauritius Standard Time";
+                            break;
                         }
                     case Countries.UtcOffset.UtcPlusFourpointfive:
                         {
-                            return new QuestionAnswer(country, "Afghanistan Standard Time");
+                            actionResult.Description = "Afghanistan Standard Time";
+                            break;
                         }
                     case Countries.UtcOffset.UtcPlusFive:
                         {
-                            return new QuestionAnswer(country, "Ekaterinburg Standard Time");
+                            actionResult.Description = "Ekaterinburg Standard Time";
+                            break;
                         }
                     case Countries.UtcOffset.UtcPlusSix:
                         {
-                            return new QuestionAnswer(country, "N. Central Asia Standard Time");
+                            actionResult.Description = "N. Central Asia Standard Time";
+                            break;
                         }
                     case Countries.UtcOffset.UtcPlusSeven:
                         {
-                            return new QuestionAnswer(country, "SE Asia Standard Time");
+                            actionResult.Description = "SE Asia Standard Time";
+                            break;
                         }
                     case Countries.UtcOffset.UtcPlusEight:
                         {
-                            return new QuestionAnswer(country, "China Standard Time ");
+                            actionResult.Description = "China Standard Time ";
+                            break;
                         }
                     case Countries.UtcOffset.UtcPlusNine:
                         {
-                            return new QuestionAnswer(country, "Korea Standard Time");
+                            actionResult.Description = "Korea Standard Time";
+                            break;
                         }
                     case Countries.UtcOffset.UtcPlusTen:
                         {
-                            return new QuestionAnswer(country, "E. Australia Standard Time");
+                            actionResult.Description = "E. Australia Standard Time";
+                            break;
                         }
                     case Countries.UtcOffset.UtcPlusEleven:
                         {
-                            return new QuestionAnswer(country, "Central Pacific Standard Time");
+                            actionResult.Description = "Central Pacific Standard Time";
+                            break;
                         }
                     case Countries.UtcOffset.UtcPlusTwelve:
                         {
-                            return new QuestionAnswer(country, "New Zealand Standard Time");
+                            actionResult.Description = "New Zealand Standard Time";
+                            break;
                         }
                     case Countries.UtcOffset.UtcPlusThirteen:
                         {
-                            return new QuestionAnswer(country, "Tonga Standard Time");
+                            actionResult.Description = "Tonga Standard Time";
+                            break;
                         }
                     case Countries.UtcOffset.UtcPlusFivepointfive:
                         {
-                            return new QuestionAnswer(country, "India Standard Time");
+                            actionResult.Description = "India Standard Time";
+                            break;
                         }
                     default:
                         {
-                            return new QuestionAnswer(country, "Unknown time zone");
+                            actionResult.Description = "Unknown time zone";
+                            break;
                         }
                 }
             }
-            else
-            {
-                return new QuestionAnswer(isSuccessful: true);
-            }
+
+            return actionResult;
         }
 
         private KeyValuePair<string, Countries.UtcOffset> TryKeypair()
