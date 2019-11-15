@@ -12,7 +12,7 @@ namespace it.Actions
             "dd-MM-yyyy"
         };
         public int Priority => 0;
-
+        
         public ActionResult TryExecute(string clipboardText)
         {
             ActionResult actionResult = new ActionResult(isProcessed: false);
