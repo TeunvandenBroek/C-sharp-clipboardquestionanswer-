@@ -26,7 +26,6 @@ namespace it.Actions
 
         private bool isCountingWords = false;
 
-
         QuestionAnswer IAction.TryExecute(string clipboardText)
         {
             CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
@@ -52,16 +51,16 @@ namespace it.Actions
                     }
                 case "taakbeheer":
                 case "task mananger":
-                {
+                    {
                         _taskmananger = Process.Start("taskmgr.exe");
                         return new QuestionAnswer(isSuccessful: true);
-                }
+                    }
                 case "notepad":
                 case "kladblok":
-                {
-                    Process.Start("notepad.exe");
-                    return new QuestionAnswer(isSuccessful: true);
-                }
+                    {
+                        _notepad = Process.Start("notepad.exe");
+                        return new QuestionAnswer(isSuccessful: true);
+                    }
                 case "leeg prullebak":
                 case "prullebak":
                 case "empty recycle bin":
@@ -73,8 +72,10 @@ namespace it.Actions
                         {
                             case 1033: // english-us
                                 return new QuestionAnswer(clipboardText, "Recycling bin emptied successfully");
+
                             case 1043: // dutch
                                 return new QuestionAnswer(clipboardText, "Prullebak succesvol leeg gemaakt");
+
                             default:
                                 return null;
                         }
@@ -82,7 +83,7 @@ namespace it.Actions
                 case "vergrendel":
                 case "lock":
                     {
-                        _vergrendel = Process.Start(@"C:\WINDOWS\system32\rundll32.exe", "user32.dll,LockWorkStation");
+                        _vergrendel = Process.Start($@"C:\WINDOWS\system32\rundll32.exe", "user32.dll,LockWorkStation");
                         return new QuestionAnswer(isSuccessful: true);
                     }
                 case "afsluiten":
@@ -98,8 +99,10 @@ namespace it.Actions
                         {
                             case 1033: // english-us
                                 return new QuestionAnswer("RAM Memory", ramCounter.Value.NextValue().ToString(CultureInfo.InvariantCulture) + " MB of RAM in your system");
+
                             case 1043: // dutch
                                 return new QuestionAnswer("Ram geheugen", ramCounter.Value.NextValue().ToString(CultureInfo.InvariantCulture) + " MB ram-geheugen over in je systeem");
+
                             default:
                                 return null;
                         }
@@ -111,8 +114,10 @@ namespace it.Actions
                         {
                             case 1033: // english-us
                                 return new QuestionAnswer("Your Windows version", $"Windows Version {Environment.OSVersion.Version}");
+
                             case 1043: // dutch
                                 return new QuestionAnswer("Je windows versie", $"Windows Version {Environment.OSVersion.Version}");
+
                             default:
                                 return null;
                         }
@@ -135,8 +140,10 @@ namespace it.Actions
                         {
                             case 1033: // english-us
                                 return new QuestionAnswer("Your MAC Address", sMacAddress);
+
                             case 1043: // dutch
                                 return new QuestionAnswer("Je mac adres", sMacAddress);
+
                             default:
                                 return new QuestionAnswer(isSuccessful: true);
                         }
@@ -151,10 +158,12 @@ namespace it.Actions
                         {
                             case 1033: // english-us
                                 return new QuestionAnswer("Your MAC Address", dnsName);
+
                             case 1043: // dutch
                                 return new QuestionAnswer("je computer naam is", dnsName);
+
                             default:
-                                return new QuestionAnswer(isSuccessful: true); ;
+                                return new QuestionAnswer(isSuccessful: true);
                         }
                     }
                 case "cpu":
@@ -165,10 +174,12 @@ namespace it.Actions
                         {
                             case 1033: // english-us
                                 return new QuestionAnswer("Processor consumption", secondValue.ToString("###", CultureInfo.InvariantCulture) + "%");
+
                             case 1043: // dutch
                                 return new QuestionAnswer("Processor verbruik", secondValue.ToString("###", CultureInfo.InvariantCulture) + "%");
+
                             default:
-                                return new QuestionAnswer(isSuccessful: true); ;
+                                return new QuestionAnswer(isSuccessful: true);
                         }
                     }
                 case "wifi check":
@@ -183,13 +194,14 @@ namespace it.Actions
                                 {
                                     case 1033: // english-us
                                         return new QuestionAnswer(clipboardText, "You have Internet");
+
                                     case 1043: // dutch
                                         return new QuestionAnswer(clipboardText, "Je hebt internet");
+
                                     default:
-                                        return new QuestionAnswer(isSuccessful: true); ;
+                                        return new QuestionAnswer(isSuccessful: true);
                                 }
                             }
-
                         }
                         catch
                         {
@@ -197,10 +209,12 @@ namespace it.Actions
                             {
                                 case 1033: // english-us
                                     return new QuestionAnswer(clipboardText, "You do not have Internet");
+
                                 case 1043: // dutch
                                     return new QuestionAnswer(clipboardText, "Je hebt geen internet");
+
                                 default:
-                                    return new QuestionAnswer(isSuccessful: true); ;
+                                    return new QuestionAnswer(isSuccessful: true);
                             }
                         }
                     }
@@ -232,10 +246,12 @@ namespace it.Actions
                         {
                             case 1033: // english-us
                                 return new QuestionAnswer("IPAddress Address", "Your public IP Address = " + externalIpAddress);
+
                             case 1043: // dutch
                                 return new QuestionAnswer("Ip adres", "Je public ip adres = " + externalIpAddress);
+
                             default:
-                                return new QuestionAnswer(isSuccessful: true); ;
+                                return new QuestionAnswer(isSuccessful: true);
                         }
                     }
             }
@@ -247,9 +263,7 @@ namespace it.Actions
                 int numberOfWords = words.Length;
                 isCountingWords = false;
                 return new QuestionAnswer("Number of words are: ", numberOfWords.ToString());
-
             }
-
 
             return new QuestionAnswer();
         }
@@ -286,6 +300,7 @@ namespace it.Actions
                 _afsluiten?.Dispose();
                 _vergrendel?.Dispose();
                 _reboot?.Dispose();
+                _notepad?.Dispose();
             }
 
             disposed = true;
@@ -299,13 +314,7 @@ namespace it.Actions
 
         private enum Recycle : uint
         {
-            /// <summary>
-            /// Defines the SHRB_NOCONFIRMATION
-            /// </summary>
             SHRB_NOCONFIRMATION = 0x00000001,
-            /// <summary>
-            /// Defines the SHRB_NOPROGRESSUI
-            /// </summary>
             SHRB_NOPROGRESSUI = 0x00000002,
             /// <summary>
             /// Defines the SHRB_NOSOUND
@@ -314,5 +323,6 @@ namespace it.Actions
         }
 
         private Process _taskmananger;
+        private Process _notepad;
     }
 }
