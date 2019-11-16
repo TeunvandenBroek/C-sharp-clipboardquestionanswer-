@@ -225,8 +225,13 @@ namespace it.Actions
                     }
                 case "count words":
                     {
-                        if (!isCountingWords) isCountingWords = true;
-                        break;
+                        if (!isCountingWords)
+                        {
+                            actionResult.Title = null;
+                            actionResult.Description = null;
+                            isCountingWords = true;
+                        }
+                        return actionResult;
                     }
                 case "ip":
                     {
@@ -260,26 +265,23 @@ namespace it.Actions
                         }
                         break;
                     }
-                default:
-                    {           // no command
-                        if (isCountingWords)
-                        {
-                            string[] words = clipboardText.Split(' ');
-                            int numberOfWords = words.Length;
-                            isCountingWords = false;
-                            actionResult.Title = "Number of words are: ";
-                            actionResult.Description = numberOfWords.ToString();
-
-                        }
-                        else
-                        {
-                            actionResult.IsProcessed = false;
-                        }
-                    }
-                    break;
+              
 
             }
 
+            if (isCountingWords)
+            {
+                string[] words = clipboardText.Split(' ');
+                int numberOfWords = words.Length;
+                isCountingWords = false;
+                actionResult.Title = "Number of words are: ";
+                actionResult.Description = numberOfWords.ToString();
+
+            }
+            else
+            {
+                actionResult.IsProcessed = false;
+            }
             return actionResult;
 
         }
