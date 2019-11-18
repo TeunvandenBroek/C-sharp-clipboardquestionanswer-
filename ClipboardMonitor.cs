@@ -37,13 +37,13 @@ namespace it
         }
 
         [DllImport("User32.dll")]
-        protected static extern int SetClipboardViewer(int hWndNewViewer);
+        private static extern int SetClipboardViewer(int hWndNewViewer);
 
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
-        public static extern bool ChangeClipboardChain(IntPtr hWndRemove, IntPtr hWndNewNext);
+        private static extern bool ChangeClipboardChain(IntPtr hWndRemove, IntPtr hWndNewNext);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern int SendMessage(IntPtr hwnd, int wMsg, IntPtr wParam, IntPtr lParam);
+        private static extern int SendMessage(IntPtr hwnd, int wMsg, IntPtr wParam, IntPtr lParam);
 
         protected override void WndProc(ref System.Windows.Forms.Message m)
         {
