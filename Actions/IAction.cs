@@ -16,7 +16,7 @@
 
     internal interface IAction
     {
-        public ActionResult TryExecute(string clipboardText);
+        ActionResult TryExecute(string clipboardText);
     }
 
     internal abstract class ActionBase : IAction
