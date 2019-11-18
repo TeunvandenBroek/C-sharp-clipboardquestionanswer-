@@ -62,12 +62,14 @@ namespace it
         private void ClipboardMonitor_ClipboardChanged(object sender, ClipboardChangedEventArgs e)
         {
             // retrieve the text from the clipboard
-            string clipboardText = e.DataObject.GetData(DataFormats.Text) as string;
-            // the data is not a string. bail.
-            if (string.IsNullOrWhiteSpace(clipboardText)) return;
+            if (e.DataObject.GetData(DataFormats.Text) is string clipboardText)
+            {
+                // the data is not a string. bail.
+                if (string.IsNullOrWhiteSpace(clipboardText)) return;
 
-            // if we get to here, we have text
-            GetAnswer(clipboardText);
+                // if we get to here, we have text
+                GetAnswer(clipboardText);
+            }
         }
 
         private void GetAnswer(string clipboardText)
