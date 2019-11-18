@@ -100,12 +100,18 @@ namespace it.Actions
                         switch (currentCulture.LCID)
                         {
                             case 1033: // english-us
-                                actionResult.Title = "RAM Memory";
-                                actionResult.Description = ramCounter.Value.NextValue().ToString(CultureInfo.InvariantCulture) + " MB of RAM in your system";
+                                using (PerformanceCounter pc = ramCounter.Value)
+                                {
+                                    actionResult.Title = "RAM Memory";
+                                    actionResult.Description = pc.NextValue().ToString(CultureInfo.InvariantCulture) + " MB of RAM in your system";
+                                }
                                 break;
                             case 1043: // dutch
-                                actionResult.Title = "Ram geheugen";
-                                actionResult.Description = ramCounter.Value.NextValue().ToString(CultureInfo.InvariantCulture) + " MB ram-geheugen over in je systeem";
+                                using (PerformanceCounter pc = ramCounter.Value)
+                                {
+                                    actionResult.Title = "Ram geheugen";
+                                    actionResult.Description = pc.NextValue().ToString(CultureInfo.InvariantCulture) + " MB ram-geheugen over in je systeem";
+                                }
                                 break;
                         }
                         break;
