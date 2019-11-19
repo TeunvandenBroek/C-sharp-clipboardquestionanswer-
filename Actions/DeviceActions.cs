@@ -38,31 +38,31 @@ namespace it.Actions
                 case "sluit":
                     {
                         Environment.Exit(0);
-                        break;
+                        return actionResult;
                     }
                 case "opnieuw opstarten":
                 case "reboot":
                     {
                         _reboot = Process.Start("shutdown", "/r /t 0");
-                        break;
+                        return actionResult;
                     }
                 case "slaapstand":
                 case "sleep":
                     {
                         Application.SetSuspendState(PowerState.Hibernate, true, true);
-                        break;
+                        return actionResult;
                     }
                 case "taakbeheer":
                 case "task mananger":
                     {
                         _taskmananger = Process.Start("taskmgr.exe");
-                        break;
+                        return actionResult;
                     }
                 case "notepad":
                 case "kladblok":
                     {
                         Process.Start("notepad.exe");
-                        break;
+                        return actionResult;
                     }
                 case "leeg prullebak":
                 case "prullebak":
@@ -80,7 +80,7 @@ namespace it.Actions
                                 actionResult.Description = "Prullebak succesvol leeg gemaakt";
                                 break;
                         }
-                        break;
+                        return actionResult;
                     }
                 case "vergrendel":
                 case "lock":
@@ -114,7 +114,7 @@ namespace it.Actions
                                 }
                                 break;
                         }
-                        break;
+                        return actionResult;
                     }
                 case "windows versie":
                 case "windows version":
@@ -130,7 +130,7 @@ namespace it.Actions
                                 actionResult.Description = $"Windows Version {Environment.OSVersion.Version}";
                                 break;
                         }
-                        break;
+                        return actionResult;
                     }
                 case "mac-adres":
                 case "mac":
@@ -142,7 +142,7 @@ namespace it.Actions
                             if (string.IsNullOrEmpty(sMacAddress))
                             {
                                 sMacAddress = adapter.GetPhysicalAddress().ToString();
-                                break;
+                                return actionResult;
                             }
                         }
 
@@ -157,7 +157,7 @@ namespace it.Actions
                                 actionResult.Description = sMacAddress;
                                 break;
                         }
-                        break;
+                        return actionResult;
                     }
                 case "computer naam":
                 case "computer name":
@@ -176,7 +176,7 @@ namespace it.Actions
                                 actionResult.Description = dnsName;
                                 break;
                         }
-                        break;
+                        return actionResult;
                     }
                 case "cpu":
                     {
@@ -193,7 +193,7 @@ namespace it.Actions
                                 actionResult.Description = secondValue.ToString("###", CultureInfo.InvariantCulture) + "%";
                                 break;
                         }
-                        break;
+                        return actionResult;
                     }
                 case "wifi check":
                 case "heb ik internet?":
@@ -213,7 +213,7 @@ namespace it.Actions
                                         break;
                                 }
                             }
-                            break;
+                            return actionResult;
                         }
                         catch
                         {
@@ -227,7 +227,7 @@ namespace it.Actions
                                     break;
                             }
                         }
-                        break;
+                        return actionResult;
                     }
                 case "count words":
                     {
@@ -263,13 +263,13 @@ namespace it.Actions
                             case 1033: // english-us
                                 actionResult.Title = "IPAddress Address";
                                 actionResult.Description = "Your public IP Address = " + externalIpAddress;
-                                break;
+                                return actionResult;
                             case 1043: // dutch
                                 actionResult.Title = "Ip adres";
                                 actionResult.Description = "Je public ip adres = " + externalIpAddress;
-                                break;
+                                return actionResult;
                         }
-                        break;
+                        return actionResult;
                     }
 
 
