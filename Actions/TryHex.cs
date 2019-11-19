@@ -13,7 +13,6 @@ namespace it.Actions
         //covert number to hex
         ActionResult IAction.TryExecute(string clipboardText)
         {
-            CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
             ActionResult actionResult = new ActionResult();
             // Store integer 182
             int decValue = 182;
