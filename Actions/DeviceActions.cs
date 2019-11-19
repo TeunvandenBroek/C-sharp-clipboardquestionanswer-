@@ -239,7 +239,7 @@ namespace it.Actions
                         }
                         return actionResult;
                     }
-                case "ip":
+                case "ip-adress":
                     {
                         string externalIpAddress = null;
                         using (WebClient webClient = new WebClient())
@@ -271,7 +271,7 @@ namespace it.Actions
                         }
                         break;
                     }
-              
+
 
             }
 

@@ -25,7 +25,6 @@ namespace it.Actions
             else
             {
                 actionResult.Title = country;
-
                 switch (keyValuePair.Value)
                 {
                     case Countries.UtcOffset.UtcMinusTwelve:
@@ -180,7 +179,7 @@ namespace it.Actions
                         }
                     default:
                         {
-                            timeZoneId = "Unknown time zone";
+                            actionResult.IsProcessed = false;
                             break;
                         }
                 }
