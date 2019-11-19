@@ -2,7 +2,7 @@
 
 namespace it
 {
-    class ControlContainer : IContainer
+    sealed class ControlContainer : IContainer
     {
         ComponentCollection _components;
         public ControlContainer()
