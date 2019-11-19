@@ -14,7 +14,7 @@ namespace it.Actions
 
         ActionResult IAction.TryExecute(string clipboardText)
         {
-            ActionResult actionResult = new ActionResult();
+            ActionResult actionResult = new ActionResult(clipboardText);
 
             country = clipboardText.Trim().ToLowerInvariant();
             KeyValuePair<string, Countries.UtcOffset> keyValuePair = TryKeypair();
