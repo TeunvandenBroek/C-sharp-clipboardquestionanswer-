@@ -17,8 +17,7 @@ namespace it.Actions
 
             CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
 
-            string clipboard = Clipboard.GetText();
-            switch (clipboard)
+            switch (clipboardText)
             {
                 case "start stopwatch": //start
                     {
@@ -27,9 +26,9 @@ namespace it.Actions
                             actionResult.Title = "Stopwatch";
                             actionResult.Description = "Stopwatch already running";
                         }
-                        if (clipboard != lastClipboard)
+                        if (clipboardText != lastClipboard)
                         {
-                            lastClipboard = clipboard;
+                            lastClipboard = clipboardText;
                             myStopwatch = new Stopwatch();
                             myStopwatch.Start();
                         }
@@ -37,9 +36,9 @@ namespace it.Actions
                     }
                 case "reset stopwatch": //reset
                     {
-                        if (clipboard != lastClipboard)
+                        if (clipboardText != lastClipboard)
                         {
-                            lastClipboard = clipboard;
+                            lastClipboard = clipboardText;
                             myStopwatch.Reset();
                             myStopwatch = new Stopwatch();
                             myStopwatch.Start();
@@ -60,9 +59,9 @@ namespace it.Actions
                     }
                 case "pause stopwatch": //  pause
                     {
-                        if (clipboard != lastClipboard)
+                        if (clipboardText != lastClipboard)
                         {
-                            lastClipboard = clipboard;
+                            lastClipboard = clipboardText;
                             TimeSpan ts = myStopwatch.Elapsed;
                             myStopwatch.Stop();
 
@@ -82,9 +81,9 @@ namespace it.Actions
                     }
                 case "resume stopwatch":
                     {
-                        if (clipboard != lastClipboard)
+                        if (clipboardText != lastClipboard)
                         {
-                            lastClipboard = clipboard;
+                            lastClipboard = clipboardText;
                             TimeSpan ts = myStopwatch.Elapsed;
                             myStopwatch.Start();
                             switch (currentCulture.LCID)
