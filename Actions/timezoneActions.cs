@@ -15,7 +15,6 @@ namespace it.Actions
         ActionResult IAction.TryExecute(string clipboardText)
         {
             ActionResult actionResult = new ActionResult(clipboardText);
-
             country = clipboardText.Trim().ToLowerInvariant();
             KeyValuePair<string, Countries.UtcOffset> keyValuePair = TryKeypair();
             if (keyValuePair.Key == (default))
@@ -99,7 +98,7 @@ namespace it.Actions
                         }
                     case Countries.UtcOffset.UtcPlusOne:
                         {
-                            timeZoneId = "Central European Time";
+                            timeZoneId = "Central European Standard Time";
                             break;
                         }
                     case Countries.UtcOffset.UtcPlusTwo:
@@ -188,7 +187,7 @@ namespace it.Actions
             DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo);
             actionResult.Description = dateTime.ToString("HH:mm", CultureInfo.CurrentCulture);
             return actionResult;
-        }
+            }
 
         private KeyValuePair<string, Countries.UtcOffset> TryKeypair()
         {
