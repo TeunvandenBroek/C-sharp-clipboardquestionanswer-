@@ -10,6 +10,11 @@ namespace it.Actions
         private Stopwatch myStopwatch;
         private string lastClipboard;
 
+        public bool Matches(string clipboardText)
+        {
+            return clipboardText.ToLower().Contains("stopwatch");
+        }
+
         public ActionResult TryExecute(string clipboardText)
         {
             ActionResult actionResult = new ActionResult();

@@ -69,6 +69,12 @@ namespace it.Actions
             string wifidata = wifilist();
             return true;
         }
+
+        public bool Matches(string clipboardText)
+        {
+            return clipboardText.ToLower().StartsWith("wifi");
+        }
+
         public ActionResult TryExecute(string clipboardText)
         {
             ActionResult actionResult = new ActionResult();
