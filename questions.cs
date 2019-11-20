@@ -6,6 +6,7 @@ namespace it
     public static class Questions
     {
         private static Dictionary<string, string> questionDict = new Dictionary<string, string>
+        (System.StringComparer.Ordinal)
         {
             //Add question/answer to list
             //hoofdstuk 3 it

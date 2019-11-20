@@ -2,16 +2,16 @@
 
 namespace it
 {
-    sealed class ControlContainer : IContainer
+    internal sealed class ControlContainer : IContainer
     {
-        ComponentCollection _components;
+        private ComponentCollection _components;
         public ControlContainer()
         {
-            _components = new ComponentCollection(new IComponent[] { });
+            _components = new ComponentCollection(System.Array.Empty<IComponent>());
         }
         public void Add(IComponent component)
         { }
-        public void Add(IComponent component, string Name)
+        public void Add(IComponent component, string name)
         { }
         public void Remove(IComponent component)
         { }

@@ -1,10 +1,9 @@
 using it.Actions;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Globalization;
 using System.Windows.Forms;
+using System;
 
 namespace it
 {
@@ -40,6 +39,7 @@ namespace it
             serviceDescriptors.AddSingleton<IAction, ConvertActions>();
             serviceDescriptors.AddSingleton<IAction, CountdownActions>();
             serviceDescriptors.AddSingleton<IAction, DeviceActions>();
+            serviceDescriptors.AddSingleton<IAction, MathActions>();
             serviceDescriptors.AddSingleton<IAction, RandomActions>();
             serviceDescriptors.AddSingleton<IAction, StopwatchActions>();
             serviceDescriptors.AddSingleton<IAction, TimespanActions>();
@@ -47,7 +47,6 @@ namespace it
             serviceDescriptors.AddSingleton<IAction, TryCalcBmi>();
             serviceDescriptors.AddSingleton<IAction, TryRedirect>();
             serviceDescriptors.AddSingleton<IAction, TryWifiPass>();
-            serviceDescriptors.AddSingleton<IAction, MathActions>();
 
             serviceProvider = serviceDescriptors.BuildServiceProvider();
         }

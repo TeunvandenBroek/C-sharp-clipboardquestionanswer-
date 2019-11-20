@@ -7,9 +7,9 @@ using System.Windows.Forms;
 namespace it
 {
     [DefaultEvent("ClipboardChanged")]
-    public partial class ClipboardMonitor : Control
+    public class ClipboardMonitor : Control
     {
-        IntPtr nextClipboardViewer;
+        private IntPtr nextClipboardViewer;
 
         public ClipboardMonitor()
         {
@@ -71,15 +71,12 @@ namespace it
             }
         }
 
-        void OnClipboardChanged()
+        private void OnClipboardChanged()
         {
             try
             {
                 IDataObject iData = Clipboard.GetDataObject();
-                if (ClipboardChanged != null)
-                {
-                    ClipboardChanged(this, new ClipboardChangedEventArgs(iData));
-                }
+                ClipboardChanged?.Invoke(this, new ClipboardChangedEventArgs(iData));
 
             }
             catch (Exception e)
