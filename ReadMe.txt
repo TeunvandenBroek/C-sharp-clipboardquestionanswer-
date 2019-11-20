@@ -1,6 +1,6 @@
-This application shold run in the background. Becuase of this, a Windows Forms project seems 
+This application should run in the background. Because of this, a Windows Forms project seems 
 overkill for what is accomplished here. Converting this to a form-less application would be 
-more lightweight, encasulate seperation of concerns (SOC), and have a lighter memeory footprint.
+more lightweight, encapsulate separation of concerns (SOC), and have a lighter memory footprint.
 
 We will keep the forms here in case we want visual aspects in the project.
 
