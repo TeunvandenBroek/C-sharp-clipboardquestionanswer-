@@ -19,6 +19,13 @@ namespace it.Actions
             return keyValuePair.Key != default;
         }
 
+        public bool Matches(string clipboardText)
+        {
+            country = clipboardText.Trim().ToLowerInvariant();
+            KeyValuePair<string, Countries.UtcOffset> keyValuePair = TryKeypair();
+            return keyValuePair.Key != default;
+        }
+
         ActionResult IAction.TryExecute(string clipboardText)
         {
             ActionResult actionResult = new ActionResult();
