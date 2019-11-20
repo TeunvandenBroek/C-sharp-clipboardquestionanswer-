@@ -53,7 +53,7 @@
             }
         }
 
-        public async Task Function()
+        public async Task FunctionAsync() 
         {
             await Task.Delay(_time).ConfigureAwait(false);
             DoCleaningCheck();
