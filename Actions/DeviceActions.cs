@@ -28,12 +28,28 @@ namespace it.Actions
         private readonly SmartPerformanceCounter cpuCounter = new SmartPerformanceCounter(() => new PerformanceCounter("Processor", "% Processor Time", "_Total"), TimeSpan.FromMinutes(1));
         private bool isCountingWords = false;
 
+        private string[] commands = { "sluit", "opnieuw opstarten", "reboot", "slaapstand", "sleep", "taakbeheer",
+            "task mananger", "notepad", "kladblok", "leeg prullebak", "prullebak", "empty recycle bin", "empty bin",
+            "empty recycling bin", "vergrendel", "lock", "afsluiten", "shut down", "ram", "windows versie", "windows version",
+            "mac-adres", "mac", "mac address", "computer naam", "computer name", "cpu", "wifi check", "heb ik internet?", "count words", "ip" };
+
+        public bool Matches(string clipboardText)
+        {
+            foreach(string command in commands)
+            {
+                if (command.Equals(clipboardText.ToLower())) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         ActionResult IAction.TryExecute(string clipboardText)
         {
             CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
             ActionResult actionResult = new ActionResult(title: clipboardText);
 
-            switch (clipboardText)
+            switch (clipboardText.ToLower())
             {
                 case "sluit":
                     {

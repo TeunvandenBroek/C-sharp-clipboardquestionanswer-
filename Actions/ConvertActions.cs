@@ -9,6 +9,12 @@ namespace it.Actions
     {
         private readonly Regex unitRegex = new Regex("(?<number>^[0-9]+([.,][0-9]{1,3})?)(\\s*)(?<from>[a-z]+[2-3]?) to (?<to>[a-z]+[2-3]?)");
 
+        public override bool Matches(string clipboardText)
+        {
+            Match matches = unitRegex.Match(clipboardText);
+            return matches.Success;
+        }
+
 
         override public ActionResult TryExecute(string clipboardText)
         {

@@ -22,6 +22,12 @@ namespace it.Actions
                { "%", (a, b) => a / b * 100 },
             };
 
+        public bool Matches(string clipboardText)
+        {
+            Match match = mathRegex.Match(clipboardText.Replace(',', '.'));
+            return match.Success;
+        }
+
         public ActionResult TryExecute(string clipboardText)
         {
             ActionResult actionResult = new ActionResult(title: clipboardText);

@@ -4,6 +4,11 @@
 
     public class TryRedirect : IAction
     {
+        public bool Matches(string clipboardText)
+        {
+            return clipboardText.ToLower().StartsWith("ga naar");
+        }
+
         public ActionResult TryExecute(string clipboardText)
         {
             switch (clipboardText)

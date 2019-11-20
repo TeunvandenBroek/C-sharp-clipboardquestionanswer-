@@ -2,6 +2,8 @@ using it.Actions;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 using System;
 
@@ -75,27 +77,40 @@ namespace it
         {
             try
             {
-                foreach (IAction action in serviceProvider.GetServices<IAction>())
+                //foreach (IAction action in serviceProvider.GetServices<IAction>())
+                //{
+                //    // disconnect events from the clipboard.
+                //    clipboardMonitor.ClipboardChanged -= ClipboardMonitor_ClipboardChanged;
+                //    // run the action
+                //    ActionResult actionResult = action.TryExecute(clipboardText);
+                //    // re attach the event
+                //    clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
+
+                //    // if this action processed the command, exit the loop.
+                //    if (actionResult.IsProcessed)
+                //    {
+                //        if (!String.IsNullOrWhiteSpace(actionResult.Title) || !String.IsNullOrWhiteSpace(actionResult.Description))
+                //        {
+                //            ShowNotification(actionResult);
+                //            Clipboard.Clear();
+                //        }
+                //        break;
+                //    }
+
+                //}
+
+                var service = serviceProvider.GetServices<IAction>().FirstOrDefault(s => s.Matches(clipboardText));
+                clipboardMonitor.ClipboardChanged -= ClipboardMonitor_ClipboardChanged;
+                // run the action
+                ActionResult actionResult = service.TryExecute(clipboardText);
+                // re attach the event
+                clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
+                if (!string.IsNullOrWhiteSpace(actionResult.Title) || !string.IsNullOrWhiteSpace(actionResult.Description))
                 {
-                    // disconnect events from the clipboard.
-                    clipboardMonitor.ClipboardChanged -= ClipboardMonitor_ClipboardChanged;
-                    // run the action
-                    ActionResult actionResult = action.TryExecute(clipboardText);
-                    // re attach the event
-                    clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
-
-                    // if this action processed the command, exit the loop.
-                    if (actionResult.IsProcessed)
-                    {
-                        if (!String.IsNullOrWhiteSpace(actionResult.Title) || !String.IsNullOrWhiteSpace(actionResult.Description))
-                        {
-                            ShowNotification(actionResult);
-                            Clipboard.Clear();
-                        }
-                        break;
-                    }
-
+                    ShowNotification(actionResult);
+                    Clipboard.Clear();
                 }
+
 
             }
             catch (Exception ex)

@@ -8,6 +8,20 @@ namespace it.Actions
     internal class RandomActions : IAction
     {
         private readonly Random _random = new Random();
+
+        private string[] commands = { "kop of munt", "heads or tails", "random password" };
+
+        public bool Matches(string clipboardText)
+        {
+            foreach (string command in commands)
+            {
+                if (command.Equals(clipboardText.ToLower())) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         ActionResult IAction.TryExecute(string clipboardText)
         {
             CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
