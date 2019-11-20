@@ -14,7 +14,7 @@ namespace it.Actions
 
         ActionResult IAction.TryExecute(string clipboardText)
         {
-            ActionResult actionResult = new ActionResult(clipboardText);
+            ActionResult actionResult = new ActionResult();
             country = clipboardText.Trim().ToLowerInvariant();
             KeyValuePair<string, Countries.UtcOffset> keyValuePair = TryKeypair();
             if (keyValuePair.Key == (default))
@@ -179,7 +179,7 @@ namespace it.Actions
                     default:
                         {
                             actionResult.IsProcessed = false;
-                            break;
+                            return actionResult;
                         }
                 }
             }

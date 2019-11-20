@@ -141,7 +141,7 @@ namespace it.Actions
                         {
                             if (string.IsNullOrEmpty(sMacAddress))
                             {
-                                sMacAddress = adapter.GetPhysicalAddress().ToString();
+                                adapter.GetPhysicalAddress().ToString();
                                 return actionResult;
                             }
                         }
