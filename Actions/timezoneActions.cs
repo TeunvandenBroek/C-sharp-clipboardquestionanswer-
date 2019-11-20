@@ -20,6 +20,7 @@ namespace it.Actions
             if (keyValuePair.Key == (default))
             {
                 actionResult.IsProcessed = false;
+                return actionResult;
             }
             else
             {
@@ -176,6 +177,7 @@ namespace it.Actions
                             timeZoneId = "India Standard Time";
                             break;
                         }
+
                     default:
                         {
                             actionResult.IsProcessed = false;
@@ -183,6 +185,7 @@ namespace it.Actions
                         }
                 }
             }
+            Console.WriteLine(timeZoneId);
             TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
             DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo);
             actionResult.Description = dateTime.ToString("HH:mm", CultureInfo.CurrentCulture);
