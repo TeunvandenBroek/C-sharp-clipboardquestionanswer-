@@ -25,7 +25,7 @@ namespace it.Actions
                             actionResult.Title = "Stopwatch";
                             actionResult.Description = "Stopwatch already running";
                         }
-                        if (clipboardText != lastClipboard)
+                        if (!string.Equals(clipboardText, lastClipboard, StringComparison.Ordinal))
                         {
                             lastClipboard = clipboardText;
                             myStopwatch = new Stopwatch();
@@ -35,7 +35,7 @@ namespace it.Actions
                     }
                 case "reset stopwatch": //reset
                     {
-                        if (clipboardText != lastClipboard)
+                        if (!string.Equals(clipboardText, lastClipboard, StringComparison.Ordinal))
                         {
                             lastClipboard = clipboardText;
                             myStopwatch.Reset();
@@ -58,7 +58,7 @@ namespace it.Actions
                     }
                 case "pause stopwatch": //  pause
                     {
-                        if (clipboardText != lastClipboard)
+                        if (!string.Equals(clipboardText, lastClipboard, StringComparison.Ordinal))
                         {
                             lastClipboard = clipboardText;
                             TimeSpan ts = myStopwatch.Elapsed;
@@ -80,7 +80,7 @@ namespace it.Actions
                     }
                 case "resume stopwatch":
                     {
-                        if (clipboardText != lastClipboard)
+                        if (!string.Equals(clipboardText, lastClipboard, StringComparison.Ordinal))
                         {
                             lastClipboard = clipboardText;
                             TimeSpan ts = myStopwatch.Elapsed;

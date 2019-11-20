@@ -10,7 +10,7 @@ namespace it.Actions
     {
 
         private string country;
-        private string timeZoneId;
+        private string timeZoneId = String.Empty;
 
         ActionResult IAction.TryExecute(string clipboardText)
         {
@@ -185,7 +185,6 @@ namespace it.Actions
                         }
                 }
             }
-            Console.WriteLine(timeZoneId);
             TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
             DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo);
             actionResult.Description = dateTime.ToString("HH:mm", CultureInfo.CurrentCulture);

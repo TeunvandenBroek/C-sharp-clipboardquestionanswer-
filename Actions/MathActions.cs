@@ -11,7 +11,8 @@ namespace it.Actions
         private readonly Regex mathRegex = new Regex(@"^(?<lhs>\d+(?:[,.]{1}\d)*)(([ ]*(?<operator>[+\-\:x\%\*/])[ ]*(?<rhs>\d+(?:[,.]{1}\d)*)+)+)");
 
         private readonly Dictionary<string, Func<double, double, double>> binaryOperators = new Dictionary<string, Func<double, double, double>>
-            {
+        (StringComparer.Ordinal)
+        {
                { "+", (a, b) => a + b},
                { "x", (a, b) => a * b },
                { "*", (a, b) => a * b },

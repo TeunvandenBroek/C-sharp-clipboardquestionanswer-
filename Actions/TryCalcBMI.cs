@@ -5,7 +5,7 @@ namespace it.Actions
     {
         ActionResult IAction.TryExecute(string clipboardText)
         {
-            if (clipboardText.StartsWith("bmi"))
+            if (clipboardText.StartsWith("bmi", System.StringComparison.Ordinal))
             {
 
             }
