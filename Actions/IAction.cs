@@ -2,16 +2,16 @@
 {
     public class ActionResult
     {
-        internal string Title { get; set; }
-        internal string Description { get; set; }
-        internal bool IsProcessed { get; set; }
-
         public ActionResult(string title = null, string description = null, bool isProcessed = true)
         {
             Title = title;
             Description = description;
             IsProcessed = isProcessed;
         }
+
+        internal string Title { get; set; }
+        internal string Description { get; set; }
+        internal bool IsProcessed { get; set; }
     }
 
     internal interface IAction

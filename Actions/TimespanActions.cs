@@ -1,29 +1,31 @@
+using System;
+using System.Globalization;
+
 namespace it.Actions
 {
-    using System;
-    using System.Globalization;
-
     public class TimespanActions : IAction
     {
-        private DateTime? prevDate;
         private readonly string[] DateFormats =
         {
             "dd.MM.yyyy",
             "dd-MM-yyyy"
         };
+
+        private DateTime? prevDate;
         public int Priority => 0;
 
         public ActionResult TryExecute(string clipboardText)
         {
-            ActionResult actionResult = new ActionResult(isProcessed: false);
+            var actionResult = new ActionResult(isProcessed: false);
 
-            if (DateTime.TryParseExact(clipboardText, DateFormats, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out DateTime newDate))
+            if (DateTime.TryParseExact(clipboardText, DateFormats, CultureInfo.CurrentCulture,
+                DateTimeStyles.AssumeLocal, out var newDate))
             {
                 actionResult.IsProcessed = true;
 
                 if (prevDate.HasValue)
                 {
-                    TimeSpan? difference = newDate - prevDate;
+                    var difference = newDate - prevDate;
                     if (difference.HasValue)
                     {
                         prevDate = null;
