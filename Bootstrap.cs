@@ -1,25 +1,26 @@
-using it.Actions;
-using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using System;
+using it.Actions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace it
 {
     /// <summary>
-    /// The bootstrap class is provided to allow the application to run with out a form.
-    /// We can use a form however in the future by adding it to here.
+    ///     The bootstrap class is provided to allow the application to run with out a form.
+    ///     We can use a form however in the future by adding it to here.
     /// </summary>
     internal sealed class Bootstrap : IDisposable
     {
         private readonly ClipboardMonitor clipboardMonitor = new ClipboardMonitor();
         private readonly ControlContainer container = new ControlContainer();
-        private readonly NotifyIcon notifyIcon = null;
+        private readonly NotifyIcon notifyIcon;
         private readonly List<Question> questionList = Questions.LoadQuestions();
 
         // Container to hold the actions
         private IServiceProvider serviceProvider;
+
         public Bootstrap()
         {
             notifyIcon = new NotifyIcon(container);
@@ -28,6 +29,14 @@ namespace it
             ConfigureDependancies();
 
             clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
+        }
+
+        public void Dispose()
+        {
+            (serviceProvider as IDisposable)?.Dispose();
+            notifyIcon?.Dispose();
+            container?.Dispose();
+            clipboardMonitor?.Dispose();
         }
 
 
@@ -55,7 +64,6 @@ namespace it
         internal void Startup()
         {
             // monitor the clipboard
-
         }
 
         private void ClipboardMonitor_ClipboardChanged(object sender, ClipboardChangedEventArgs e)
@@ -75,34 +83,43 @@ namespace it
         {
             try
             {
-                foreach (IAction action in serviceProvider.GetServices<IAction>())
+                var actions = new List<IAction>(serviceProvider.GetServices<IAction>());
+                foreach (var action in actions)
                 {
                     // disconnect events from the clipboard.
                     clipboardMonitor.ClipboardChanged -= ClipboardMonitor_ClipboardChanged;
                     // run the action
-                    ActionResult actionResult = action.TryExecute(clipboardText);
+                    var actionResult = action.TryExecute(clipboardText);
                     // re attach the event
                     clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
 
                     // if this action processed the command, exit the loop.
                     if (actionResult.IsProcessed)
                     {
-                        if (!String.IsNullOrWhiteSpace(actionResult.Title) || !String.IsNullOrWhiteSpace(actionResult.Description))
+                        if (!string.IsNullOrWhiteSpace(actionResult.Title) ||
+                            !string.IsNullOrWhiteSpace(actionResult.Description))
                         {
                             ShowNotification(actionResult);
                             Clipboard.Clear();
                         }
+
                         break;
                     }
-
                 }
 
+                if (clipboardText.Length > 2)
+                    foreach (var question in questionList)
+                        if (question.Text.Contains(clipboardText))
+                        {
+                            ShowNotification(new ActionResult(question.Text, question.Answer));
+                            Clipboard.Clear();
+                            return;
+                        }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
             }
-
         }
 
         private void ShowNotification(ActionResult actionResult)
@@ -112,14 +129,6 @@ namespace it
             notifyIcon.BalloonTipText = actionResult.Description;
             notifyIcon.BalloonTipIcon = ToolTipIcon.Error;
             notifyIcon.ShowBalloonTip(1000);
-        }
-
-        public void Dispose()
-        {
-            (serviceProvider as IDisposable)?.Dispose();
-            notifyIcon?.Dispose();
-            container?.Dispose();
-            clipboardMonitor?.Dispose();
         }
     }
 }
