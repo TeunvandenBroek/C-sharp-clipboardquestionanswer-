@@ -8,7 +8,7 @@ namespace it.Actions
     {
         public bool Matches(string clipboardText)
         {
-            return clipboardText.ToLower().StartsWith("bmi");
+            return clipboardText.ToLower().StartsWith("bmi", StringComparison.Ordinal);
         }
 
         ActionResult IAction.TryExecute(string clipboardText)

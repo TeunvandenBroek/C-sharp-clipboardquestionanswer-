@@ -11,7 +11,7 @@ namespace it.Actions
 
         public override bool Matches(string clipboardText)
         {
-            Match matches = unitRegex.Match(clipboardText);
+            var matches = unitRegex.Match(clipboardText);
             return matches.Success;
         }
 
@@ -34,7 +34,6 @@ namespace it.Actions
                 double meter = 0, gram = 0, liter = 0, oppervlakte = 0;
                 switch (from)
                 {
-                    // lengte eenheden
                     case "mm":
                     case "millimeter":
                         meter = number / 1000;
@@ -48,7 +47,7 @@ namespace it.Actions
                         meter = number / 10;
                         break;
                     case "m":
-                    case "meter":
+                    case nameof(meter):
                         meter = number;
                         break;
                     case "dam":
@@ -92,7 +91,7 @@ namespace it.Actions
                         gram = number / 10;
                         break;
                     case "gr":
-                    case "gram":
+                    case nameof(gram):
                         gram = number;
                         break;
                     case "dag":
@@ -120,7 +119,7 @@ namespace it.Actions
                         liter = number / 10;
                         break;
                     case "l":
-                    case "liter":
+                    case nameof(liter):
                         liter = number;
                         break;
                     case "dal":
@@ -157,6 +156,8 @@ namespace it.Actions
                     case "km2":
                         oppervlakte = number * 1000000;
                         break;
+                    default:
+                        throw new System.Exception("Unexpected Case");
                 }
 
                 // oppervlakte eenheden (area units)
@@ -178,7 +179,7 @@ namespace it.Actions
                         result = meter * 10;
                         break;
                     case "m":
-                    case "meter":
+                    case nameof(meter):
                         result = meter;
                         break;
                     case "dam":
@@ -222,7 +223,7 @@ namespace it.Actions
                         result = gram * 10;
                         break;
                     case "gr":
-                    case "gram":
+                    case nameof(gram):
                         result = gram;
                         break;
                     case "dag":
@@ -251,7 +252,7 @@ namespace it.Actions
                         result = liter * 10;
                         break;
                     case "l":
-                    case "liter":
+                    case nameof(liter):
                         result = liter;
                         break;
                     case "dal":
@@ -288,11 +289,13 @@ namespace it.Actions
                     case "km2":
                         result = oppervlakte / 1000000;
                         break;
+                    default:
+                        throw new System.Exception("Unexpected Case");
                 }
 
                 Clipboard.SetText(result.ToString(CultureInfo.CurrentCulture));
                 actionResult.Title = clipboardText;
-                actionResult.Description = result + to;
+                actionResult.Description = result+ to;
             }
 
             return actionResult;

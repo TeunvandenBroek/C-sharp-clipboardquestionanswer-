@@ -1,8 +1,10 @@
-﻿namespace it.Actions
+﻿using System;
+
+namespace it.Actions
 {
-    public class ActionResult
+    public sealed class ActionResult
     {
-        public ActionResult(string title = null, string description = null, bool isProcessed = true)
+        internal ActionResult(string title = null, string description = null, bool isProcessed = true)
         {
             Title = title;
             Description = description;

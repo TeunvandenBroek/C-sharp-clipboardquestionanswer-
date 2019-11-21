@@ -24,15 +24,19 @@ namespace it
         // Container to hold the actions
         private IServiceProvider serviceProvider;
 
+
         public Bootstrap()
         {
-            notifyIcon = new NotifyIcon(container);
-            notifyIcon.Visible = true;
+            notifyIcon = new NotifyIcon(container)
+            {
+                Visible = true
+            };
 
             ConfigureDependancies();
 
             clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
         }
+
 
         public void Dispose()
         {
@@ -42,11 +46,10 @@ namespace it
             clipboardMonitor?.Dispose();
         }
 
-
         private void ConfigureDependancies()
         {
             // Add configure services
-            IServiceCollection serviceDescriptors = new Microsoft.Extensions.DependencyInjection.ServiceCollection();
+            IServiceCollection serviceDescriptors = new ServiceCollection();
 
             serviceDescriptors.AddSingleton<IAction, ConvertActions>();
             serviceDescriptors.AddSingleton<IAction, CountdownActions>();
@@ -64,7 +67,7 @@ namespace it
         }
 
 
-        internal void Startup()
+        internal static void Startup()
         {
             // monitor the clipboard
         }
@@ -90,9 +93,9 @@ namespace it
                 clipboardMonitor.ClipboardChanged -= ClipboardMonitor_ClipboardChanged;
                 ActionResult actionResult = null;
                 // run the action
-                if (service != null) actionResult = service.TryExecute(clipboardText);
+                if (service is object) actionResult = service.TryExecute(clipboardText);
                 // re attach the event
-                if (actionResult != null &&
+                if (actionResult is object &&
                     (!string.IsNullOrWhiteSpace(actionResult.Title) || !string.IsNullOrWhiteSpace(actionResult.Description)))
                 {
                     ProcessResult(actionResult, clipboardText);
@@ -114,7 +117,7 @@ namespace it
                     // if this action processed the command, exit the loop.
                     if (actionResult.IsProcessed)
                     {
-                        // if the result is not null, and has a title and description 
+                        // if the result is not null, and has a title and description
                         if (!string.IsNullOrWhiteSpace(actionResult.Title) ||
                             !string.IsNullOrWhiteSpace(actionResult.Description))
                         {
@@ -140,9 +143,16 @@ namespace it
             }
         }
 
+
+
+        private static void ClearClipboard(string clipboardText)
+        {
+        }
+
+
         private void ProcessResult(ActionResult actionResult, string clipboardText)
         {
-            if (Clipboard.GetText() == clipboardText) Clipboard.Clear();
+            if (string.Equals(Clipboard.GetText(), clipboardText, StringComparison.Ordinal)) Clipboard.Clear();
 
             notifyIcon.Icon = SystemIcons.Exclamation;
             notifyIcon.BalloonTipTitle = actionResult.Title;

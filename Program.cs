@@ -19,6 +19,7 @@ namespace it
         {
 
 
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
@@ -29,6 +30,13 @@ namespace it
 
             //_disposable = new Form1();
             Application.Run();
+
+            using (var bootstrap = new Bootstrap())
+            {
+                Bootstrap.Startup();
+                Application.Run();
+            }
+
         }
     }
 }

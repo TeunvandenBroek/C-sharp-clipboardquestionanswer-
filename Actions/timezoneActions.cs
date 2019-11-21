@@ -13,7 +13,7 @@ namespace it.Actions
         public bool Matches(string clipboardText)
         {
             country = clipboardText.Trim().ToLowerInvariant();
-            KeyValuePair<string, Countries.UtcOffset> keyValuePair = TryKeypair();
+            var keyValuePair = TryKeypair();
             return keyValuePair.Key != default;
         }
 
