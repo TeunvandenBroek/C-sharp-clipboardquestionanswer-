@@ -5,6 +5,11 @@ namespace it.Actions
 {
     internal class CountdownActions : IAction
     {
+        public bool Matches(string clipboardText)
+        {
+            return clipboardText.StartsWith("timer") && TimeSpan.TryParse(clipboardText.Replace("timer ", ""), out TimeSpan ts);
+        }
+
         ActionResult IAction.TryExecute(string clipboardText)
         {
             var actionResult = new ActionResult();

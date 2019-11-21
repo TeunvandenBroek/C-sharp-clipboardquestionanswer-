@@ -14,6 +14,11 @@ namespace it.Actions
         private DateTime? prevDate;
         public int Priority => 0;
 
+        public bool Matches(string clipboardText)
+        {
+            return DateTime.TryParseExact(clipboardText, DateFormats, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out DateTime newDate);
+        }
+
         public ActionResult TryExecute(string clipboardText)
         {
             var actionResult = new ActionResult(isProcessed: false);

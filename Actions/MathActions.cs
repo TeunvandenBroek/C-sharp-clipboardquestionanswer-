@@ -25,6 +25,12 @@ namespace it.Actions
         private readonly Regex mathRegex =
             new Regex(@"^(?<lhs>\d+(?:[,.]{1}\d)*)(([ ]*(?<operator>[+\-\:x\%\*/])[ ]*(?<rhs>\d+(?:[,.]{1}\d)*)+)+)");
 
+        public bool Matches(string clipboardText)
+        {
+            Match match = mathRegex.Match(clipboardText.Replace(',', '.'));
+            return match.Success;
+        }
+
         public ActionResult TryExecute(string clipboardText)
         {
             var actionResult = new ActionResult(clipboardText);

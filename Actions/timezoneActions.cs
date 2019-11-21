@@ -10,6 +10,20 @@ namespace it.Actions
         private string country;
         private string timeZoneId = string.Empty;
 
+        public bool Matches(string clipboardText)
+        {
+            country = clipboardText.Trim().ToLowerInvariant();
+            KeyValuePair<string, Countries.UtcOffset> keyValuePair = TryKeypair();
+            return keyValuePair.Key != default;
+        }
+
+        public bool Matches(string clipboardText)
+        {
+            country = clipboardText.Trim().ToLowerInvariant();
+            KeyValuePair<string, Countries.UtcOffset> keyValuePair = TryKeypair();
+            return keyValuePair.Key != default;
+        }
+
         ActionResult IAction.TryExecute(string clipboardText)
         {
             var actionResult = new ActionResult();

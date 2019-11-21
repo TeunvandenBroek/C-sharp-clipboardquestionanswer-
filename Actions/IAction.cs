@@ -17,10 +17,12 @@
     internal interface IAction
     {
         ActionResult TryExecute(string clipboardText);
+        bool Matches(string clipboardText);
     }
 
     internal abstract class ActionBase : IAction
     {
         public abstract ActionResult TryExecute(string clipboardText);
+        public abstract bool Matches(string clipboardText);
     }
 }

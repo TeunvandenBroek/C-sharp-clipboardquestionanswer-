@@ -88,5 +88,32 @@ namespace it.Actions
             var wifidata = wifilist();
             return true;
         }
+
+
+        public bool Matches(string clipboardText)
+        {
+            return clipboardText.ToLower().StartsWith("wifi");
+        }
+
+        public ActionResult TryExecute(string clipboardText)
+        {
+            ActionResult actionResult = new ActionResult();
+
+            switch (clipboardText)
+            {
+                case "wifi password":
+                    {
+                        actionResult.Title = "Your wifi password is";
+                        actionResult.Description = get_passwords().ToString();
+                        break;
+                    }
+                default:
+                    actionResult.IsProcessed = false;
+                    break;
+            }
+
+            return actionResult;
+        }
+
     }
 }

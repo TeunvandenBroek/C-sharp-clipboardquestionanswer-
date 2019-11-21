@@ -9,6 +9,11 @@ namespace it.Actions
         private string lastClipboard;
         private Stopwatch myStopwatch;
 
+        public bool Matches(string clipboardText)
+        {
+            return clipboardText.ToLower().Contains("stopwatch");
+        }
+
         public ActionResult TryExecute(string clipboardText)
         {
             var actionResult = new ActionResult();

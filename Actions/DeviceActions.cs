@@ -33,12 +33,28 @@ namespace it.Actions
         private bool disposed;
         private bool isCountingWords;
 
+        private string[] commands = { "sluit", "opnieuw opstarten", "reboot", "slaapstand", "sleep", "taakbeheer",
+            "task mananger", "notepad", "kladblok", "leeg prullebak", "prullebak", "empty recycle bin", "empty bin",
+            "empty recycling bin", "vergrendel", "lock", "afsluiten", "shut down", "ram", "windows versie", "windows version",
+            "mac-adres", "mac", "mac address", "computer naam", "computer name", "cpu", "wifi check", "heb ik internet?", "count words", "ip" };
+
+        public bool Matches(string clipboardText)
+        {
+            foreach(string command in commands)
+            {
+                if (command.Equals(clipboardText.ToLower())) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         ActionResult IAction.TryExecute(string clipboardText)
         {
             var currentCulture = Thread.CurrentThread.CurrentCulture;
             var actionResult = new ActionResult(clipboardText);
 
-            switch (clipboardText)
+            switch (clipboardText.ToLower())
             {
                 case "sluit":
                 {
