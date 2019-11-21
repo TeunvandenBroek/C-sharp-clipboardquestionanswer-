@@ -16,7 +16,7 @@ namespace it.Actions
         private readonly SmartPerformanceCounter cpuCounter = new SmartPerformanceCounter(
             () => new PerformanceCounter("Processor", "% Processor Time", "_Total"), TimeSpan.FromMinutes(1));
 
-        private readonly SafeHandle handle = new SafeFileHandle(IntPtr.Zero, true);
+        private readonly SafeHandle _handle = new SafeFileHandle(IntPtr.Zero, true);
 
         private readonly SmartPerformanceCounter ramCounter =
             new SmartPerformanceCounter(() => new PerformanceCounter("Memory", "Available MBytes"),
@@ -338,7 +338,7 @@ namespace it.Actions
 
             if (disposing)
             {
-                handle.Dispose();
+                _handle.Dispose();
                 if (ramCounter.IsValueCreated) ramCounter.Value.Dispose();
                 if (cpuCounter.IsValueCreated) cpuCounter.Value.Dispose();
                 _taskmananger?.Dispose();

@@ -27,7 +27,7 @@ namespace it.Actions
 
         public bool Matches(string clipboardText)
         {
-            Match match = mathRegex.Match(clipboardText.Replace(',', '.'));
+            var match = mathRegex.Match(clipboardText.Replace(',', '.'));
             return match.Success;
         }
 

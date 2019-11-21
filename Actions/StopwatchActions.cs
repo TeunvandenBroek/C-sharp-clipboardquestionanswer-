@@ -48,20 +48,23 @@ namespace it.Actions
                         myStopwatch = new Stopwatch();
                         myStopwatch.Start();
                         var ts = myStopwatch.Elapsed;
-                        switch (currentCulture.LCID)
-                        {
-                            case 1033: // english-us
-                                actionResult.Title = "Stopwatch reset to";
-                                actionResult.Description =
-                                    $"{ts.Hours} hours, {ts.Minutes} minutes,  {ts.Seconds} seconds";
-                                break;
-                            case 1043: // dutch
-                                actionResult.Title = "Stopwatch gereset naar";
-                                actionResult.Description =
-                                    $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes";
-                                break;
+                            switch (currentCulture.LCID)
+                            {
+                                case 1033: // english-us
+                                    actionResult.Title = "Stopwatch reset to";
+                                    actionResult.Description =
+                                        $"{ts.Hours} hours, {ts.Minutes} minutes,  {ts.Seconds} seconds";
+                                    break;
+                                case 1043: // dutch
+                                    actionResult.Title = "Stopwatch gereset naar";
+                                    actionResult.Description =
+                                        $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes";
+                                    break;
+                                default:
+                                    actionResult.IsProcessed = false;
+                                    return actionResult;
+                            }
                         }
-                    }
 
                     break;
                 }
@@ -73,20 +76,23 @@ namespace it.Actions
                         var ts = myStopwatch.Elapsed;
                         myStopwatch.Stop();
 
-                        switch (currentCulture.LCID)
-                        {
-                            case 1033: // english-us
-                                actionResult.Title = "Stopwatch paused on";
-                                actionResult.Description =
-                                    $"{ts.Hours} hours, {ts.Minutes} minutes,  {ts.Seconds} seconds";
-                                break;
-                            case 1043: // dutch
-                                actionResult.Title = "Stopwatch gepauzeerd op";
-                                actionResult.Description =
-                                    $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes";
-                                break;
+                            switch (currentCulture.LCID)
+                            {
+                                case 1033: // english-us
+                                    actionResult.Title = "Stopwatch paused on";
+                                    actionResult.Description =
+                                        $"{ts.Hours} hours, {ts.Minutes} minutes,  {ts.Seconds} seconds";
+                                    break;
+                                case 1043: // dutch
+                                    actionResult.Title = "Stopwatch gepauzeerd op";
+                                    actionResult.Description =
+                                        $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes";
+                                    break;
+                                default:
+                                    actionResult.IsProcessed = false;
+                                    return actionResult;
+                            }
                         }
-                    }
 
                     break;
                 }
@@ -97,20 +103,23 @@ namespace it.Actions
                         lastClipboard = clipboardText;
                         var ts = myStopwatch.Elapsed;
                         myStopwatch.Start();
-                        switch (currentCulture.LCID)
-                        {
-                            case 1033: // english-us
-                                actionResult.Title = "Stopwatch resumed from";
-                                actionResult.Description =
-                                    $"{ts.Hours} hours, {ts.Minutes} minutes,  {ts.Seconds} seconds";
-                                break;
-                            case 1043: // dutch
-                                actionResult.Title = "Stopwatch gepauzeerd op";
-                                actionResult.Description =
-                                    $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes";
-                                break;
+                            switch (currentCulture.LCID)
+                            {
+                                case 1033: // english-us
+                                    actionResult.Title = "Stopwatch resumed from";
+                                    actionResult.Description =
+                                        $"{ts.Hours} hours, {ts.Minutes} minutes,  {ts.Seconds} seconds";
+                                    break;
+                                case 1043: // dutch
+                                    actionResult.Title = "Stopwatch gepauzeerd op";
+                                    actionResult.Description =
+                                        $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes";
+                                    break;
+                                default:
+                                    actionResult.IsProcessed = false;
+                                    return actionResult;
+                            }
                         }
-                    }
 
                     break;
                 }
@@ -121,20 +130,23 @@ namespace it.Actions
                         lastClipboard = null;
                         myStopwatch.Stop();
                         var ts = myStopwatch.Elapsed;
-                        switch (currentCulture.LCID)
-                        {
-                            case 1033: // english-us
-                                actionResult.Title = "Elapsed time";
-                                actionResult.Description =
-                                    $"{ts.Hours} hours, {ts.Minutes} minutes,  {ts.Seconds} seconds";
-                                break;
-                            case 1043: // dutch
-                                actionResult.Title = "Elapsed time";
-                                actionResult.Description =
-                                    $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes";
-                                break;
+                            switch (currentCulture.LCID)
+                            {
+                                case 1033: // english-us
+                                    actionResult.Title = "Elapsed time";
+                                    actionResult.Description =
+                                        $"{ts.Hours} hours, {ts.Minutes} minutes,  {ts.Seconds} seconds";
+                                    break;
+                                case 1043: // dutch
+                                    actionResult.Title = "Elapsed time";
+                                    actionResult.Description =
+                                        $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes";
+                                    break;
+                                default:
+                                    actionResult.IsProcessed = false;
+                                    return actionResult;
+                            }
                         }
-                    }
                     else
                     {
                         actionResult.IsProcessed = false;
