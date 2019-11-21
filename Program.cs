@@ -17,11 +17,26 @@ namespace it
         [STAThread]
         private static void Main()
         {
+
+
+
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
+            var bootstrap = new Bootstrap();
+            bootstrap.EnsureWindowStartup(false);
+            bootstrap.Startup();
+
+
+            //_disposable = new Form1();
+            Application.Run();
+
             using (var bootstrap = new Bootstrap())
             {
                 Bootstrap.Startup();
                 Application.Run();
             }
+
         }
     }
 }
