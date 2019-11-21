@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace it
 {
-    public static class Questions
+    public static class Questions 
     {
         private static readonly Dictionary<string, string> questionDict = new Dictionary<string, string>
             (StringComparer.Ordinal)

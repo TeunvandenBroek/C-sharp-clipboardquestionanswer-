@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Globalization;
 using System.Linq;
+using System.Web.Services.Description;
 using System.Windows.Forms;
 using it.Actions;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,7 +45,7 @@ namespace it
         private void ConfigureDependancies()
         {
             // Add configure services
-            IServiceCollection serviceDescriptors = new ServiceCollection();
+            IServiceCollection serviceDescriptors = new Microsoft.Extensions.DependencyInjection.ServiceCollection();
 
             serviceDescriptors.AddSingleton<IAction, ConvertActions>();
             serviceDescriptors.AddSingleton<IAction, CountdownActions>();
@@ -85,29 +85,6 @@ namespace it
         {
             try
             {
-
-                //foreach (IAction action in serviceProvider.GetServices<IAction>())
-                //{
-                //    // disconnect events from the clipboard.
-                //    clipboardMonitor.ClipboardChanged -= ClipboardMonitor_ClipboardChanged;
-                //    // run the action
-                //    ActionResult actionResult = action.TryExecute(clipboardText);
-                //    // re attach the event
-                //    clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
-
-                //    // if this action processed the command, exit the loop.
-                //    if (actionResult.IsProcessed)
-                //    {
-                //        if (!String.IsNullOrWhiteSpace(actionResult.Title) || !String.IsNullOrWhiteSpace(actionResult.Description))
-                //        {
-                //            ShowNotification(actionResult);
-                //            Clipboard.Clear();
-                //        }
-                //        break;
-                //    }
-
-                //}
-
                 var service = serviceProvider.GetServices<IAction>().FirstOrDefault(s => s.Matches(clipboardText));
                 clipboardMonitor.ClipboardChanged -= ClipboardMonitor_ClipboardChanged;
                 // run the action
@@ -122,13 +99,12 @@ namespace it
 
 
 
-                var actions = new List<IAction>(serviceProvider.GetServices<IAction>());
-                foreach (var action in actions)
+                foreach (var action in new List<IAction>(serviceProvider.GetServices<IAction>()))
                 {
                     // disconnect events from the clipboard.
                     clipboardMonitor.ClipboardChanged -= ClipboardMonitor_ClipboardChanged;
                     // run the action
-                    var actionResult = action.TryExecute(clipboardText);
+                    actionResult = action.TryExecute(clipboardText);
                     // re attach the event
                     clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
 
