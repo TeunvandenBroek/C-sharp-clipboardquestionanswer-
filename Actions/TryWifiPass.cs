@@ -7,26 +7,6 @@ namespace it.Actions
     //TO DO
     public class TryWifiPass : IAction
     {
-        public ActionResult TryExecute(string clipboardText)
-        {
-            var actionResult = new ActionResult();
-
-            switch (clipboardText)
-            {
-                case "wifi password":
-                {
-                    actionResult.Title = "Your wifi password is";
-                    actionResult.Description = get_passwords().ToString();
-                    break;
-                }
-                default:
-                    actionResult.IsProcessed = false;
-                    break;
-            }
-
-            return actionResult;
-        }
-
         private string wifilist()
         {
             // netsh wlan show profile
