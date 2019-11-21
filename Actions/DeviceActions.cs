@@ -33,7 +33,7 @@ namespace it.Actions
         private bool disposed;
         private bool isCountingWords;
 
-        private string[] commands = { "sluit", "opnieuw opstarten", "reboot", "slaapstand", "sleep", "taakbeheer",
+        private readonly string[] commands = { "sluit", "opnieuw opstarten", "reboot", "slaapstand", "sleep", "taakbeheer",
             "task mananger", "notepad", "kladblok", "leeg prullebak", "prullebak", "empty recycle bin", "empty bin",
             "empty recycling bin", "vergrendel", "lock", "afsluiten", "shut down", "ram", "windows versie", "windows version",
             "mac-adres", "mac", "mac address", "computer naam", "computer name", "cpu", "wifi check", "heb ik internet?", "count words", "ip" };
@@ -305,7 +305,7 @@ namespace it.Actions
 
             if (isCountingWords)
             {
-                var words = clipboardText.Split(' ');
+                var words = clipboardText.Split(new char[] { ' ' });
                 var numberOfWords = words.Length;
                 isCountingWords = false;
                 actionResult.Title = "Number of words are: ";
