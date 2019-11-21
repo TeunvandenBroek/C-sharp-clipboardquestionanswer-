@@ -6,8 +6,8 @@ using System.Windows.Forms;
 
 namespace it
 {
-    [DefaultEvent("ClipboardChanged")]
-    public class ClipboardMonitor : Control
+    [DefaultEvent(nameof(ClipboardChanged))]
+    public sealed class ClipboardMonitor : Control
     {
         private IntPtr nextClipboardViewer;
 
