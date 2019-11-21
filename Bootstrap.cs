@@ -1,9 +1,11 @@
 using it.Actions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace it
@@ -76,11 +78,11 @@ namespace it
                 if (string.IsNullOrWhiteSpace(clipboardText)) return;
 
                 // if we get to here, we have text
-                GetAnswer(clipboardText);
+                ProcessClipboardText(clipboardText);
             }
         }
 
-        private void GetAnswer(string clipboardText)
+        private void ProcessClipboardText(string clipboardText)
         {
             try
             {
@@ -138,10 +140,6 @@ namespace it
             }
         }
 
-        private void ClearClipboard(string clipboardText)
-        {
-        }
-
         private void ProcessResult(ActionResult actionResult, string clipboardText)
         {
             if (Clipboard.GetText() == clipboardText) Clipboard.Clear();
@@ -152,6 +150,36 @@ namespace it
             notifyIcon.BalloonTipIcon = ToolTipIcon.Error;
             notifyIcon.ShowBalloonTip(1000);
 
+        }
+
+        internal void EnsureWindowStartup(bool isStartingWithWindows)
+        {
+            string keyName = "Clipboard Assistant";
+            string keyValue = Assembly.GetExecutingAssembly().Location;
+
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
+            if (key == null) return;
+
+            string value = key.GetValue(keyName, null) as string;
+
+            if (isStartingWithWindows)
+            {
+                // key doesn't exist, add it
+                if (String.IsNullOrWhiteSpace(value))
+                {
+                    key.SetValue(keyName, keyValue);
+                }
+            }
+            else
+            {
+                // if key exist, remove it
+                if (!String.IsNullOrWhiteSpace(value))
+                {
+                    key.DeleteValue(keyName);
+                }
+            }
+
+            key.Close();
         }
     }
 }

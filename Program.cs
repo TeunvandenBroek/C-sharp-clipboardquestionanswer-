@@ -17,10 +17,13 @@ namespace it
         [STAThread]
         private static void Main()
         {
+
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
             var bootstrap = new Bootstrap();
+            bootstrap.EnsureWindowStartup(false);
             bootstrap.Startup();
 
 
