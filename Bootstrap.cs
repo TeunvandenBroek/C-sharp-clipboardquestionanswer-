@@ -165,7 +165,7 @@ namespace it
             if (isStartingWithWindows)
             {
                 // key doesn't exist, add it
-                if (String.IsNullOrWhiteSpace(value))
+                if (String.IsNullOrWhiteSpace(value) && value == keyValue)
                 {
                     key.SetValue(keyName, keyValue);
                 }
