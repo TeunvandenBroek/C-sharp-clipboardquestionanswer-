@@ -44,13 +44,13 @@ namespace it.Actions
             {
                 var operators = (from Capture capture
                         in match.Groups["operator"].Captures
-                    select capture.Value).ToList();
+                                 select capture.Value).ToList();
 
                 var lhs = double.Parse(match.Groups["lhs"].Value, CultureInfo.InvariantCulture);
 
                 var rhss = (from Capture capture
                         in match.Groups["rhs"].Captures
-                    select double.Parse(capture.Value, CultureInfo.InvariantCulture)).ToArray();
+                            select double.Parse(capture.Value, CultureInfo.InvariantCulture)).ToArray();
 
                 var answer = lhs;
 

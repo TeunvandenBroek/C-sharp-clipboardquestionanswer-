@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace it.Actions
 {
-    internal class DeviceActions : IAction
+    internal class DeviceActions : IAction, IDisposable
     {
         private readonly SmartPerformanceCounter cpuCounter = new SmartPerformanceCounter(
             () => new PerformanceCounter("Processor", "% Processor Time", "_Total"), TimeSpan.FromMinutes(1));
@@ -42,7 +42,7 @@ namespace it.Actions
         {
             foreach (string command in commands)
             {
-                if (command.Equals(clipboardText.ToLower()))
+                if (command.Equals(clipboardText.ToLower(), StringComparison.Ordinal))
                 {
                     return true;
                 }
@@ -101,6 +101,9 @@ namespace it.Actions
                             case 1043: // dutch
                                 actionResult.Description = "Prullebak succesvol leeg gemaakt";
                                 break;
+                            default:
+                                actionResult.IsProcessed = false;
+                                return actionResult;
                         }
 
                         return actionResult;
@@ -141,6 +144,9 @@ namespace it.Actions
                                 }
 
                                 break;
+                            default:
+                                actionResult.IsProcessed = false;
+                                return actionResult;
                         }
 
                         return actionResult;
@@ -158,6 +164,9 @@ namespace it.Actions
                                 actionResult.Title = "Je windows versie";
                                 actionResult.Description = $"Windows Version {Environment.OSVersion.Version}";
                                 break;
+                            default:
+                                actionResult.IsProcessed = false;
+                                return actionResult;
                         }
 
                         return actionResult;
@@ -184,6 +193,9 @@ namespace it.Actions
                                 actionResult.Title = "Je mac adres";
                                 actionResult.Description = sMacAddress;
                                 break;
+                            default:
+                                actionResult.IsProcessed = false;
+                                return actionResult;
                         }
 
                         return actionResult;
@@ -204,6 +216,9 @@ namespace it.Actions
                                 actionResult.Title = "je computer naam is";
                                 actionResult.Description = dnsName;
                                 break;
+                            default:
+                                actionResult.IsProcessed = false;
+                                return actionResult;
                         }
 
                         return actionResult;
@@ -222,6 +237,9 @@ namespace it.Actions
                                 actionResult.Title = "Processor verbruik";
                                 actionResult.Description = secondValue.ToString("###", CultureInfo.InvariantCulture) + "%";
                                 break;
+                            default:
+                                actionResult.IsProcessed = false;
+                                return actionResult;
                         }
 
                         return actionResult;
@@ -242,12 +260,15 @@ namespace it.Actions
                                     case 1043: // dutch
                                         actionResult.Description = "Je hebt internet";
                                         break;
+                                    default:
+                                        actionResult.IsProcessed = false;
+                                        return actionResult;
                                 }
                             }
 
                             return actionResult;
                         }
-                        catch
+                        catch (Exception ex)
                         {
                             switch (currentCulture.LCID)
                             {
@@ -257,6 +278,9 @@ namespace it.Actions
                                 case 1043: // dutch
                                     actionResult.Description = "Je hebt geen internet";
                                     break;
+                                default:
+                                    actionResult.IsProcessed = false;
+                                    return actionResult;
                             }
                         }
 
@@ -298,10 +322,15 @@ namespace it.Actions
                                 actionResult.Title = "Ip adres";
                                 actionResult.Description = "Je public ip adres = " + externalIpAddress;
                                 return actionResult;
+                            default:
+                                actionResult.IsProcessed = false;
+                                return actionResult;
                         }
-
-                        return actionResult;
                     }
+
+                default:
+                    actionResult.IsProcessed = false;
+                    return actionResult;
             }
 
             if (isCountingWords)
@@ -352,20 +381,19 @@ namespace it.Actions
 
         private enum Recycle : uint
         {
-            /// <summary>
-            ///     Defines the SHRB_NOCONFIRMATION
-            /// </summary>
             SHRB_NOCONFIRMATION = 0x00000001,
-
-            /// <summary>
-            ///     Defines the SHRB_NOPROGRESSUI
-            /// </summary>
             SHRB_NOPROGRESSUI = 0x00000002,
-
-            /// <summary>
-            ///     Defines the SHRB_NOSOUND
-            /// </summary>
             SHRB_NOSOUND = 0x00000004
+        }
+
+        public void Dispose()
+        {
+            _handle?.Dispose();
+            _afsluiten?.Dispose();
+            _reboot?.Dispose();
+            _taskmananger?.Dispose();
+            _vergrendel?.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }
