@@ -13,14 +13,14 @@ namespace it
 
         public ClipboardMonitor()
         {
-            this.BackColor = Color.Red;
-            this.Visible = false;
+            BackColor = Color.Red;
+            Visible = false;
 
-            nextClipboardViewer = (IntPtr)SetClipboardViewer((int)this.Handle);
+            nextClipboardViewer = (IntPtr) SetClipboardViewer((int) Handle);
         }
 
         /// <summary>
-        /// Clipboard contents changed.
+        ///     Clipboard contents changed.
         /// </summary>
         public event EventHandler<ClipboardChangedEventArgs> ClipboardChanged;
 
@@ -28,11 +28,10 @@ namespace it
         {
             try
             {
-                ChangeClipboardChain(this.Handle, nextClipboardViewer);
+                ChangeClipboardChain(Handle, nextClipboardViewer);
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -45,7 +44,7 @@ namespace it
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern int SendMessage(IntPtr hwnd, int wMsg, IntPtr wParam, IntPtr lParam);
 
-        protected override void WndProc(ref System.Windows.Forms.Message m)
+        protected override void WndProc(ref Message m)
         {
             // defined in winuser.h
             const int WM_DRAWCLIPBOARD = 0x308;
@@ -75,9 +74,8 @@ namespace it
         {
             try
             {
-                IDataObject iData = Clipboard.GetDataObject();
+                var iData = Clipboard.GetDataObject();
                 ClipboardChanged?.Invoke(this, new ClipboardChangedEventArgs(iData));
-
             }
             catch (Exception e)
             {

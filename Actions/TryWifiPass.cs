@@ -7,10 +7,30 @@ namespace it.Actions
     //TO DO
     public class TryWifiPass : IAction
     {
+        public ActionResult TryExecute(string clipboardText)
+        {
+            var actionResult = new ActionResult();
+
+            switch (clipboardText)
+            {
+                case "wifi password":
+                {
+                    actionResult.Title = "Your wifi password is";
+                    actionResult.Description = get_passwords().ToString();
+                    break;
+                }
+                default:
+                    actionResult.IsProcessed = false;
+                    break;
+            }
+
+            return actionResult;
+        }
+
         private string wifilist()
         {
             // netsh wlan show profile
-            Process processWifi = new Process();
+            var processWifi = new Process();
             processWifi.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             processWifi.StartInfo.FileName = "netsh";
             processWifi.StartInfo.Arguments = "wlan show profile";
@@ -20,16 +40,16 @@ namespace it.Actions
             processWifi.StartInfo.RedirectStandardOutput = true;
             processWifi.StartInfo.CreateNoWindow = true;
             processWifi.Start();
-            string output = processWifi.StandardOutput.ReadToEnd();
-            string err = processWifi.StandardError.ReadToEnd();
+            var output = processWifi.StandardOutput.ReadToEnd();
+            var err = processWifi.StandardError.ReadToEnd();
             processWifi.WaitForExit();
             return output;
         }
 
         private string wifipassword(string wifiname)
         {
-            string argument = "wlan show profile name=\"" + wifiname + "\" key=clear";
-            Process processWifi = new Process();
+            var argument = "wlan show profile name=\"" + wifiname + "\" key=clear";
+            var processWifi = new Process();
             processWifi.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             processWifi.StartInfo.FileName = "netsh";
             processWifi.StartInfo.Arguments = argument;
@@ -39,36 +59,36 @@ namespace it.Actions
             processWifi.StartInfo.RedirectStandardOutput = true;
             processWifi.StartInfo.CreateNoWindow = true;
             processWifi.Start();
-            string output = processWifi.StandardOutput.ReadToEnd();
-            string err = processWifi.StandardError.ReadToEnd();
+            var output = processWifi.StandardOutput.ReadToEnd();
+            var err = processWifi.StandardError.ReadToEnd();
             processWifi.WaitForExit();
             return output;
         }
+
         public string wifipassword_single(string wifiname)
         {
-            string get_password = wifipassword(wifiname);
-            using (StringReader reader = new StringReader(get_password.ToString()))
+            var get_password = wifipassword(wifiname);
+            using (var reader = new StringReader(get_password))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    Regex regex2 = new Regex(@"Key Content * : (?<after>.*)");
-                    Match match2 = regex2.Match(line);
+                    var regex2 = new Regex(@"Key Content * : (?<after>.*)");
+                    var match2 = regex2.Match(line);
 
-                    if (match2.Success)
-                    {
-                        return match2.Groups["after"].Value;
-                    }
+                    if (match2.Success) return match2.Groups["after"].Value;
                 }
             }
+
             return "Open Network";
         }
 
         private bool get_passwords() // Main Operation occurs here in this function
         {
-            string wifidata = wifilist();
+            var wifidata = wifilist();
             return true;
         }
+
 
         public bool Matches(string clipboardText)
         {
@@ -94,5 +114,6 @@ namespace it.Actions
 
             return actionResult;
         }
+
     }
 }

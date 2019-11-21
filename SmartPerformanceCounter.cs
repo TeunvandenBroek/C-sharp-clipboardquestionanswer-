@@ -1,12 +1,14 @@
-﻿namespace it
-{
-    using System;
-    using System.Diagnostics;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
+namespace it
+{
     public class SmartPerformanceCounter
     {
         private readonly Func<PerformanceCounter> _factory;
+
+        private readonly object _lock = new object();
 
         private readonly TimeSpan _time;
 
@@ -14,7 +16,11 @@
 
         private PerformanceCounter _value;
 
-        private readonly object _lock = new object();
+        public SmartPerformanceCounter(Func<PerformanceCounter> factory, TimeSpan time)
+        {
+            _factory = factory;
+            _time = time;
+        }
 
         public bool IsValueCreated { get; private set; }
 
@@ -30,19 +36,15 @@
                         IsValueCreated = true;
                     }
                 }
+
                 _cpuCounterLastAccessedTimestamp = Stopwatch.GetTimestamp();
                 return _value;
             }
         }
-        public SmartPerformanceCounter(Func<PerformanceCounter> factory, TimeSpan time)
-        {
-            _factory = factory;
-            _time = time;
-        }
 
         private void DoCleaningCheck()
         {
-            long now = Stopwatch.GetTimestamp();
+            var now = Stopwatch.GetTimestamp();
             if (now - _cpuCounterLastAccessedTimestamp <= _time.Ticks) return;
             lock (_lock)
             {
@@ -53,7 +55,7 @@
             }
         }
 
-        public async Task FunctionAsync() 
+        public async Task FunctionAsync()
         {
             await Task.Delay(_time).ConfigureAwait(false);
             DoCleaningCheck();

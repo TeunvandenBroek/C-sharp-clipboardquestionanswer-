@@ -4,10 +4,10 @@ using System.Windows.Forms;
 
 namespace it.Actions
 {
-
     internal class ConvertActions : ActionBase
     {
-        private readonly Regex unitRegex = new Regex("(?<number>^[0-9]+([.,][0-9]{1,3})?)(\\s*)(?<from>[a-z]+[2-3]?) to (?<to>[a-z]+[2-3]?)");
+        private readonly Regex unitRegex =
+            new Regex("(?<number>^[0-9]+([.,][0-9]{1,3})?)(\\s*)(?<from>[a-z]+[2-3]?) to (?<to>[a-z]+[2-3]?)");
 
         public override bool Matches(string clipboardText)
         {
@@ -16,11 +16,11 @@ namespace it.Actions
         }
 
 
-        override public ActionResult TryExecute(string clipboardText)
+        public override ActionResult TryExecute(string clipboardText)
         {
-            ActionResult actionResult = new ActionResult();
+            var actionResult = new ActionResult();
 
-            Match matches = unitRegex.Match(clipboardText);
+            var matches = unitRegex.Match(clipboardText);
 
             if (!matches.Success)
             {
@@ -28,10 +28,9 @@ namespace it.Actions
             }
             else
             {
-
-                double number = double.Parse(matches.Groups["number"].Value);
-                string from = matches.Groups["from"].Value;
-                string to = matches.Groups["to"].Value;
+                var number = double.Parse(matches.Groups["number"].Value);
+                var from = matches.Groups["from"].Value;
+                var to = matches.Groups["to"].Value;
                 double meter = 0, gram = 0, liter = 0, oppervlakte = 0;
                 switch (from)
                 {
@@ -157,8 +156,6 @@ namespace it.Actions
                         break;
                     case "km2":
                         oppervlakte = number * 1000000;
-                        break;
-                    default:
                         break;
                 }
 
@@ -291,8 +288,6 @@ namespace it.Actions
                     case "km2":
                         result = oppervlakte / 1000000;
                         break;
-                    default:
-                        break;
                 }
 
                 Clipboard.SetText(result.ToString(CultureInfo.CurrentCulture));
@@ -302,6 +297,5 @@ namespace it.Actions
 
             return actionResult;
         }
-
     }
 }
