@@ -1,3 +1,4 @@
+using Microsoft.Win32.SafeHandles;
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -7,7 +8,6 @@ using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
-using Microsoft.Win32.SafeHandles;
 
 namespace it.Actions
 {
@@ -40,9 +40,10 @@ namespace it.Actions
 
         public bool Matches(string clipboardText)
         {
-            foreach(string command in commands)
+            foreach (string command in commands)
             {
-                if (command.Equals(clipboardText.ToLower())) {
+                if (command.Equals(clipboardText.ToLower()))
+                {
                     return true;
                 }
             }
@@ -57,250 +58,250 @@ namespace it.Actions
             switch (clipboardText.ToLower())
             {
                 case "sluit":
-                {
-                    Environment.Exit(0);
-                    return actionResult;
-                }
+                    {
+                        Environment.Exit(0);
+                        return actionResult;
+                    }
                 case "opnieuw opstarten":
                 case "reboot":
-                {
-                    _reboot = Process.Start("shutdown", "/r /t 0");
-                    return actionResult;
-                }
+                    {
+                        _reboot = Process.Start("shutdown", "/r /t 0");
+                        return actionResult;
+                    }
                 case "slaapstand":
                 case "sleep":
-                {
-                    Application.SetSuspendState(PowerState.Hibernate, true, true);
-                    return actionResult;
-                }
+                    {
+                        Application.SetSuspendState(PowerState.Hibernate, true, true);
+                        return actionResult;
+                    }
                 case "taakbeheer":
                 case "task mananger":
-                {
-                    _taskmananger = Process.Start("taskmgr.exe");
-                    return actionResult;
-                }
+                    {
+                        _taskmananger = Process.Start("taskmgr.exe");
+                        return actionResult;
+                    }
                 case "notepad":
                 case "kladblok":
-                {
-                    Process.Start("notepad.exe");
-                    return actionResult;
-                }
+                    {
+                        Process.Start("notepad.exe");
+                        return actionResult;
+                    }
                 case "leeg prullebak":
                 case "prullebak":
                 case "empty recycle bin":
                 case "empty bin":
                 case "empty recycling bin":
-                {
-                    SHEmptyRecycleBin(IntPtr.Zero, null, Recycle.SHRB_NOCONFIRMATION);
-                    switch (currentCulture.LCID)
                     {
-                        case 1033: // english-us
-                            actionResult.Description = "Recycling bin emptied successfully";
-                            break;
-                        case 1043: // dutch
-                            actionResult.Description = "Prullebak succesvol leeg gemaakt";
-                            break;
-                    }
+                        SHEmptyRecycleBin(IntPtr.Zero, null, Recycle.SHRB_NOCONFIRMATION);
+                        switch (currentCulture.LCID)
+                        {
+                            case 1033: // english-us
+                                actionResult.Description = "Recycling bin emptied successfully";
+                                break;
+                            case 1043: // dutch
+                                actionResult.Description = "Prullebak succesvol leeg gemaakt";
+                                break;
+                        }
 
-                    return actionResult;
-                }
+                        return actionResult;
+                    }
                 case "vergrendel":
                 case "lock":
-                {
-                    _vergrendel = Process.Start(@"C:\WINDOWS\system32\rundll32.exe", "user32.dll,LockWorkStation");
-                    break;
-                }
+                    {
+                        _vergrendel = Process.Start(@"C:\WINDOWS\system32\rundll32.exe", "user32.dll,LockWorkStation");
+                        break;
+                    }
                 case "afsluiten":
                 case "shut down":
-                {
-                    _afsluiten = Process.Start("shutdown", "/s /t 0");
-                    break;
-                }
+                    {
+                        _afsluiten = Process.Start("shutdown", "/s /t 0");
+                        break;
+                    }
                 //om je momentele ram geheugen te laten zien (To display your momentary RAM memory)
                 case "ram":
-                {
-                    switch (currentCulture.LCID)
                     {
-                        case 1033: // english-us
-                            using (var pc = ramCounter.Value)
-                            {
-                                actionResult.Title = "RAM Memory";
-                                actionResult.Description =
-                                    pc.NextValue().ToString(CultureInfo.InvariantCulture) + " MB of RAM in your system";
-                            }
+                        switch (currentCulture.LCID)
+                        {
+                            case 1033: // english-us
+                                using (var pc = ramCounter.Value)
+                                {
+                                    actionResult.Title = "RAM Memory";
+                                    actionResult.Description =
+                                        pc.NextValue().ToString(CultureInfo.InvariantCulture) + " MB of RAM in your system";
+                                }
 
-                            break;
-                        case 1043: // dutch
-                            using (var pc = ramCounter.Value)
-                            {
-                                actionResult.Title = "Ram geheugen";
-                                actionResult.Description =
-                                    pc.NextValue().ToString(CultureInfo.InvariantCulture) +
-                                    " MB ram-geheugen over in je systeem";
-                            }
+                                break;
+                            case 1043: // dutch
+                                using (var pc = ramCounter.Value)
+                                {
+                                    actionResult.Title = "Ram geheugen";
+                                    actionResult.Description =
+                                        pc.NextValue().ToString(CultureInfo.InvariantCulture) +
+                                        " MB ram-geheugen over in je systeem";
+                                }
 
-                            break;
+                                break;
+                        }
+
+                        return actionResult;
                     }
-
-                    return actionResult;
-                }
                 case "windows versie":
                 case "windows version":
-                {
-                    switch (currentCulture.LCID)
                     {
-                        case 1033: // english-us
-                            actionResult.Title = "Your Windows version";
-                            actionResult.Description = $"Windows Version {Environment.OSVersion.Version}";
-                            break;
-                        case 1043: // dutch
-                            actionResult.Title = "Je windows versie";
-                            actionResult.Description = $"Windows Version {Environment.OSVersion.Version}";
-                            break;
-                    }
+                        switch (currentCulture.LCID)
+                        {
+                            case 1033: // english-us
+                                actionResult.Title = "Your Windows version";
+                                actionResult.Description = $"Windows Version {Environment.OSVersion.Version}";
+                                break;
+                            case 1043: // dutch
+                                actionResult.Title = "Je windows versie";
+                                actionResult.Description = $"Windows Version {Environment.OSVersion.Version}";
+                                break;
+                        }
 
-                    return actionResult;
-                }
+                        return actionResult;
+                    }
                 case "mac-adres":
                 case "mac":
                 case "mac address":
-                {
-                    var sMacAddress = string.Empty;
-                    foreach (var adapter in NetworkInterface.GetAllNetworkInterfaces())
-                        if (string.IsNullOrEmpty(sMacAddress))
+                    {
+                        var sMacAddress = string.Empty;
+                        foreach (var adapter in NetworkInterface.GetAllNetworkInterfaces())
+                            if (string.IsNullOrEmpty(sMacAddress))
+                            {
+                                adapter.GetPhysicalAddress().ToString();
+                                return actionResult;
+                            }
+
+                        switch (currentCulture.LCID)
                         {
-                            adapter.GetPhysicalAddress().ToString();
-                            return actionResult;
+                            case 1033: // english-us
+                                actionResult.Title = "Your MAC Address";
+                                actionResult.Description = sMacAddress;
+                                break;
+                            case 1043: // dutch
+                                actionResult.Title = "Je mac adres";
+                                actionResult.Description = sMacAddress;
+                                break;
                         }
 
-                    switch (currentCulture.LCID)
-                    {
-                        case 1033: // english-us
-                            actionResult.Title = "Your MAC Address";
-                            actionResult.Description = sMacAddress;
-                            break;
-                        case 1043: // dutch
-                            actionResult.Title = "Je mac adres";
-                            actionResult.Description = sMacAddress;
-                            break;
+                        return actionResult;
                     }
-
-                    return actionResult;
-                }
                 case "computer naam":
                 case "computer name":
-                {
-                    var dnsName = Dns.GetHostName();
-                    Clipboard.SetText(dnsName);
-
-                    switch (currentCulture.LCID)
                     {
-                        case 1033: // english-us
-                            actionResult.Title = "Your MAC Address";
-                            actionResult.Description = dnsName;
-                            break;
-                        case 1043: // dutch
-                            actionResult.Title = "je computer naam is";
-                            actionResult.Description = dnsName;
-                            break;
-                    }
+                        var dnsName = Dns.GetHostName();
+                        Clipboard.SetText(dnsName);
 
-                    return actionResult;
-                }
+                        switch (currentCulture.LCID)
+                        {
+                            case 1033: // english-us
+                                actionResult.Title = "Your MAC Address";
+                                actionResult.Description = dnsName;
+                                break;
+                            case 1043: // dutch
+                                actionResult.Title = "je computer naam is";
+                                actionResult.Description = dnsName;
+                                break;
+                        }
+
+                        return actionResult;
+                    }
                 case "cpu":
-                {
-                    // komt nu overeen met lezen van taakbeheer (Now matches read Task Manager)
-                    var secondValue = cpuCounter.Value.NextValue();
-                    switch (currentCulture.LCID)
                     {
-                        case 1033: // english-us
-                            actionResult.Title = "Processor consumption";
-                            actionResult.Description = secondValue.ToString("###", CultureInfo.InvariantCulture) + "%";
-                            break;
-                        case 1043: // dutch
-                            actionResult.Title = "Processor verbruik";
-                            actionResult.Description = secondValue.ToString("###", CultureInfo.InvariantCulture) + "%";
-                            break;
-                    }
+                        // komt nu overeen met lezen van taakbeheer (Now matches read Task Manager)
+                        var secondValue = cpuCounter.Value.NextValue();
+                        switch (currentCulture.LCID)
+                        {
+                            case 1033: // english-us
+                                actionResult.Title = "Processor consumption";
+                                actionResult.Description = secondValue.ToString("###", CultureInfo.InvariantCulture) + "%";
+                                break;
+                            case 1043: // dutch
+                                actionResult.Title = "Processor verbruik";
+                                actionResult.Description = secondValue.ToString("###", CultureInfo.InvariantCulture) + "%";
+                                break;
+                        }
 
-                    return actionResult;
-                }
+                        return actionResult;
+                    }
                 case "wifi check":
                 case "heb ik internet?":
-                {
-                    try
                     {
-                        using (var client = new WebClient())
-                        using (var stream = client.OpenRead("http://www.google.com"))
+                        try
+                        {
+                            using (var client = new WebClient())
+                            using (var stream = client.OpenRead("http://www.google.com"))
+                            {
+                                switch (currentCulture.LCID)
+                                {
+                                    case 1033: // english-us
+                                        actionResult.Description = "You have Internet";
+                                        break;
+                                    case 1043: // dutch
+                                        actionResult.Description = "Je hebt internet";
+                                        break;
+                                }
+                            }
+
+                            return actionResult;
+                        }
+                        catch
                         {
                             switch (currentCulture.LCID)
                             {
                                 case 1033: // english-us
-                                    actionResult.Description = "You have Internet";
+                                    actionResult.Description = "You do not have Internet";
                                     break;
                                 case 1043: // dutch
-                                    actionResult.Description = "Je hebt internet";
+                                    actionResult.Description = "Je hebt geen internet";
                                     break;
                             }
                         }
 
                         return actionResult;
                     }
-                    catch
+                case "count words":
                     {
+                        if (!isCountingWords)
+                        {
+                            actionResult.Title = null;
+                            actionResult.Description = null;
+                            isCountingWords = true;
+                        }
+
+                        return actionResult;
+                    }
+                case "ip":
+                    {
+                        string externalIpAddress = null;
+                        using (var webClient = new WebClient())
+                        {
+                            var externalIp = webClient.DownloadString("http://icanhazip.com");
+                            if (!string.IsNullOrEmpty(externalIp))
+                            {
+                                var iPHostEntry = Dns.GetHostEntry(Dns.GetHostName());
+                                foreach (var ipAddress in iPHostEntry.AddressList)
+                                    if (ipAddress.AddressFamily == AddressFamily.InterNetwork)
+                                        externalIpAddress = externalIp;
+                            }
+                        }
+
                         switch (currentCulture.LCID)
                         {
                             case 1033: // english-us
-                                actionResult.Description = "You do not have Internet";
-                                break;
+                                actionResult.Title = "IPAddress Address";
+                                actionResult.Description = "Your public IP Address = " + externalIpAddress;
+                                return actionResult;
                             case 1043: // dutch
-                                actionResult.Description = "Je hebt geen internet";
-                                break;
+                                actionResult.Title = "Ip adres";
+                                actionResult.Description = "Je public ip adres = " + externalIpAddress;
+                                return actionResult;
                         }
-                    }
 
-                    return actionResult;
-                }
-                case "count words":
-                {
-                    if (!isCountingWords)
-                    {
-                        actionResult.Title = null;
-                        actionResult.Description = null;
-                        isCountingWords = true;
+                        return actionResult;
                     }
-
-                    return actionResult;
-                }
-                case "ip":
-                {
-                    string externalIpAddress = null;
-                    using (var webClient = new WebClient())
-                    {
-                        var externalIp = webClient.DownloadString("http://icanhazip.com");
-                        if (!string.IsNullOrEmpty(externalIp))
-                        {
-                            var iPHostEntry = Dns.GetHostEntry(Dns.GetHostName());
-                            foreach (var ipAddress in iPHostEntry.AddressList)
-                                if (ipAddress.AddressFamily == AddressFamily.InterNetwork)
-                                    externalIpAddress = externalIp;
-                        }
-                    }
-
-                    switch (currentCulture.LCID)
-                    {
-                        case 1033: // english-us
-                            actionResult.Title = "IPAddress Address";
-                            actionResult.Description = "Your public IP Address = " + externalIpAddress;
-                            return actionResult;
-                        case 1043: // dutch
-                            actionResult.Title = "Ip adres";
-                            actionResult.Description = "Je public ip adres = " + externalIpAddress;
-                            return actionResult;
-                    }
-
-                    return actionResult;
-                }
             }
 
             if (isCountingWords)

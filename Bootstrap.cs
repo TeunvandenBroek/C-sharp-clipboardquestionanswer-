@@ -1,11 +1,10 @@
+using it.Actions;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Web.Services.Description;
 using System.Windows.Forms;
-using it.Actions;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace it
 {
@@ -87,14 +86,16 @@ namespace it
             {
                 var service = serviceProvider.GetServices<IAction>().FirstOrDefault(s => s.Matches(clipboardText));
                 clipboardMonitor.ClipboardChanged -= ClipboardMonitor_ClipboardChanged;
+                ActionResult actionResult = null;
                 // run the action
-                ActionResult actionResult = service.TryExecute(clipboardText);
+                if (service != null) actionResult = service.TryExecute(clipboardText);
                 // re attach the event
-                clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
-                if (!string.IsNullOrWhiteSpace(actionResult.Title) || !string.IsNullOrWhiteSpace(actionResult.Description))
+                if (actionResult != null &&
+                    (!string.IsNullOrWhiteSpace(actionResult.Title) || !string.IsNullOrWhiteSpace(actionResult.Description)))
                 {
-                    ShowNotification(actionResult);
-                    Clipboard.Clear();
+                    ProcessResult(actionResult, clipboardText);
+                    clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
+                    return;
                 }
 
 
@@ -111,11 +112,11 @@ namespace it
                     // if this action processed the command, exit the loop.
                     if (actionResult.IsProcessed)
                     {
+                        // if the result is not null, and has a title and description 
                         if (!string.IsNullOrWhiteSpace(actionResult.Title) ||
                             !string.IsNullOrWhiteSpace(actionResult.Description))
                         {
-                            ShowNotification(actionResult);
-                            Clipboard.Clear();
+                            ProcessResult(actionResult, clipboardText);
                         }
 
                         break;
@@ -126,8 +127,7 @@ namespace it
                     foreach (var question in questionList)
                         if (question.Text.Contains(clipboardText))
                         {
-                            ShowNotification(new ActionResult(question.Text, question.Answer));
-                            Clipboard.Clear();
+                            ProcessResult(new ActionResult(question.Text, question.Answer), clipboardText);
                             return;
                         }
 
@@ -138,13 +138,20 @@ namespace it
             }
         }
 
-        private void ShowNotification(ActionResult actionResult)
+        private void ClearClipboard(string clipboardText)
         {
+        }
+
+        private void ProcessResult(ActionResult actionResult, string clipboardText)
+        {
+            if (Clipboard.GetText() == clipboardText) Clipboard.Clear();
+
             notifyIcon.Icon = SystemIcons.Exclamation;
             notifyIcon.BalloonTipTitle = actionResult.Title;
             notifyIcon.BalloonTipText = actionResult.Description;
             notifyIcon.BalloonTipIcon = ToolTipIcon.Error;
             notifyIcon.ShowBalloonTip(1000);
+
         }
     }
 }
