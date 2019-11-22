@@ -42,7 +42,7 @@ namespace it.Actions
                     else
                     {
                         stopwatch.Start();
-                        FillStopwatchStarted();
+                        actionResult.Description = FillStopwatchStarted();
                     }
 
                     break;
@@ -190,7 +190,8 @@ namespace it.Actions
                     break;
                 }
             }
-            return null;
+
+            return actionResult;
         }
 
         #region Stopwatch Fill Methods
