@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
+
 namespace it
 {
     /// <summary>
@@ -67,7 +68,7 @@ namespace it
         }
 
 
-        internal void Startup()
+        internal static void Startup()
         {
             // monitor the clipboard
         }

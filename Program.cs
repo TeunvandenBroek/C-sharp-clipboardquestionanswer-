@@ -21,7 +21,7 @@ namespace it
             Application.SetCompatibleTextRenderingDefault(false);
 
             var bootstrap = new Bootstrap();
-            bootstrap.Startup();
+            Bootstrap.Startup();
 
 
             //_disposable = new Form1();
