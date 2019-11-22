@@ -67,7 +67,7 @@ namespace it
         }
 
 
-        internal static void Startup()
+        internal void Startup()
         {
             // monitor the clipboard
         }
