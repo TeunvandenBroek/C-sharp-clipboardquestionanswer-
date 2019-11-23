@@ -163,7 +163,7 @@ namespace it
 
         }
 
-        internal void EnsureWindowStartup(bool isStartingWithWindows)
+        internal static void EnsureWindowStartup(bool isStartingWithWindows)
         {
             string keyName = "Clipboard Assistant";
             string keyValue = Assembly.GetExecutingAssembly().Location;
