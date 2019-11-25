@@ -94,12 +94,14 @@ namespace it
                 clipboardMonitor.ClipboardChanged -= ClipboardMonitor_ClipboardChanged;
                 ActionResult actionResult = null;
                 // run the action
-                if (service is object) actionResult = service.TryExecute(clipboardText);
+                if (service != null) actionResult = service.TryExecute(clipboardText);
                 // re attach the event
-                if (actionResult is object &&
-                    (!string.IsNullOrWhiteSpace(actionResult.Title) || !string.IsNullOrWhiteSpace(actionResult.Description)))
+                if (actionResult != null && actionResult.IsProcessed)
                 {
-                    ProcessResult(actionResult, clipboardText);
+                    if (!String.IsNullOrWhiteSpace(actionResult.Title) || !String.IsNullOrWhiteSpace(actionResult.Description))
+                    {
+                        ProcessResult(actionResult, clipboardText);
+                    }
                     clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
                     return;
                 }
