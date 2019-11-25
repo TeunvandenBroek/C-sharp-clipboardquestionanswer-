@@ -5,6 +5,8 @@ namespace it.Actions
 {
     public class TimespanActions : IAction
     {
+        private bool IsUsingTimespan = false;
+
         private readonly string[] DateFormats =
         {
             "dd.MM.yyyy",
@@ -21,6 +23,7 @@ namespace it.Actions
 
         public ActionResult TryExecute(string clipboardText)
         {
+            IsUsingTimespan = !IsUsingTimespan;
             var actionResult = new ActionResult(isProcessed: false);
 
             if (DateTime.TryParseExact(clipboardText, DateFormats, CultureInfo.CurrentCulture,
