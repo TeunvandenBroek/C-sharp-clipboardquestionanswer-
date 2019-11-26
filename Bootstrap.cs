@@ -55,7 +55,6 @@ namespace it
             serviceDescriptors.AddSingleton<IAction, ConvertActions>();
             serviceDescriptors.AddSingleton<IAction, CountdownActions>();
             serviceDescriptors.AddSingleton<IAction, DeviceActions>();
-            serviceDescriptors.AddSingleton<IAction, MathActions>();
             serviceDescriptors.AddSingleton<IAction, RandomActions>();
             serviceDescriptors.AddSingleton<IAction, StopwatchActions>();
             serviceDescriptors.AddSingleton<IAction, TimespanActions>();
@@ -63,6 +62,8 @@ namespace it
             serviceDescriptors.AddSingleton<IAction, TryCalcBmi>();
             serviceDescriptors.AddSingleton<IAction, TryRedirect>();
             serviceDescriptors.AddSingleton<IAction, TryWifiPass>();
+            serviceDescriptors.AddSingleton<IAction, TryCurrency>();
+            serviceDescriptors.AddSingleton<IAction, MathActions>();
 
             serviceProvider = serviceDescriptors.BuildServiceProvider();
         }
