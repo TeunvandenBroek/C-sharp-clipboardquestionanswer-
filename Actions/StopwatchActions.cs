@@ -18,7 +18,7 @@ namespace it.Actions
 
         public bool Matches(string clipboardText)
         {
-            return clipboardText.ToLower().Contains("stopwatch");
+            return clipboardText.IndexOf("stopwatch", StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         public ActionResult TryExecute(string clipboardText)

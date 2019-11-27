@@ -7,7 +7,7 @@ namespace it.Actions
     {
         public bool Matches(string clipboardText)
         {
-            return clipboardText.StartsWith("timer") && TimeSpan.TryParse(clipboardText.Replace("timer ", ""), out TimeSpan ts);
+            return clipboardText.StartsWith("timer", StringComparison.Ordinal) && TimeSpan.TryParse(clipboardText.Replace("timer ", ""), out TimeSpan ts);
         }
 
         ActionResult IAction.TryExecute(string clipboardText)

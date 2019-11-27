@@ -9,13 +9,13 @@ namespace it.Actions
         private readonly Random _random = new Random();
 
 
-        private string[] commands = { "kop of munt", "heads or tails", "random password" };
+        private readonly string[] commands = { "kop of munt", "heads or tails", "random password" };
 
         public bool Matches(string clipboardText)
         {
             foreach (string command in commands)
             {
-                if (command.Equals(clipboardText.ToLower())) {
+                if (command.Equals(clipboardText.ToLower(), StringComparison.Ordinal)) {
                     return true;
                 }
             }
@@ -35,19 +35,22 @@ namespace it.Actions
                 {
                     var isHeads = (int) _random.NextDouble() % 2 > 0;
 
-                    switch (currentCulture.LCID)
-                    {
-                        case 1033: // english-us
-                            actionResult.Title = "heads or tails?";
-                            actionResult.Description = isHeads ? "Heads" : "Tails";
-                            break;
-                        case 1043: // dutch
-                            actionResult.Title = "Kop of munt?";
-                            actionResult.Description = isHeads ? "Kop" : "Munt";
-                            break;
-                    }
+                        switch (currentCulture.LCID)
+                        {
+                            case 1033: // english-us
+                                actionResult.Title = "heads or tails?";
+                                actionResult.Description = isHeads ? "Heads" : "Tails";
+                                break;
+                            case 1043: // dutch
+                                actionResult.Title = "Kop of munt?";
+                                actionResult.Description = isHeads ? "Kop" : "Munt";
+                                break;
+                            default:
+                                actionResult.IsProcessed = false;
+                                break;
+                        }
 
-                    break;
+                        break;
                 }
                 case "random password":
                 {
