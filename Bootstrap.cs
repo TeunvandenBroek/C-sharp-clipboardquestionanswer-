@@ -95,9 +95,9 @@ namespace it
                 clipboardMonitor.ClipboardChanged -= ClipboardMonitor_ClipboardChanged;
                 ActionResult actionResult = null;
                 // run the action
-                if (service != null) actionResult = service.TryExecute(clipboardText);
+                if (service is object) actionResult = service.TryExecute(clipboardText);
                 // re attach the event
-                if (actionResult != null && actionResult.IsProcessed)
+                if (actionResult is object && actionResult.IsProcessed)
                 {
                     if (!String.IsNullOrWhiteSpace(actionResult.Title) || !String.IsNullOrWhiteSpace(actionResult.Description))
                     {
@@ -172,14 +172,14 @@ namespace it
             string keyValue = Assembly.GetExecutingAssembly().Location;
 
             RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
-            if (key == null) return;
+            if (key is null) return;
 
-            string value = key.GetValue(keyName, null) as string;
+            var value = key.GetValue(keyName, null) as string;
 
             if (isStartingWithWindows)
             {
                 // key doesn't exist, add it
-                if (String.IsNullOrWhiteSpace(value) && value == keyValue)
+                if (String.IsNullOrWhiteSpace(value) && string.Equals(value, keyValue, StringComparison.Ordinal))
                 {
                     key.SetValue(keyName, keyValue);
                 }
