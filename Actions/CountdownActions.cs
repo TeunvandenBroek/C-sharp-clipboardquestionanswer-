@@ -1,13 +1,13 @@
-using System;
-using System.Threading;
-
 namespace it.Actions
 {
-    internal class CountdownActions : IAction
+    using System;
+    using System.Threading;
+
+    internal sealed class CountdownActions : IAction
     {
         public bool Matches(string clipboardText)
         {
-            return clipboardText.StartsWith("timer", StringComparison.Ordinal) && TimeSpan.TryParse(clipboardText.Replace("timer ", ""), out TimeSpan ts);
+            return clipboardText.StartsWith("timer", StringComparison.Ordinal) && TimeSpan.TryParse(clipboardText.Replace("timer ", string.Empty), out TimeSpan ts);
         }
 
         ActionResult IAction.TryExecute(string clipboardText)
@@ -15,7 +15,7 @@ namespace it.Actions
             var actionResult = new ActionResult();
 
             if (clipboardText.StartsWith("timer", StringComparison.Ordinal) &&
-                TimeSpan.TryParse(clipboardText.Replace("timer ", ""), out var ts))
+                TimeSpan.TryParse(clipboardText.Replace("timer ", string.Empty), out var ts))
             {
                 Thread.Sleep((int) ts.TotalMilliseconds);
                 actionResult.Title = "Countdown timer";

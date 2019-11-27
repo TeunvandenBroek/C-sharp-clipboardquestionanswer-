@@ -1,21 +1,20 @@
-using System;
-using System.Text;
-using System.Threading;
-
 namespace it.Actions
 {
-    internal class RandomActions : IAction
+    using System;
+    using System.Text;
+    using System.Threading;
+
+    internal sealed class RandomActions : IAction
     {
-        private readonly Random _random = new Random();
-
-
         private readonly string[] commands = { "kop of munt", "heads or tails", "random password" };
+        private readonly Random random = new Random();
 
         public bool Matches(string clipboardText)
         {
             foreach (string command in commands)
             {
-                if (command.Equals(clipboardText.ToLower(), StringComparison.Ordinal)) {
+                if (command.Equals(clipboardText.ToLower(), StringComparison.Ordinal))
+                {
                     return true;
                 }
             }
@@ -32,8 +31,8 @@ namespace it.Actions
             {
                 case "kop of munt":
                 case "heads or tails":
-                {
-                    var isHeads = (int) _random.NextDouble() % 2 > 0;
+                    {
+                        var isHeads = (int)this.random.NextDouble() % 2 > 0;
 
                         switch (currentCulture.LCID)
                         {
@@ -51,22 +50,28 @@ namespace it.Actions
                         }
 
                         break;
-                }
+                    }
                 case "random password":
-                {
-                    const int minLength = 8;
-                    const int maxLength = 12;
-                    const string charAvailable = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789-";
-                    var password = new StringBuilder();
-                    var passwordLength = _random.Next(minLength, maxLength + 1);
-                    while (passwordLength-- > 0) password.Append(charAvailable[_random.Next(charAvailable.Length)]);
-                    actionResult.Title = "Random password";
-                    actionResult.Description = password.ToString();
-                }
+                    {
+                        const int minLength = 8;
+                        const int maxLength = 12;
+                        const string charAvailable = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789-";
+                        var password = new StringBuilder();
+                        var passwordLength = this.random.Next(minLength, maxLength + 1);
+                        while (passwordLength-- > 0)
+                        {
+                            password.Append(charAvailable[this.random.Next(charAvailable.Length)]);
+                        }
+
+                        actionResult.Title = "Random password";
+                        actionResult.Description = password.ToString();
+                    }
                     break;
                 default:
-                    actionResult.IsProcessed = false;
-                    break;
+                    {
+                        actionResult.IsProcessed = false;
+                        break;
+                    }
             }
 
             return actionResult;

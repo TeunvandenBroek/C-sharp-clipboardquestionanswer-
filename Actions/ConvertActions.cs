@@ -1,17 +1,17 @@
-﻿using System.Globalization;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
-
-namespace it.Actions
+﻿namespace it.Actions
 {
-    internal class ConvertActions : ActionBase
+    using System.Globalization;
+    using System.Text.RegularExpressions;
+    using System.Windows.Forms;
+
+    internal sealed class ConvertActions : ActionBase
     {
         private readonly Regex unitRegex =
             new Regex("(?<number>^[0-9]+([.,][0-9]{1,3})?)(\\s*)(?<from>[a-z]+[2-3]?) to (?<to>[a-z]+[2-3]?)");
 
         public override bool Matches(string clipboardText)
         {
-            var matches = unitRegex.Match(clipboardText);
+            var matches = this.unitRegex.Match(clipboardText);
             return matches.Success;
         }
 
@@ -20,7 +20,7 @@ namespace it.Actions
         {
             var actionResult = new ActionResult();
 
-            var matches = unitRegex.Match(clipboardText);
+            var matches = this.unitRegex.Match(clipboardText);
 
             if (!matches.Success)
             {
@@ -290,7 +290,8 @@ namespace it.Actions
                         result = oppervlakte / 1000000;
                         break;
                     default:
-                        throw new System.Exception("Unexpected Case");
+                        actionResult.IsProcessed = false;
+                        return actionResult;
                 }
 
                 Clipboard.SetText(result.ToString(CultureInfo.CurrentCulture));
