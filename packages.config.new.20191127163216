@@ -1,10 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <packages>
+  <package id="AsyncFixer" version="1.1.6" targetFramework="net461" developmentDependency="true" />
   <package id="BenchmarkDotNet" version="0.12.0" targetFramework="net461" />
   <package id="BenchmarkDotNet.Annotations" version="0.12.0" targetFramework="net461" />
   <package id="CommandLineParser" version="2.4.3" targetFramework="net461" />
+  <package id="DiConstructorGeneratorExtension.Attributes" version="1.0.1" targetFramework="net461" />
+  <package id="ErrorProne.NET" version="0.1.5898.41180" targetFramework="net461" />
+  <package id="ErrorProne.NET.Structs" version="0.1.2" targetFramework="net461" developmentDependency="true" />
+  <package id="ExceptionAnalyzer" version="1.0.5" targetFramework="net461" />
+  <package id="Fody" version="6.0.0" targetFramework="net461" developmentDependency="true" />
+  <package id="GCop.Conditional" version="2.6.1" targetFramework="net461" />
+  <package id="GCop.IO" version="2.6.1" targetFramework="net461" />
+  <package id="GCop.Linq" version="2.6.1" targetFramework="net461" />
+  <package id="GCop.String" version="2.6.1" targetFramework="net461" />
+  <package id="IDisposableAnalyzers" version="3.1.0" targetFramework="net461" developmentDependency="true" />
   <package id="Microsoft.CodeAnalysis" version="2.10.0" targetFramework="net461" />
   <package id="Microsoft.CodeAnalysis.Analyzers" version="2.6.1" targetFramework="net461" developmentDependency="true" />
+  <package id="Microsoft.CodeAnalysis.BannedApiAnalyzers" version="2.9.4" targetFramework="net461" developmentDependency="true" />
   <package id="Microsoft.CodeAnalysis.Common" version="2.10.0" targetFramework="net461" />
   <package id="Microsoft.CodeAnalysis.CSharp" version="2.10.0" targetFramework="net461" />
   <package id="Microsoft.CodeAnalysis.CSharp.Workspaces" version="2.10.0" targetFramework="net461" />
@@ -16,11 +28,15 @@
   <package id="Microsoft.Extensions.DependencyInjection.Abstractions" version="3.0.0" targetFramework="net461" />
   <package id="Microsoft.IO.RecyclableMemoryStream" version="1.3.0" targetFramework="net461" />
   <package id="Microsoft.NETCore.Platforms" version="1.1.0" targetFramework="net461" />
+  <package id="Microsoft.VisualStudio.SDK.Analyzers" version="16.3.14" targetFramework="net461" />
+  <package id="Microsoft.VisualStudio.Threading.Analyzers" version="16.3.52" targetFramework="net461" />
   <package id="Microsoft.Win32.Primitives" version="4.3.0" targetFramework="net461" />
   <package id="Microsoft.Win32.Registry" version="4.5.0" targetFramework="net461" />
+  <package id="NamedParametersAnalyzer" version="0.3.1" targetFramework="net461" />
+  <package id="NetFabric.Hyperlinq.Analyzer" version="1.4.1" targetFramework="net461" developmentDependency="true" />
   <package id="NETStandard.Library" version="1.6.1" targetFramework="net461" />
   <package id="Newtonsoft.Json" version="12.0.3" targetFramework="net461" />
-  <package id="PerformanceScopes" version="1.0.16008.03" targetFramework="net461" />
+  <package id="RecordConstructorGenerator" version="3.3.0" targetFramework="net461" />
   <package id="Sharp.Disposable" version="1.0.0" targetFramework="net461" />
   <package id="SQLitePCLRaw.bundle_green" version="1.1.2" targetFramework="net461" />
   <package id="SQLitePCLRaw.core" version="1.1.2" targetFramework="net461" />
@@ -28,6 +44,8 @@
   <package id="SQLitePCLRaw.lib.e_sqlite3.osx" version="1.1.2" targetFramework="net461" />
   <package id="SQLitePCLRaw.lib.e_sqlite3.v110_xp" version="1.1.2" targetFramework="net461" />
   <package id="SQLitePCLRaw.provider.e_sqlite3.net45" version="1.1.2" targetFramework="net461" />
+  <package id="StyleCop.Analyzers" version="1.1.118" targetFramework="net461" developmentDependency="true" />
+  <package id="SwitchAnalyzer" version="0.6.10" targetFramework="net461" />
   <package id="System.AppContext" version="4.3.0" targetFramework="net461" />
   <package id="System.Collections" version="4.3.0" targetFramework="net461" />
   <package id="System.Collections.Concurrent" version="4.3.0" targetFramework="net461" />
@@ -96,4 +114,5 @@
   <package id="System.Xml.XmlDocument" version="4.3.0" targetFramework="net461" />
   <package id="System.Xml.XPath" version="4.3.0" targetFramework="net461" />
   <package id="System.Xml.XPath.XDocument" version="4.3.0" targetFramework="net461" />
+  <package id="UselessIfAnalyzer" version="0.0.6099.19184" targetFramework="net461" />
 </packages>

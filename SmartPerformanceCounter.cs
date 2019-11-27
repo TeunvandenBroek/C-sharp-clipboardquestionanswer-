@@ -1,25 +1,26 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
-
-namespace it
+﻿namespace it
 {
-    public class SmartPerformanceCounter
+    using System;
+    using System.Diagnostics;
+    using System.Threading.Tasks;
+
+    public sealed partial class SmartPerformanceCounter : IDisposable
     {
-        private readonly Func<PerformanceCounter> _factory;
 
-        private readonly object _lock = new object();
+        private readonly object @lock = new object();
 
-        private readonly TimeSpan _time;
+        private long cpuCounterLastAccessedTimestamp;
+        private bool disposed;
+        private readonly Func<PerformanceCounter> factory;
 
-        private long _cpuCounterLastAccessedTimestamp;
+        private readonly TimeSpan time;
 
-        private PerformanceCounter _value;
+        private PerformanceCounter value;
 
         public SmartPerformanceCounter(Func<PerformanceCounter> factory, TimeSpan time)
         {
-            _factory = factory;
-            _time = time;
+            this.factory = factory;
+            this.time = time;
         }
 
         public bool IsValueCreated { get; private set; }
@@ -28,37 +29,61 @@ namespace it
         {
             get
             {
-                lock (_lock)
+                lock (this.@lock)
                 {
-                    if (!IsValueCreated)
+                    if (!this.IsValueCreated)
                     {
-                        _value = _factory();
-                        IsValueCreated = true;
+                        this.value?.Dispose();
+                        this.value = this.factory();
+                        this.IsValueCreated = true;
                     }
                 }
 
-                _cpuCounterLastAccessedTimestamp = Stopwatch.GetTimestamp();
-                return _value;
+                this.cpuCounterLastAccessedTimestamp = Stopwatch.GetTimestamp();
+                return this.value;
             }
+        }
+
+        public void Dispose()
+        {
+            if (this.disposed)
+            {
+                return;
+            }
+
+            this.disposed = true;
+            this.value?.Dispose();
+        }
+
+        public async Task FunctionAsync()
+        {
+            await Task.Delay(this.time).ConfigureAwait(false);
+            this.DoCleaningCheck();
         }
 
         private void DoCleaningCheck()
         {
             var now = Stopwatch.GetTimestamp();
-            if (now - _cpuCounterLastAccessedTimestamp <= _time.Ticks) return;
-            lock (_lock)
+            if (now - this.cpuCounterLastAccessedTimestamp <= this.time.Ticks)
             {
-                IsValueCreated = false;
-                _value.Close();
-                _value.Dispose();
-                _value = null;
+                return;
+            }
+
+            lock (this.@lock)
+            {
+                this.IsValueCreated = false;
+                this.value.Close();
+                this.value.Dispose();
+                this.value = null;
             }
         }
 
-        public async Task FunctionAsync()
+        private void ThrowIfDisposed()
         {
-            await Task.Delay(_time).ConfigureAwait(false);
-            DoCleaningCheck();
+            if (this.disposed)
+            {
+                throw new ObjectDisposedException(this.GetType().FullName);
+            }
         }
     }
 }
