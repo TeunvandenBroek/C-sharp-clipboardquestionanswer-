@@ -1,6 +1,6 @@
 ﻿namespace it
 {
-    public partial class SmartPerformanceCounter
+    public sealed partial class SmartPerformanceCounter
     {
         /// <summary>Record Constructor</summary>
         /// <param name="isValueCreated"><see cref="IsValueCreated"/></param>

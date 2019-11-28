@@ -14,11 +14,11 @@
             },
             [UtcOffset.UtcMinusEleven] = new[]
             {
-                "amerikaans-Samoa","midway-eilanden","niue"
+                "amerikaans-Samoa","midway-eilanden","niue",
             },
             [UtcOffset.UtcMinusTen] = new[]
             {
-                "cookeilanden","Jonhnston-atol","Hawai"
+                "cookeilanden","Jonhnston-atol","Hawai",
             },
             [UtcOffset.UtcMinusNine] = new[]
             {
@@ -158,6 +158,7 @@
                 .SelectMany(x => x.Value.Select(c => (Offset: x.Key, Country: c)))
              .ToDictionary(x => x.Country, x => x.Offset, System.StringComparer.Ordinal);
         internal static Dictionary<UtcOffset, string[]> CountriesByUtcOffset => countriesByUtcOffset;
+
         public static class Offset
         {
             public const byte Hours = 4;

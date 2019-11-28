@@ -2,7 +2,7 @@
 {
     using System.ComponentModel;
 
-    internal partial class ControlContainer
+    internal sealed partial class ControlContainer
     {
         /// <summary>Record Constructor</summary>
         /// <param name="components"><see cref="Components"/></param>

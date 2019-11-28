@@ -1,6 +1,6 @@
 ﻿namespace it
 {
-    public class Question
+    public sealed class Question
     {
         public Question(string text, string answer)
         {

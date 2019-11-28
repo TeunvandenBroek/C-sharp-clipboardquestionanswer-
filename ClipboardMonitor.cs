@@ -46,22 +46,26 @@
             switch (m.Msg)
             {
                 case WM_DRAWCLIPBOARD:
-                    this.OnClipboardChanged();
-                    SendMessage(nextClipboardViewer, m.Msg, m.WParam, m.LParam);
-                    break;
-
-                case WM_CHANGECBCHAIN:
-                    if (m.WParam == this.nextClipboardViewer)
                     {
-                        this.nextClipboardViewer = m.LParam;
-                    }
-                    else
+                        this.OnClipboardChanged();
                         SendMessage(nextClipboardViewer, m.Msg, m.WParam, m.LParam);
-                    break;
-
+                        break;
+                    }
+                case WM_CHANGECBCHAIN:
+                    {
+                        if (m.WParam == this.nextClipboardViewer)
+                        {
+                            this.nextClipboardViewer = m.LParam;
+                        }
+                        else
+                            SendMessage(nextClipboardViewer, m.Msg, m.WParam, m.LParam);
+                        break;
+                    }
                 default:
-                    base.WndProc(ref m);
-                    break;
+                    {
+                        base.WndProc(ref m);
+                        break;
+                    }
             }
         }
 
@@ -88,7 +92,7 @@
         }
     }
 
-    public class ClipboardChangedEventArgs : EventArgs
+    public sealed class ClipboardChangedEventArgs : EventArgs
     {
         internal readonly IDataObject DataObject;
 

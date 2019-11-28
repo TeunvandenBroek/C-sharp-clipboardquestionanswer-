@@ -1,4 +1,6 @@
-﻿namespace it
+﻿using System;
+
+namespace it
 {
     using System;
     using System.Diagnostics;
@@ -19,7 +21,7 @@
 
         public SmartPerformanceCounter(Func<PerformanceCounter> factory, TimeSpan time)
         {
-            this.factory = factory;
+            this.factory = factory ?? throw new ArgumentNullException(nameof(factory));
             this.time = time;
         }
 

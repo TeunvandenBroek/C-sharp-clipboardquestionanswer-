@@ -22,7 +22,7 @@ namespace it
         private readonly List<Question> questionList = Questions.LoadQuestions();
 
         // Container to hold the actions
-        private IServiceProvider serviceProvider;
+        private ServiceProvider serviceProvider;
 
 
         public Bootstrap()
@@ -60,7 +60,6 @@ namespace it
             serviceDescriptors.AddSingleton<IAction, TimezoneActions>();
             serviceDescriptors.AddSingleton<IAction, TryCalcBmi>();
             serviceDescriptors.AddSingleton<IAction, TryRedirect>();
-            serviceDescriptors.AddSingleton<IAction, TryCurrency>();
             serviceDescriptors.AddSingleton<IAction, MathActions>();
             (this.serviceProvider as IDisposable)?.Dispose();
             this.serviceProvider = serviceDescriptors.BuildServiceProvider();
@@ -117,9 +116,8 @@ namespace it
 
                 if (clipboardText.Length > 2)
                 {
-                    for (var index = 0; index < this.questionList.Count; index++)
+                    foreach (var question in this.questionList)
                     {
-                        var question = this.questionList[index];
                         if (question.Text.Contains(clipboardText))
                         {
                             this.ProcessResult(new ActionResult(question.Text, question.Answer), clipboardText);
@@ -159,7 +157,8 @@ namespace it
         {
             const string keyName = "Clipboard Assistant";
             var keyValue = Assembly.GetExecutingAssembly().Location;
-            this.key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
+            this.key?.Dispose();
+            this.key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", writable: true);
             if (this.key is null)
             {
                 return;
