@@ -7,7 +7,7 @@ namespace it.Actions
     using System.Text.RegularExpressions;
     using System.Windows.Forms;
 
-    public class MathActions : IAction
+    public sealed class MathActions : IAction
     {
         private readonly Dictionary<string, Func<double, double, double>> binaryOperators =
             new Dictionary<string, Func<double, double, double>>(
@@ -56,7 +56,7 @@ namespace it.Actions
 
                 var i = 0;
 
-                for (var i2 = rhss.Length - 1; i2 >= 0; i2--)
+                for (var i2 = 0; i2 < rhss.Length; i2++)
                 {
                     answer = this.binaryOperators[operators[i++]](answer, rhss[i2]);
                 }

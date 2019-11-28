@@ -23,7 +23,6 @@ namespace it.Actions
         private readonly SmartPerformanceCounter cpuCounter = new SmartPerformanceCounter(
             () => new PerformanceCounter("Processor", "% Processor Time", "_Total"), TimeSpan.FromMinutes(1));
 
-        private bool disposed;
 
         private readonly SafeHandle handle = new SafeFileHandle(IntPtr.Zero, true);
         private bool isCountingWords;
@@ -61,7 +60,7 @@ namespace it.Actions
 
         public bool Matches(string clipboardText)
         {
-            foreach (string command in this.commands)
+            foreach (var command in this.commands)
             {
                 if (command.Equals(clipboardText.ToLower(), StringComparison.Ordinal))
                 {
@@ -74,37 +73,6 @@ namespace it.Actions
 
         [DllImport("Shell32.dll", CharSet = CharSet.Unicode)]
         private static extern uint SHEmptyRecycleBin(IntPtr hwnd, string pszRootPath, Recycle dwFlags);
-
-
-        private void Dispose(bool disposing)
-        {
-            if (this.disposed)
-            {
-                return;
-            }
-
-            if (disposing)
-            {
-                this.handle.Dispose();
-                if (this.ramCounter.IsValueCreated)
-                {
-                    this.ramCounter.Value.Dispose();
-                }
-
-                if (this.cpuCounter.IsValueCreated)
-                {
-                    this.cpuCounter.Value.Dispose();
-                }
-
-                this.taskmananger?.Dispose();
-                this.afsluiten?.Dispose();
-                this.vergrendel?.Dispose();
-                this.reboot?.Dispose();
-                this.kladblok?.Dispose();
-            }
-
-            this.disposed = true;
-        }
 
         ActionResult IAction.TryExecute(string clipboardText)
         {
@@ -159,14 +127,20 @@ namespace it.Actions
                         switch (currentCulture.LCID)
                         {
                             case 1033: // english-us
-                                actionResult.Description = "Recycling bin emptied successfully";
-                                break;
+                                {
+                                    actionResult.Description = "Recycling bin emptied successfully";
+                                    break;
+                                }
                             case 1043: // dutch
-                                actionResult.Description = "Prullebak succesvol leeg gemaakt";
-                                break;
+                                {
+                                    actionResult.Description = "Prullebak succesvol leeg gemaakt";
+                                    break;
+                                }
                             default:
-                                actionResult.IsProcessed = false;
-                                return actionResult;
+                                {
+                                    actionResult.IsProcessed = false;
+                                    return actionResult;
+                                }
                         }
 
                         return actionResult;
@@ -191,27 +165,33 @@ namespace it.Actions
                         switch (currentCulture.LCID)
                         {
                             case 1033: // english-us
-                                using (var pc = this.ramCounter.Value)
                                 {
-                                    actionResult.Title = "RAM Memory";
-                                    actionResult.Description =
-                                        pc.NextValue().ToString(CultureInfo.InvariantCulture) + " MB of RAM in your system";
-                                }
+                                    using (var pc = this.ramCounter.Value)
+                                    {
+                                        actionResult.Title = "RAM Memory";
+                                        actionResult.Description =
+                                            pc.NextValue().ToString(CultureInfo.InvariantCulture) + " MB of RAM in your system";
+                                    }
 
-                                break;
+                                    break;
+                                }
                             case 1043: // dutch
-                                using (var pc = this.ramCounter.Value)
                                 {
-                                    actionResult.Title = "Ram geheugen";
-                                    actionResult.Description =
-                                        pc.NextValue().ToString(CultureInfo.InvariantCulture) +
-                                        " MB ram-geheugen over in je systeem";
-                                }
+                                    using (var pc = this.ramCounter.Value)
+                                    {
+                                        actionResult.Title = "Ram geheugen";
+                                        actionResult.Description =
+                                            pc.NextValue().ToString(CultureInfo.InvariantCulture) +
+                                            " MB ram-geheugen over in je systeem";
+                                    }
 
-                                break;
+                                    break;
+                                }
                             default:
-                                actionResult.IsProcessed = false;
-                                return actionResult;
+                                {
+                                    actionResult.IsProcessed = false;
+                                    return actionResult;
+                                }
                         }
 
                         return actionResult;
@@ -222,16 +202,22 @@ namespace it.Actions
                         switch (currentCulture.LCID)
                         {
                             case 1033: // english-us
-                                actionResult.Title = "Your Windows version";
-                                actionResult.Description = $"Windows Version {Environment.OSVersion.Version}";
-                                break;
+                                {
+                                    actionResult.Title = "Your Windows version";
+                                    actionResult.Description = $"Windows Version {Environment.OSVersion.Version}";
+                                    break;
+                                }
                             case 1043: // dutch
-                                actionResult.Title = "Je windows versie";
-                                actionResult.Description = $"Windows Version {Environment.OSVersion.Version}";
-                                break;
+                                {
+                                    actionResult.Title = "Je windows versie";
+                                    actionResult.Description = $"Windows Version {Environment.OSVersion.Version}";
+                                    break;
+                                }
                             default:
-                                actionResult.IsProcessed = false;
-                                return actionResult;
+                                {
+                                    actionResult.IsProcessed = false;
+                                    return actionResult;
+                                }
                         }
 
                         return actionResult;
@@ -253,16 +239,22 @@ namespace it.Actions
                         switch (currentCulture.LCID)
                         {
                             case 1033: // english-us
-                                actionResult.Title = "Your MAC Address";
-                                actionResult.Description = sMacAddress;
-                                break;
+                                {
+                                    actionResult.Title = "Your MAC Address";
+                                    actionResult.Description = sMacAddress;
+                                    break;
+                                }
                             case 1043: // dutch
-                                actionResult.Title = "Je mac adres";
-                                actionResult.Description = sMacAddress;
-                                break;
+                                {
+                                    actionResult.Title = "Je mac adres";
+                                    actionResult.Description = sMacAddress;
+                                    break;
+                                }
                             default:
-                                actionResult.IsProcessed = false;
-                                return actionResult;
+                                {
+                                    actionResult.IsProcessed = false;
+                                    return actionResult;
+                                }
                         }
 
                         return actionResult;
@@ -276,16 +268,22 @@ namespace it.Actions
                         switch (currentCulture.LCID)
                         {
                             case 1033: // english-us
-                                actionResult.Title = "Your MAC Address";
-                                actionResult.Description = dnsName;
-                                break;
+                                {
+                                    actionResult.Title = "Your MAC Address";
+                                    actionResult.Description = dnsName;
+                                    break;
+                                }
                             case 1043: // dutch
-                                actionResult.Title = "je computer naam is";
-                                actionResult.Description = dnsName;
-                                break;
+                                {
+                                    actionResult.Title = "je computer naam is";
+                                    actionResult.Description = dnsName;
+                                    break;
+                                }
                             default:
-                                actionResult.IsProcessed = false;
-                                return actionResult;
+                                {
+                                    actionResult.IsProcessed = false;
+                                    return actionResult;
+                                }
                         }
 
                         return actionResult;
@@ -297,16 +295,22 @@ namespace it.Actions
                         switch (currentCulture.LCID)
                         {
                             case 1033: // english-us
-                                actionResult.Title = "Processor consumption";
-                                actionResult.Description = secondValue.ToString("###", CultureInfo.InvariantCulture) + "%";
-                                break;
+                                {
+                                    actionResult.Title = "Processor consumption";
+                                    actionResult.Description = secondValue.ToString("###", CultureInfo.InvariantCulture) + "%";
+                                    break;
+                                }
                             case 1043: // dutch
-                                actionResult.Title = "Processor verbruik";
-                                actionResult.Description = secondValue.ToString("###", CultureInfo.InvariantCulture) + "%";
-                                break;
+                                {
+                                    actionResult.Title = "Processor verbruik";
+                                    actionResult.Description = secondValue.ToString("###", CultureInfo.InvariantCulture) + "%";
+                                    break;
+                                }
                             default:
-                                actionResult.IsProcessed = false;
-                                return actionResult;
+                                {
+                                    actionResult.IsProcessed = false;
+                                    return actionResult;
+                                }
                         }
 
                         return actionResult;
@@ -322,14 +326,20 @@ namespace it.Actions
                                 switch (currentCulture.LCID)
                                 {
                                     case 1033: // english-us
-                                        actionResult.Description = "You have Internet";
-                                        break;
+                                        {
+                                            actionResult.Description = "You have Internet";
+                                            break;
+                                        }
                                     case 1043: // dutch
-                                        actionResult.Description = "Je hebt internet";
-                                        break;
+                                        {
+                                            actionResult.Description = "Je hebt internet";
+                                            break;
+                                        }
                                     default:
-                                        actionResult.IsProcessed = false;
-                                        return actionResult;
+                                        {
+                                            actionResult.IsProcessed = false;
+                                            return actionResult;
+                                        }
                                 }
                             }
 
@@ -340,14 +350,20 @@ namespace it.Actions
                             switch (currentCulture.LCID)
                             {
                                 case 1033: // english-us
-                                    actionResult.Description = "You do not have Internet";
-                                    break;
+                                    {
+                                        actionResult.Description = "You do not have Internet";
+                                        break;
+                                    }
                                 case 1043: // dutch
-                                    actionResult.Description = "Je hebt geen internet";
-                                    break;
+                                    {
+                                        actionResult.Description = "Je hebt geen internet";
+                                        break;
+                                    }
                                 default:
-                                    actionResult.IsProcessed = false;
-                                    return actionResult;
+                                    {
+                                        actionResult.IsProcessed = false;
+                                        return actionResult;
+                                    }
                             }
                         }
 
@@ -386,16 +402,22 @@ namespace it.Actions
                         switch (currentCulture.LCID)
                         {
                             case 1033: // english-us
-                                actionResult.Title = "IPAddress Address";
-                                actionResult.Description = "Your public IP Address = " + externalIpAddress;
-                                return actionResult;
+                                {
+                                    actionResult.Title = "IPAddress Address";
+                                    actionResult.Description = "Your public IP Address = " + externalIpAddress;
+                                    return actionResult;
+                                }
                             case 1043: // dutch
-                                actionResult.Title = "Ip adres";
-                                actionResult.Description = "Je public ip adres = " + externalIpAddress;
-                                return actionResult;
+                                {
+                                    actionResult.Title = "Ip adres";
+                                    actionResult.Description = "Je public ip adres = " + externalIpAddress;
+                                    return actionResult;
+                                }
                             default:
-                                actionResult.IsProcessed = false;
-                                return actionResult;
+                                {
+                                    actionResult.IsProcessed = false;
+                                    return actionResult;
+                                }
                         }
                     }
 

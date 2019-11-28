@@ -11,7 +11,7 @@ namespace it.Actions
 
         public bool Matches(string clipboardText)
         {
-            foreach (string command in commands)
+            foreach (var command in commands)
             {
                 if (command.Equals(clipboardText.ToLower(), StringComparison.Ordinal))
                 {
@@ -37,16 +37,22 @@ namespace it.Actions
                         switch (currentCulture.LCID)
                         {
                             case 1033: // english-us
-                                actionResult.Title = "heads or tails?";
-                                actionResult.Description = isHeads ? "Heads" : "Tails";
-                                break;
+                                {
+                                    actionResult.Title = "heads or tails?";
+                                    actionResult.Description = isHeads ? "Heads" : "Tails";
+                                    break;
+                                }
                             case 1043: // dutch
-                                actionResult.Title = "Kop of munt?";
-                                actionResult.Description = isHeads ? "Kop" : "Munt";
-                                break;
+                                {
+                                    actionResult.Title = "Kop of munt?";
+                                    actionResult.Description = isHeads ? "Kop" : "Munt";
+                                    break;
+                                }
                             default:
-                                actionResult.IsProcessed = false;
-                                break;
+                                {
+                                    actionResult.IsProcessed = false;
+                                    break;
+                                }
                         }
 
                         break;

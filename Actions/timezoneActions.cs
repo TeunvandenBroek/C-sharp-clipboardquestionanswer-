@@ -5,9 +5,9 @@ namespace it.Actions
     using System.Globalization;
     using System.Linq;
 
-    public class TimezoneActions : IAction
+    internal sealed class TimezoneActions : IAction
     {
-        private string country;
+        private  string country;
         private string timeZoneId = string.Empty;
 
         public bool Matches(string clipboardText)

@@ -36,128 +36,192 @@
                 {
                     case "mm":
                     case "millimeter":
-                        meter = number / 1000;
-                        break;
+                        {
+                            meter = number / 1000;
+                            break;
+                        }
                     case "cm":
                     case "centimer":
-                        meter = number / 100;
-                        break;
+                        {
+                            meter = number / 100;
+                            break;
+                        }
                     case "dm":
                     case "decimeter":
-                        meter = number / 10;
-                        break;
+                        {
+                            meter = number / 10;
+                            break;
+                        }
                     case "m":
                     case nameof(meter):
-                        meter = number;
-                        break;
+                        {
+                            meter = number;
+                            break;
+                        }
                     case "dam":
                     case "decameter":
-                        meter = number * 1;
-                        break;
+                        {
+                            meter = number * 1;
+                            break;
+                        }
                     case "hm":
                     case "hectometer":
-                        meter = number * 100;
-                        break;
+                        {
+                            meter = number * 100;
+                            break;
+                        }
                     case "km":
                     case "kilometer":
-                        meter = number * 1000;
-                        break;
+                        {
+                            meter = number * 1000;
+                            break;
+                        }
                     case "feet":
                     case "ft":
-                        meter = number * 0.3048;
-                        break;
+                        {
+                            meter = number * 0.3048;
+                            break;
+                        }
                     case "inch":
-                        meter = number * 0.0254;
-                        break;
+                        {
+                            meter = number * 0.0254;
+                            break;
+                        }
                     case "mile":
                     case "miles":
-                        meter = number / 0.00062137;
-                        break;
+                        {
+                            meter = number / 0.00062137;
+                            break;
+                        }
                     case "yard":
                     case "yd":
-                        meter = number * 0.9144;
-                        break;
-                    // gewicht eenheden
+                        {
+                            meter = number * 0.9144;
+                            break;
+                        }                    // gewicht eenheden
                     case "mg":
                     case "milligram":
-                        gram = number / 1000;
-                        break;
+                        {
+                            gram = number / 1000;
+                            break;
+                        }
                     case "cg":
                     case "centigram":
-                        gram = number / 100;
-                        break;
+                        {
+                            gram = number / 100;
+                            break;
+                        }
                     case "dg":
                     case "decigram":
-                        gram = number / 10;
-                        break;
+                        {
+                            gram = number / 10;
+                            break;
+                        }
                     case "gr":
                     case nameof(gram):
-                        gram = number;
-                        break;
+                        {
+                            gram = number;
+                            break;
+                        }
                     case "dag":
                     case "decagram":
-                        gram = number * 10;
-                        break;
+                        {
+                            gram = number * 10;
+                            break;
+                        }
                     case "hg":
                     case "hectogram":
-                        gram = number * 100;
-                        break;
+                        {
+                            gram = number * 100;
+                            break;
+                        }
                     case "kg":
                     case "kilogram":
-                        gram = number * 1000;
-                        break;
+                        {
+                            gram = number * 1000;
+                            break;
+                        }
                     case "ml":
                     case "milliliter":
-                        liter = number / 1000;
-                        break;
+                        {
+                            liter = number / 1000;
+                            break;
+                        }
                     case "cl":
                     case "centiliter":
-                        liter = number / 100;
-                        break;
+                        {
+                            liter = number / 100;
+                            break;
+                        }
                     case "dl":
                     case "deciliter":
-                        liter = number / 10;
-                        break;
+                        {
+                            liter = number / 10;
+                            break;
+                        }
                     case "l":
                     case nameof(liter):
-                        liter = number;
-                        break;
+                        {
+                            liter = number;
+                            break;
+                        }
                     case "dal":
                     case "decaliter":
-                        liter = number * 10;
-                        break;
+                        {
+                            liter = number * 10;
+                            break;
+                        }
                     case "hl":
                     case "hectoliter":
-                        liter = number * 100;
-                        break;
+                        {
+                            liter = number * 100;
+                            break;
+                        }
                     case "kl":
                     case "kiloliter":
-                        liter = number * 1000;
-                        break;
-                    // oppervlakte eenheden
+                        {
+                            liter = number * 1000;
+                            break;
+                        }                    // oppervlakte eenheden
                     case "mm2":
-                        oppervlakte = number / 1000000;
-                        break;
+                        {
+                            oppervlakte = number / 1000000;
+                            break;
+                        }
                     case "cm2":
-                        oppervlakte = number / 10000;
-                        break;
+                        {
+                            oppervlakte = number / 10000;
+                            break;
+                        }
                     case "dm2":
-                        oppervlakte = number / 100;
-                        break;
+                        {
+                            oppervlakte = number / 100;
+                            break;
+                        }
                     case "m2":
-                        oppervlakte = number;
-                        break;
+                        {
+                            oppervlakte = number;
+                            break;
+                        }
                     case "dam2":
-                        oppervlakte = number * 100;
-                        break;
+                        {
+                            oppervlakte = number * 100;
+                            break;
+                        }
                     case "hm2":
-                        oppervlakte = number * 10000;
-                        break;
+                        {
+                            oppervlakte = number * 10000;
+                            break;
+                        }
                     case "km2":
-                        oppervlakte = number * 1000000;
-                        break;
+                        {
+                            oppervlakte = number * 1000000;
+                            break;
+                        }
                     default:
-                        throw new System.Exception("Unexpected Case");
+                        {
+                            throw new System.Exception("Unexpected Case");
+                        }
                 }
 
                 // oppervlakte eenheden (area units)
@@ -168,130 +232,193 @@
                     // lengte eenheden
                     case "mm":
                     case "millimeter":
-                        result = meter * 1000;
-                        break;
+                        {
+                            result = meter * 1000;
+                            break;
+                        }
                     case "cm":
                     case "centimer":
-                        result = meter * 100;
-                        break;
+                        {
+                            result = meter * 100;
+                            break;
+                        }
                     case "dm":
                     case "decimeter":
-                        result = meter * 10;
-                        break;
+                        {
+                            result = meter * 10;
+                            break;
+                        }
                     case "m":
                     case nameof(meter):
-                        result = meter;
-                        break;
+                        {
+                            result = meter;
+                            break;
+                        }
                     case "dam":
                     case "decameter":
-                        result = meter / 1;
-                        break;
+                        {
+                            result = meter / 1;
+                            break;
+                        }
                     case "hm":
                     case "hectometer":
-                        result = meter / 100;
-                        break;
+                        {
+                            result = meter / 100;
+                            break;
+                        }
                     case "km":
                     case "kilometer":
-                        result = meter / 1000;
-                        break;
+                        {
+                            result = meter / 1000;
+                            break;
+                        }
                     case "feet":
                     case "ft":
-                        result = meter / 0.3048;
-                        break;
+                        {
+                            result = meter / 0.3048;
+                            break;
+                        }
                     case "inch":
-                        result = meter / 0.0254;
-                        break;
+                        {
+                            result = meter / 0.0254;
+                            break;
+                        }
                     case "mile":
                     case "miles":
-                        result = meter * 0.00062137;
-                        break;
+                        {
+                            result = meter * 0.00062137;
+                            break;
+                        }
                     case "yard":
                     case "yd":
-                        result = meter * 0.9144;
-                        break;
-                    // gewicht eenheden (Weight Units)
+                        {
+                            result = meter * 0.9144;
+                            break;
+                        }                    // gewicht eenheden (Weight Units)
                     case "mg":
                     case "milligram":
-                        result = gram * 1000;
-                        break;
+                        {
+                            result = gram * 1000;
+                            break;
+                        }
                     case "cg":
                     case "centigram":
-                        result = gram * 100;
-                        break;
+                        {
+                            result = gram * 100;
+                            break;
+                        }
                     case "dg":
                     case "decigram":
-                        result = gram * 10;
-                        break;
+                        {
+                            result = gram * 10;
+                            break;
+                        }
                     case "gr":
                     case nameof(gram):
-                        result = gram;
-                        break;
+                        {
+                            result = gram;
+                            break;
+                        }
                     case "dag":
                     case "decagram":
-                        result = gram / 10;
-                        break;
+                        {
+                            result = gram / 10;
+                            break;
+                        }
                     case "hg":
                     case "hectogram":
-                        result = gram / 100;
-                        break;
+                        {
+                            result = gram / 100;
+                            break;
+                        }
                     case "kg":
                     case "kilogram":
-                        result = gram / 1000;
-                        break;
-                    // inhoud (volume units)
+                        {
+                            result = gram / 1000;
+                            break;
+                        }                    // inhoud (volume units)
                     case "ml":
                     case "milliliter":
-                        result = liter * 1000;
-                        break;
+                        {
+                            result = liter * 1000;
+                            break;
+                        }
                     case "cl":
                     case "centiliter":
-                        result = liter * 100;
-                        break;
+                        {
+                            result = liter * 100;
+                            break;
+                        }
                     case "dl":
                     case "deciliter":
-                        result = liter * 10;
-                        break;
+                        {
+                            result = liter * 10;
+                            break;
+                        }
                     case "l":
                     case nameof(liter):
-                        result = liter;
-                        break;
+                        {
+                            result = liter;
+                            break;
+                        }
                     case "dal":
                     case "decaliter":
-                        result = liter / 10;
-                        break;
+                        {
+                            result = liter / 10;
+                            break;
+                        }
                     case "hl":
                     case "hectoliter":
-                        result = liter / 100;
-                        break;
+                        {
+                            result = liter / 100;
+                            break;
+                        }
                     case "kl":
                     case "kiloliter":
-                        result = liter / 1000;
-                        break;
-                    // oppervlakte eenheden (Area Units)
+                        {
+                            result = liter / 1000;
+                            break;
+                        }                    // oppervlakte eenheden (Area Units)
                     case "mm2":
-                        result = oppervlakte * 1000000;
-                        break;
+                        {
+                            result = oppervlakte * 1000000;
+                            break;
+                        }
                     case "cm2":
-                        result = oppervlakte * 10000;
-                        break;
+                        {
+                            result = oppervlakte * 10000;
+                            break;
+                        }
                     case "dm2":
-                        result = oppervlakte * 100;
-                        break;
+                        {
+                            result = oppervlakte * 100;
+                            break;
+                        }
                     case "m2":
-                        result = oppervlakte;
-                        break;
+                        {
+                            result = oppervlakte;
+                            break;
+                        }
                     case "dam2":
-                        result = oppervlakte / 100;
-                        break;
+                        {
+                            result = oppervlakte / 100;
+                            break;
+                        }
                     case "hm2":
-                        result = oppervlakte / 10000;
-                        break;
+                        {
+                            result = oppervlakte / 10000;
+                            break;
+                        }
                     case "km2":
-                        result = oppervlakte / 1000000;
-                        break;
+                        {
+                            result = oppervlakte / 1000000;
+                            break;
+                        }
                     default:
-                        actionResult.IsProcessed = false;
-                        return actionResult;
+                        {
+                            actionResult.IsProcessed = false;
+                            return actionResult;
+                        }
                 }
 
                 Clipboard.SetText(result.ToString(CultureInfo.CurrentCulture));

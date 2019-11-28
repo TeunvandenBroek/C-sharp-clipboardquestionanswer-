@@ -3,7 +3,7 @@ namespace it.Actions
     using System;
     using System.Globalization;
 
-    public class TimespanActions : IAction
+    public sealed class TimespanActions : IAction
     {
 
         private readonly string[] dateFormats =
@@ -14,8 +14,6 @@ namespace it.Actions
         private bool isUsingTimespan = false;
 
         private DateTime? prevDate;
-
-        public int Priority => 0;
 
         public bool Matches(string clipboardText)
         {
@@ -33,12 +31,9 @@ namespace it.Actions
                 if (this.prevDate.HasValue)
                 {
                     var difference = newDate - this.prevDate;
-                    if (difference.HasValue)
-                    {
-                        this.prevDate = null;
-                        actionResult.Title = "Days between:";
-                        actionResult.Description = difference.Value.Days.ToString(CultureInfo.InvariantCulture);
-                    }
+                    this.prevDate = null;
+                    actionResult.Title = "Days between:";
+                    actionResult.Description = difference.Value.Days.ToString(CultureInfo.InvariantCulture);
                 }
                 else
                 {

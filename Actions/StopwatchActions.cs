@@ -5,7 +5,7 @@ namespace it.Actions
     using System.Globalization;
     using System.Threading;
 
-    public class StopwatchActions : IAction
+    public sealed class StopwatchActions : IAction
     {
         private string lastClipboard;
         private Stopwatch stopwatch = new Stopwatch();
@@ -68,18 +68,24 @@ namespace it.Actions
                             switch (currentCulture.LCID)
                             {
                                 case 1033: // english-us
-                                    actionResult.Title = "Stopwatch reset to";
-                                    actionResult.Description =
-                                        $"{ts.Hours} hours, {ts.Minutes} minutes,  {ts.Seconds} seconds";
-                                    break;
+                                    {
+                                        actionResult.Title = "Stopwatch reset to";
+                                        actionResult.Description =
+                                            $"{ts.Hours} hours, {ts.Minutes} minutes,  {ts.Seconds} seconds";
+                                        break;
+                                    }
                                 case 1043: // dutch
-                                    actionResult.Title = "Stopwatch gereset naar";
-                                    actionResult.Description =
-                                        $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes";
-                                    break;
+                                    {
+                                        actionResult.Title = "Stopwatch gereset naar";
+                                        actionResult.Description =
+                                            $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes";
+                                        break;
+                                    }
                                 default:
-                                    actionResult.IsProcessed = false;
-                                    return actionResult;
+                                    {
+                                        actionResult.IsProcessed = false;
+                                        return actionResult;
+                                    }
                             }
                         }
 
@@ -103,18 +109,24 @@ namespace it.Actions
                             switch (currentCulture.LCID)
                             {
                                 case 1033: // english-us
-                                    actionResult.Title = "Stopwatch paused on";
-                                    actionResult.Description =
-                                        $"{ts.Hours} hours, {ts.Minutes} minutes,  {ts.Seconds} seconds";
-                                    break;
+                                    {
+                                        actionResult.Title = "Stopwatch paused on";
+                                        actionResult.Description =
+                                            $"{ts.Hours} hours, {ts.Minutes} minutes,  {ts.Seconds} seconds";
+                                        break;
+                                    }
                                 case 1043: // dutch
-                                    actionResult.Title = "Stopwatch gepauzeerd op";
-                                    actionResult.Description =
-                                        $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes";
-                                    break;
+                                    {
+                                        actionResult.Title = "Stopwatch gepauzeerd op";
+                                        actionResult.Description =
+                                            $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes";
+                                        break;
+                                    }
                                 default:
-                                    actionResult.IsProcessed = false;
-                                    return actionResult;
+                                    {
+                                        actionResult.IsProcessed = false;
+                                        return actionResult;
+                                    }
                             }
                         }
 
@@ -137,18 +149,24 @@ namespace it.Actions
                             switch (currentCulture.LCID)
                             {
                                 case 1033: // english-us
-                                    actionResult.Title = "Stopwatch resumed from";
-                                    actionResult.Description =
-                                        $"{ts.Hours} hours, {ts.Minutes} minutes,  {ts.Seconds} seconds";
-                                    break;
+                                    {
+                                        actionResult.Title = "Stopwatch resumed from";
+                                        actionResult.Description =
+                                            $"{ts.Hours} hours, {ts.Minutes} minutes,  {ts.Seconds} seconds";
+                                        break;
+                                    }
                                 case 1043: // dutch
-                                    actionResult.Title = "Stopwatch gepauzeerd op";
-                                    actionResult.Description =
-                                        $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes";
-                                    break;
+                                    {
+                                        actionResult.Title = "Stopwatch gepauzeerd op";
+                                        actionResult.Description =
+                                            $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes";
+                                        break;
+                                    }
                                 default:
-                                    actionResult.IsProcessed = false;
-                                    return actionResult;
+                                    {
+                                        actionResult.IsProcessed = false;
+                                        return actionResult;
+                                    }
                             }
                         }
                     }
@@ -172,21 +190,32 @@ namespace it.Actions
                         switch (currentCulture.LCID)
                         {
                             case 1033: // english-us
-                                actionResult.Title = "Elapsed time";
-                                actionResult.Description =
-                                    $"{ts.Hours} hours, {ts.Minutes} minutes,  {ts.Seconds} seconds";
-                                break;
+                                {
+                                    actionResult.Title = "Elapsed time";
+                                    actionResult.Description =
+                                        $"{ts.Hours} hours, {ts.Minutes} minutes,  {ts.Seconds} seconds";
+                                    break;
+                                }
                             case 1043: // dutch
-                                actionResult.Title = "Elapsed time";
-                                actionResult.Description =
-                                    $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes";
-                                break;
+                                {
+                                    actionResult.Title = "Elapsed time";
+                                    actionResult.Description =
+                                        $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes";
+                                    break;
+                                }
                             default:
-                                actionResult.IsProcessed = false;
-                                return actionResult;
+                                {
+                                    actionResult.IsProcessed = false;
+                                    return actionResult;
+                                }
                         }
 
                         break;
+                    }
+                default:
+                    {
+                        actionResult.IsProcessed = false;
+                        return actionResult;
                     }
             }
 
@@ -200,16 +229,25 @@ namespace it.Actions
                 currentCulture = Thread.CurrentThread.CurrentCulture;
             }
 
-            string description = null;
+            string description;
 
             switch (currentCulture.LCID)
             {
                 case 1033: // english-us
-                    description = "Stopwatch already running!";
-                    break;
+                    {
+                        description = "Stopwatch already running!";
+                        break;
+                    }
                 case 1043: // dutch
-                    description = "Stopwatch al actief!";
-                    break;
+                    {
+                        description = "Stopwatch al actief!";
+                        break;
+                    }
+
+                default:
+                    {
+                        throw new Exception("Unexpected Case");
+                    }
             }
 
             return description;
@@ -222,16 +260,24 @@ namespace it.Actions
                 currentCulture = Thread.CurrentThread.CurrentCulture;
             }
 
-            string description = null;
-
+            string description;
             switch (currentCulture.LCID)
             {
                 case 1033: // english-us
-                    description = "Stopwatch is not running!";
-                    break;
+                    {
+                        description = "Stopwatch is not running!";
+                        break;
+                    }
                 case 1043: // dutch
-                    description = "Stopwatch wordt niet uitgevoerd!";
-                    break;
+                    {
+                        description = "Stopwatch wordt niet uitgevoerd!";
+                        break;
+                    }
+
+                default:
+                    {
+                        throw new Exception("Unexpected Case");
+                    }
             }
 
             return description;
@@ -244,16 +290,25 @@ namespace it.Actions
                 currentCulture = Thread.CurrentThread.CurrentCulture;
             }
 
-            string description = null;
+            string description;
 
             switch (currentCulture.LCID)
             {
                 case 1033: // english-us
-                    description = "Stopwatch started";
-                    break;
+                    {
+                        description = "Stopwatch started";
+                        break;
+                    }
                 case 1043: // dutch
-                    description = "Stopwatch gestart";
-                    break;
+                    {
+                        description = "Stopwatch gestart";
+                        break;
+                    }
+
+                default:
+                    {
+                        throw new Exception("Unexpected Case");
+                    }
             }
 
             return description;
@@ -266,16 +321,25 @@ namespace it.Actions
                 currentCulture = Thread.CurrentThread.CurrentCulture;
             }
 
-            string description = null;
+            string description;
 
             switch (currentCulture.LCID)
             {
                 case 1033: // english-us
-                    description = $"Stopwatch paused on: {this.GetElaspedTime(timeSpan)}";
-                    break;
+                    {
+                        description = $"Stopwatch paused on: {this.GetElaspedTime(timeSpan)}";
+                        break;
+                    }
                 case 1043: // dutch
-                    description = $"Stopwatch gepauzeerd op: {this.GetElaspedTime(timeSpan)}";
-                    break;
+                    {
+                        description = $"Stopwatch gepauzeerd op: {this.GetElaspedTime(timeSpan)}";
+                        break;
+                    }
+
+                default:
+                    {
+                        throw new Exception("Unexpected Case");
+                    }
             }
 
             return description;
@@ -288,16 +352,25 @@ namespace it.Actions
                 currentCulture = Thread.CurrentThread.CurrentCulture;
             }
 
-            string description = null;
+            string description;
 
             switch (currentCulture.LCID)
             {
                 case 1033: // english-us
-                    description = $"Stopwatch reset to: {GetElaspedTime(timeSpan)}";
-                    break;
+                    {
+                        description = $"Stopwatch reset to: {GetElaspedTime(timeSpan)}";
+                        break;
+                    }
                 case 1043: // dutch
-                    description = $"Stopwatch resetten naar: {GetElaspedTime(timeSpan)}";
-                    break;
+                    {
+                        description = $"Stopwatch resetten naar: {GetElaspedTime(timeSpan)}";
+                        break;
+                    }
+
+                default:
+                    {
+                        throw new Exception("Unexpected Case");
+                    }
             }
 
             return description;
@@ -310,16 +383,25 @@ namespace it.Actions
                 currentCulture = Thread.CurrentThread.CurrentCulture;
             }
 
-            string description = null;
+            string description;
 
             switch (currentCulture.LCID)
             {
                 case 1033: // english-us
-                    description = $"Stopwatch resumed on: {this.GetElaspedTime(timeSpan)}";
-                    break;
+                    {
+                        description = $"Stopwatch resumed on: {this.GetElaspedTime(timeSpan)}";
+                        break;
+                    }
                 case 1043: // dutch
-                    description = $"Stopwatch hervat op: {this.GetElaspedTime(timeSpan)}";
-                    break;
+                    {
+                        description = $"Stopwatch hervat op: {this.GetElaspedTime(timeSpan)}";
+                        break;
+                    }
+
+                default:
+                    {
+                        throw new Exception("Unexpected Case");
+                    }
             }
 
             return description;
@@ -337,11 +419,19 @@ namespace it.Actions
             switch (currentCulture.LCID)
             {
                 case 1033: // english-us
-                    description = $"Stopwatch stopped on: {GetElaspedTime(timeSpan)}";
-                    break;
+                    {
+                        description = $"Stopwatch stopped on: {GetElaspedTime(timeSpan)}";
+                        break;
+                    }
                 case 1043: // dutch
-                    description = $"Stopwatch gestopt op: {GetElaspedTime(timeSpan)}";
-                    break;
+                    {
+                        description = $"Stopwatch gestopt op: {GetElaspedTime(timeSpan)}";
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
             }
 
             return description;
@@ -356,18 +446,27 @@ namespace it.Actions
                 currentCulture = Thread.CurrentThread.CurrentCulture;
             }
 
-            string description = null;
+            string description;
 
             switch (currentCulture.LCID)
             {
                 case 1033: // english-us
-                    description =
-                        $"{stopwatch.Elapsed.Hours} hours, {stopwatch.Elapsed.Hours} minutes,  {stopwatch.Elapsed.Hours} seconds";
-                    break;
+                    {
+                        description =
+                           $"{stopwatch.Elapsed.Hours} hours, {this.stopwatch.Elapsed.Hours} minutes,  {this.stopwatch.Elapsed.Hours} seconds";
+                        break;
+                    }
                 case 1043: // dutch
-                    description =
-                        $"{stopwatch.Elapsed.Hours} uur, {stopwatch.Elapsed.Hours} minuten,  {stopwatch.Elapsed.Hours}secondes";
-                    break;
+                    {
+                        description =
+                           $"{stopwatch.Elapsed.Hours} uur, {this.stopwatch.Elapsed.Hours} minuten,  {this.stopwatch.Elapsed.Hours}secondes";
+                        break;
+                    }
+
+                default:
+                    {
+                        throw new Exception("Unexpected Case");
+                    }
             }
 
             return description;
