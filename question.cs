@@ -1,11 +1,11 @@
 ﻿namespace it
 {
-    public sealed class Question
+    public class Question
     {
         public Question(string text, string answer)
         {
-            Text = text;
-            Answer = answer;
+            this.Text = text;
+            this.Answer = answer;
         }
 
         public string Text { get; set; }

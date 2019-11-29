@@ -5,6 +5,7 @@ namespace it
     using System.Drawing;
     using System.Linq;
     using System.Reflection;
+    using System.Web.Services.Description;
     using System.Windows.Forms;
     using it.Actions;
     using Microsoft.Extensions.DependencyInjection;
@@ -49,7 +50,7 @@ namespace it
         private void ConfigureDependancies()
         {
             // Add configure services
-            var serviceDescriptors = new ServiceCollection();
+            IServiceCollection serviceDescriptors = new ServiceCollection();
 
             serviceDescriptors.AddSingleton<IAction, ConvertActions>();
             serviceDescriptors.AddSingleton<IAction, CountdownActions>();
@@ -58,8 +59,6 @@ namespace it
             serviceDescriptors.AddSingleton<IAction, StopwatchActions>();
             serviceDescriptors.AddSingleton<IAction, TimespanActions>();
             serviceDescriptors.AddSingleton<IAction, TimezoneActions>();
-            serviceDescriptors.AddSingleton<IAction, TryCalcBmi>();
-            serviceDescriptors.AddSingleton<IAction, TryRedirect>();
             serviceDescriptors.AddSingleton<IAction, MathActions>();
             (this.serviceProvider as IDisposable)?.Dispose();
             this.serviceProvider = serviceDescriptors.BuildServiceProvider();
@@ -91,12 +90,8 @@ namespace it
         {
             try
             {
-
-                var service = serviceProvider.GetServices<IAction>().FirstOrDefault(s => s.Matches(clipboardText));
-
                 var service = this.serviceProvider.GetServices<IAction>().FirstOrDefault(s => s.Matches(clipboardText));
                 this.clipboardMonitor.ClipboardChanged -= this.ClipboardMonitor_ClipboardChanged;
-
                 ActionResult actionResult = null;
 
                 // run the action
@@ -119,17 +114,17 @@ namespace it
                     return;
                 }
 
-
                 if (clipboardText.Length > 2)
-                    foreach (var question in questionList)
-
-                        this.ProcessResult(actionResult, clipboardText);
+                {
+                    foreach (var question in this.questionList)
+                    {
+                        if (question.Text.Contains(clipboardText))
+                        {
+                            this.ProcessResult(new ActionResult(question.Text, question.Answer), clipboardText);
+                            return;
+                        }
                     }
-
-                    this.clipboardMonitor.ClipboardChanged += this.ClipboardMonitor_ClipboardChanged;
-                    return;
                 }
-
                 if (clipboardText.Length > 2)
                 {
                     foreach (var question in this.questionList)
@@ -143,6 +138,7 @@ namespace it
                     }
                 }
             }
+
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
@@ -194,9 +190,9 @@ namespace it
             else
                 // if key exist, remove it
                 if (!string.IsNullOrWhiteSpace(value))
-                {
-                    this.key.DeleteValue(keyName);
-                }
+            {
+                this.key.DeleteValue(keyName);
+            }
 
             key.Close();
         }
