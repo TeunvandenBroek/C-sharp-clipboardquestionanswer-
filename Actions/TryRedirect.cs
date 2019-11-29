@@ -2,7 +2,7 @@
 
 namespace it.Actions
 {
-    public class TryRedirect : IAction
+    public sealed class TryRedirect : IAction
     {
         public bool Matches(string clipboardText)
         {

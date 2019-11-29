@@ -1,16 +1,15 @@
-using it.Actions;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Reflection;
-using System.Windows.Forms;
-
-
 namespace it
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.Linq;
+    using System.Reflection;
+    using System.Windows.Forms;
+    using it.Actions;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Win32;
+
     /// <summary>
     ///     The bootstrap class is provided to allow the application to run with out a form.
     ///     We can use a form however in the future by adding it to here.
@@ -23,48 +22,47 @@ namespace it
         private readonly List<Question> questionList = Questions.LoadQuestions();
 
         // Container to hold the actions
-        private IServiceProvider serviceProvider;
+        private ServiceProvider serviceProvider;
 
 
         public Bootstrap()
         {
-            notifyIcon = new NotifyIcon(container)
+            this.notifyIcon = new NotifyIcon(this.container)
             {
-                Visible = true
+                Visible = true,
             };
 
-            ConfigureDependancies();
+            this.ConfigureDependancies();
 
-            clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
+            this.clipboardMonitor.ClipboardChanged += this.ClipboardMonitor_ClipboardChanged;
         }
-
 
         public void Dispose()
         {
-            (serviceProvider as IDisposable)?.Dispose();
-            notifyIcon?.Dispose();
-            container?.Dispose();
-            clipboardMonitor?.Dispose();
+            (this.serviceProvider as IDisposable)?.Dispose();
+            this.notifyIcon?.Dispose();
+            this.container?.Dispose();
+            this.clipboardMonitor?.Dispose();
+            this.key?.Dispose();
         }
 
         private void ConfigureDependancies()
         {
             // Add configure services
-            IServiceCollection serviceDescriptors = new ServiceCollection();
+            var serviceDescriptors = new ServiceCollection();
 
             serviceDescriptors.AddSingleton<IAction, ConvertActions>();
             serviceDescriptors.AddSingleton<IAction, CountdownActions>();
             serviceDescriptors.AddSingleton<IAction, DeviceActions>();
-            serviceDescriptors.AddSingleton<IAction, MathActions>();
             serviceDescriptors.AddSingleton<IAction, RandomActions>();
             serviceDescriptors.AddSingleton<IAction, StopwatchActions>();
             serviceDescriptors.AddSingleton<IAction, TimespanActions>();
             serviceDescriptors.AddSingleton<IAction, TimezoneActions>();
             serviceDescriptors.AddSingleton<IAction, TryCalcBmi>();
             serviceDescriptors.AddSingleton<IAction, TryRedirect>();
-            serviceDescriptors.AddSingleton<IAction, TryWifiPass>();
-
-            serviceProvider = serviceDescriptors.BuildServiceProvider();
+            serviceDescriptors.AddSingleton<IAction, MathActions>();
+            (this.serviceProvider as IDisposable)?.Dispose();
+            this.serviceProvider = serviceDescriptors.BuildServiceProvider();
         }
 
 
@@ -79,10 +77,13 @@ namespace it
             if (e.DataObject.GetData(DataFormats.Text) is string clipboardText)
             {
                 // the data is not a string. bail.
-                if (string.IsNullOrWhiteSpace(clipboardText)) return;
+                if (string.IsNullOrWhiteSpace(clipboardText))
+                {
+                    return;
+                }
 
                 // if we get to here, we have text
-                ProcessClipboardText(clipboardText);
+                this.ProcessClipboardText(clipboardText);
             }
         }
 
@@ -90,15 +91,27 @@ namespace it
         {
             try
             {
+
                 var service = serviceProvider.GetServices<IAction>().FirstOrDefault(s => s.Matches(clipboardText));
+
+                var service = this.serviceProvider.GetServices<IAction>().FirstOrDefault(s => s.Matches(clipboardText));
+                this.clipboardMonitor.ClipboardChanged -= this.ClipboardMonitor_ClipboardChanged;
+
                 ActionResult actionResult = null;
+
                 // run the action
-                if (service != null) actionResult = service.TryExecute(clipboardText);
-                // re attach the event
-                if (actionResult != null && actionResult.IsProcessed)
+                if (service is object)
                 {
-                    if (!String.IsNullOrWhiteSpace(actionResult.Title) || !String.IsNullOrWhiteSpace(actionResult.Description))
+                    actionResult = service.TryExecute(clipboardText);
+                }
+
+                // re attach the event
+                if (actionResult is object && actionResult.IsProcessed)
+                {
+                    if (!string.IsNullOrWhiteSpace(actionResult.Title) ||
+                        !string.IsNullOrWhiteSpace(actionResult.Description))
                     {
+
                         clipboardMonitor.ClipboardChanged -= ClipboardMonitor_ClipboardChanged;
                         ProcessResult(actionResult, clipboardText);
                         clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
@@ -109,12 +122,26 @@ namespace it
 
                 if (clipboardText.Length > 2)
                     foreach (var question in questionList)
+
+                        this.ProcessResult(actionResult, clipboardText);
+                    }
+
+                    this.clipboardMonitor.ClipboardChanged += this.ClipboardMonitor_ClipboardChanged;
+                    return;
+                }
+
+                if (clipboardText.Length > 2)
+                {
+                    foreach (var question in this.questionList)
+                    {
+
                         if (question.Text.Contains(clipboardText))
                         {
-                            ProcessResult(new ActionResult(question.Text, question.Answer), clipboardText);
+                            this.ProcessResult(new ActionResult(question.Text, question.Answer), clipboardText);
                             return;
                         }
-
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -131,44 +158,49 @@ namespace it
 
         private void ProcessResult(ActionResult actionResult, string clipboardText)
         {
-            if (string.Equals(Clipboard.GetText(), clipboardText, StringComparison.Ordinal)) Clipboard.Clear();
+            if (string.Equals(Clipboard.GetText(), clipboardText, StringComparison.Ordinal))
+            {
+                Clipboard.Clear();
+            }
 
-            notifyIcon.Icon = SystemIcons.Exclamation;
-            notifyIcon.BalloonTipTitle = actionResult.Title;
-            notifyIcon.BalloonTipText = actionResult.Description;
-            notifyIcon.BalloonTipIcon = ToolTipIcon.Error;
-            notifyIcon.ShowBalloonTip(1000);
-
+            this.notifyIcon.Icon = SystemIcons.Exclamation;
+            this.notifyIcon.BalloonTipTitle = actionResult.Title;
+            this.notifyIcon.BalloonTipText = actionResult.Description;
+            this.notifyIcon.BalloonTipIcon = ToolTipIcon.Error;
+            this.notifyIcon.ShowBalloonTip(1000);
         }
 
-        internal static void EnsureWindowStartup(bool isStartingWithWindows)
+        internal void EnsureWindowStartup(bool isStartingWithWindows)
         {
-            string keyName = "Clipboard Assistant";
-            string keyValue = Assembly.GetExecutingAssembly().Location;
+            const string keyName = "Clipboard Assistant";
+            var keyValue = Assembly.GetExecutingAssembly().Location;
+            this.key?.Dispose();
+            this.key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", writable: true);
+            if (this.key is null)
+            {
+                return;
+            }
 
-            RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
-            if (key == null) return;
-
-            string value = key.GetValue(keyName, null) as string;
+            var value = this.key.GetValue(keyName, null) as string;
 
             if (isStartingWithWindows)
             {
                 // key doesn't exist, add it
-                if (String.IsNullOrWhiteSpace(value) && value == keyValue)
+                if (string.IsNullOrWhiteSpace(value) && string.Equals(value, keyValue, StringComparison.Ordinal))
                 {
-                    key.SetValue(keyName, keyValue);
+                    this.key.SetValue(keyName, keyValue);
                 }
             }
             else
-            {
                 // if key exist, remove it
-                if (!String.IsNullOrWhiteSpace(value))
+                if (!string.IsNullOrWhiteSpace(value))
                 {
-                    key.DeleteValue(keyName);
+                    this.key.DeleteValue(keyName);
                 }
-            }
 
             key.Close();
         }
+
+        private RegistryKey key;
     }
 }

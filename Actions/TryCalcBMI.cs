@@ -4,7 +4,7 @@ using System;
 
 namespace it.Actions
 {
-    public class TryCalcBmi : IAction
+    public sealed class TryCalcBmi : IAction
     {
         public bool Matches(string clipboardText)
         {

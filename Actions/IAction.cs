@@ -1,19 +1,17 @@
-﻿using System;
-
-namespace it.Actions
+﻿namespace it.Actions
 {
     public sealed class ActionResult
     {
         internal ActionResult(string title = null, string description = null, bool isProcessed = true)
         {
-            Title = title;
-            Description = description;
-            IsProcessed = isProcessed;
+            this.Title = title;
+            this.Description = description;
+            this.IsProcessed = isProcessed;
         }
-
-        internal string Title { get; set; }
         internal string Description { get; set; }
         internal bool IsProcessed { get; set; }
+
+        internal string Title { get; set; }
     }
 
     internal interface IAction
@@ -24,7 +22,7 @@ namespace it.Actions
 
     internal abstract class ActionBase : IAction
     {
-        public abstract ActionResult TryExecute(string clipboardText);
         public abstract bool Matches(string clipboardText);
+        public abstract ActionResult TryExecute(string clipboardText);
     }
 }

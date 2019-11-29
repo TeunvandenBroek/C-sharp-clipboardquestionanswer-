@@ -1,14 +1,10 @@
-﻿using System;
-using System.ComponentModel;
-
-namespace it
+﻿namespace it
 {
-    internal sealed class ControlContainer : IContainer
+    using System.ComponentModel;
+
+    internal sealed partial class ControlContainer : IContainer
     {
-        public ControlContainer()
-        {
-            Components = new ComponentCollection(Array.Empty<IComponent>());
-        }
+        public ComponentCollection Components { get; private set; }
 
         public void Add(IComponent component)
         {
@@ -18,15 +14,13 @@ namespace it
         {
         }
 
-        public void Remove(IComponent component)
-        {
-        }
-
-        public ComponentCollection Components { get; private set; }
-
         public void Dispose()
         {
-            Components = null;
+            this.Components = null;
+        }
+
+        public void Remove(IComponent component)
+        {
         }
     }
 }
