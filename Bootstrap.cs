@@ -91,8 +91,12 @@ namespace it
         {
             try
             {
+
+                var service = serviceProvider.GetServices<IAction>().FirstOrDefault(s => s.Matches(clipboardText));
+
                 var service = this.serviceProvider.GetServices<IAction>().FirstOrDefault(s => s.Matches(clipboardText));
                 this.clipboardMonitor.ClipboardChanged -= this.ClipboardMonitor_ClipboardChanged;
+
                 ActionResult actionResult = null;
 
                 // run the action
@@ -107,6 +111,18 @@ namespace it
                     if (!string.IsNullOrWhiteSpace(actionResult.Title) ||
                         !string.IsNullOrWhiteSpace(actionResult.Description))
                     {
+
+                        clipboardMonitor.ClipboardChanged -= ClipboardMonitor_ClipboardChanged;
+                        ProcessResult(actionResult, clipboardText);
+                        clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
+                    }
+                    return;
+                }
+
+
+                if (clipboardText.Length > 2)
+                    foreach (var question in questionList)
+
                         this.ProcessResult(actionResult, clipboardText);
                     }
 
@@ -118,6 +134,7 @@ namespace it
                 {
                     foreach (var question in this.questionList)
                     {
+
                         if (question.Text.Contains(clipboardText))
                         {
                             this.ProcessResult(new ActionResult(question.Text, question.Answer), clipboardText);
