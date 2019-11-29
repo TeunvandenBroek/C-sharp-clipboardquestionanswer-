@@ -91,7 +91,6 @@ namespace it
             try
             {
                 var service = serviceProvider.GetServices<IAction>().FirstOrDefault(s => s.Matches(clipboardText));
-                clipboardMonitor.ClipboardChanged -= ClipboardMonitor_ClipboardChanged;
                 ActionResult actionResult = null;
                 // run the action
                 if (service != null) actionResult = service.TryExecute(clipboardText);
@@ -100,36 +99,13 @@ namespace it
                 {
                     if (!String.IsNullOrWhiteSpace(actionResult.Title) || !String.IsNullOrWhiteSpace(actionResult.Description))
                     {
+                        clipboardMonitor.ClipboardChanged -= ClipboardMonitor_ClipboardChanged;
                         ProcessResult(actionResult, clipboardText);
+                        clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
                     }
-                    clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
                     return;
                 }
 
-
-
-                foreach (var action in new List<IAction>(serviceProvider.GetServices<IAction>()))
-                {
-                    // disconnect events from the clipboard.
-                    clipboardMonitor.ClipboardChanged -= ClipboardMonitor_ClipboardChanged;
-                    // run the action
-                    actionResult = action.TryExecute(clipboardText);
-                    // re attach the event
-                    clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
-
-                    // if this action processed the command, exit the loop.
-                    if (actionResult.IsProcessed)
-                    {
-                        // if the result is not null, and has a title and description
-                        if (!string.IsNullOrWhiteSpace(actionResult.Title) ||
-                            !string.IsNullOrWhiteSpace(actionResult.Description))
-                        {
-                            ProcessResult(actionResult, clipboardText);
-                        }
-
-                        break;
-                    }
-                }
 
                 if (clipboardText.Length > 2)
                     foreach (var question in questionList)
