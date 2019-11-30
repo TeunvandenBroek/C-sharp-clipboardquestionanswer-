@@ -1,12 +1,22 @@
 ﻿namespace it
 {
-    public sealed partial class SmartPerformanceCounter
+    public sealed partial class SmartPerformanceCounter : System.IEquatable<SmartPerformanceCounter>
     {
         /// <summary>Record Constructor</summary>
         /// <param name="isValueCreated"><see cref="IsValueCreated"/></param>
-        public SmartPerformanceCounter(bool isValueCreated = default)
+        internal SmartPerformanceCounter(bool isValueCreated = default)
         {
             this.IsValueCreated = isValueCreated;
+        }
+
+        public bool Equals(SmartPerformanceCounter other)
+        {
+            if (other is null)
+            {
+                throw new System.ArgumentNullException(nameof(other));
+            }
+
+            throw new System.NotImplementedException();
         }
     }
 }

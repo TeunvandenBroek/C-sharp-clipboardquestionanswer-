@@ -5,7 +5,6 @@ namespace it
     using System.Drawing;
     using System.Linq;
     using System.Reflection;
-    using System.Web.Services.Description;
     using System.Windows.Forms;
     using it.Actions;
     using Microsoft.Extensions.DependencyInjection;
@@ -23,34 +22,34 @@ namespace it
         private readonly List<Question> questionList = Questions.LoadQuestions();
 
         // Container to hold the actions
-        private ServiceProvider serviceProvider;
+        private IServiceProvider serviceProvider;
 
 
         public Bootstrap()
         {
-            this.notifyIcon = new NotifyIcon(this.container)
+            notifyIcon = new NotifyIcon(container)
             {
                 Visible = true,
             };
 
-            this.ConfigureDependancies();
+            ConfigureDependancies();
 
-            this.clipboardMonitor.ClipboardChanged += this.ClipboardMonitor_ClipboardChanged;
+            clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
         }
+
 
         public void Dispose()
         {
-            (this.serviceProvider as IDisposable)?.Dispose();
-            this.notifyIcon?.Dispose();
-            this.container?.Dispose();
-            this.clipboardMonitor?.Dispose();
-            this.key?.Dispose();
+            (serviceProvider as IDisposable)?.Dispose();
+            notifyIcon?.Dispose();
+            container?.Dispose();
+            clipboardMonitor?.Dispose();
         }
 
         private void ConfigureDependancies()
         {
             // Add configure services
-            IServiceCollection serviceDescriptors = new ServiceCollection();
+            ServiceCollection serviceDescriptors = new ServiceCollection();
 
             serviceDescriptors.AddSingleton<IAction, ConvertActions>();
             serviceDescriptors.AddSingleton<IAction, CountdownActions>();
@@ -76,37 +75,31 @@ namespace it
             if (e.DataObject.GetData(DataFormats.Text) is string clipboardText)
             {
                 // the data is not a string. bail.
-                if (string.IsNullOrWhiteSpace(clipboardText))
-                {
-                    return;
-                }
+                if (string.IsNullOrWhiteSpace(clipboardText)) return;
 
                 // if we get to here, we have text
-                this.ProcessClipboardText(clipboardText);
+                ProcessClipboardText(clipboardText);
             }
         }
 
         private void ProcessClipboardText(string clipboardText)
         {
+            if (clipboardText is null)
+            {
+                throw new ArgumentNullException(nameof(clipboardText));
+            }
+
             try
             {
-                var service = this.serviceProvider.GetServices<IAction>().FirstOrDefault(s => s.Matches(clipboardText));
-                this.clipboardMonitor.ClipboardChanged -= this.ClipboardMonitor_ClipboardChanged;
+                var service = serviceProvider.GetServices<IAction>().FirstOrDefault(s => s.Matches(clipboardText));
                 ActionResult actionResult = null;
-
                 // run the action
-                if (service is object)
-                {
-                    actionResult = service.TryExecute(clipboardText);
-                }
-
+                if (service is object) actionResult = service.TryExecute(clipboardText);
                 // re attach the event
                 if (actionResult is object && actionResult.IsProcessed)
                 {
-                    if (!string.IsNullOrWhiteSpace(actionResult.Title) ||
-                        !string.IsNullOrWhiteSpace(actionResult.Description))
+                    if (!String.IsNullOrWhiteSpace(actionResult.Title) || !String.IsNullOrWhiteSpace(actionResult.Description))
                     {
-
                         clipboardMonitor.ClipboardChanged -= ClipboardMonitor_ClipboardChanged;
                         ProcessResult(actionResult, clipboardText);
                         clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
@@ -114,31 +107,16 @@ namespace it
                     return;
                 }
 
-                if (clipboardText.Length > 2)
-                {
-                    foreach (var question in this.questionList)
-                    {
-                        if (question.Text.Contains(clipboardText))
-                        {
-                            this.ProcessResult(new ActionResult(question.Text, question.Answer), clipboardText);
-                            return;
-                        }
-                    }
-                }
-                if (clipboardText.Length > 2)
-                {
-                    foreach (var question in this.questionList)
-                    {
 
+                if (clipboardText.Length > 2)
+                    foreach (var question in questionList)
                         if (question.Text.Contains(clipboardText))
                         {
-                            this.ProcessResult(new ActionResult(question.Text, question.Answer), clipboardText);
+                            ProcessResult(new ActionResult(question.Text, question.Answer), clipboardText);
                             return;
                         }
-                    }
-                }
+
             }
-
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
@@ -154,49 +132,49 @@ namespace it
 
         private void ProcessResult(ActionResult actionResult, string clipboardText)
         {
-            if (string.Equals(Clipboard.GetText(), clipboardText, StringComparison.Ordinal))
+            if (clipboardText is null)
             {
-                Clipboard.Clear();
+                throw new ArgumentNullException(nameof(clipboardText));
             }
 
-            this.notifyIcon.Icon = SystemIcons.Exclamation;
-            this.notifyIcon.BalloonTipTitle = actionResult.Title;
-            this.notifyIcon.BalloonTipText = actionResult.Description;
-            this.notifyIcon.BalloonTipIcon = ToolTipIcon.Error;
-            this.notifyIcon.ShowBalloonTip(1000);
+            if (string.Equals(Clipboard.GetText(), clipboardText, StringComparison.Ordinal)) Clipboard.Clear();
+
+            notifyIcon.Icon = SystemIcons.Exclamation;
+            notifyIcon.BalloonTipTitle = actionResult.Title;
+            notifyIcon.BalloonTipText = actionResult.Description;
+            notifyIcon.BalloonTipIcon = ToolTipIcon.Error;
+            notifyIcon.ShowBalloonTip(1000);
+
         }
 
-        internal void EnsureWindowStartup(bool isStartingWithWindows)
+        internal static void EnsureWindowStartup(bool isStartingWithWindows)
         {
-            const string keyName = "Clipboard Assistant";
-            var keyValue = Assembly.GetExecutingAssembly().Location;
-            this.key?.Dispose();
-            this.key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", writable: true);
-            if (this.key is null)
-            {
-                return;
-            }
+            string keyName = "Clipboard Assistant";
+            string keyValue = Assembly.GetExecutingAssembly().Location;
 
-            var value = this.key.GetValue(keyName, null) as string;
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
+            if (key == null) return;
+
+            string value = key.GetValue(keyName, null) as string;
 
             if (isStartingWithWindows)
             {
                 // key doesn't exist, add it
-                if (string.IsNullOrWhiteSpace(value) && string.Equals(value, keyValue, StringComparison.Ordinal))
+                if (String.IsNullOrWhiteSpace(value) && string.Equals(value, keyValue, StringComparison.Ordinal))
                 {
-                    this.key.SetValue(keyName, keyValue);
+                    key.SetValue(keyName, keyValue);
                 }
             }
             else
-                // if key exist, remove it
-                if (!string.IsNullOrWhiteSpace(value))
             {
-                this.key.DeleteValue(keyName);
+                // if key exist, remove it
+                if (!String.IsNullOrWhiteSpace(value))
+                {
+                    key.DeleteValue(keyName);
+                }
             }
 
             key.Close();
         }
-
-        private RegistryKey key;
     }
 }

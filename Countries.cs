@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    internal static partial class Countries
+    internal partial class Countries
     {
 
         private static readonly Dictionary<UtcOffset, string[]> countriesByUtcOffset = new Dictionary<UtcOffset, string[]>

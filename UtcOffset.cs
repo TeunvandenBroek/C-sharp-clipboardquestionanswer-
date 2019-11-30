@@ -1,6 +1,6 @@
 ﻿namespace it
 {
-    internal static partial class Countries
+    internal partial class Countries
     {
         public enum UtcOffset
         {

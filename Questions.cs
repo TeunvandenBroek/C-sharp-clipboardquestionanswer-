@@ -5,7 +5,7 @@ namespace it
 {
     public static class Questions
     {
-        private static Dictionary<string, string> questionDict = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> QuestionDict = new Dictionary<string, string>
         (System.StringComparer.Ordinal)
         {
             //Add question/answer to list
@@ -1033,18 +1033,18 @@ namespace it
 
             ["Kristel legt plakplinten langs de muur van haar woonkamer."] = "23,70",
 
-            ["straat"] = "b (het meest rechtsonder"
+            ["straat"] = "b (het meest rechtsonder",
         };
-
-        public static Dictionary<string, string> GetQuestionDict1()
-        {
-            return questionDict;
-        }
 
 
         public static Dictionary<string, string> GetQuestionDict()
         {
             return GetQuestionDict1();
+        }
+
+        public static Dictionary<string, string> GetQuestionDict1()
+        {
+            return QuestionDict;
         }
 
         internal static List<Question> LoadQuestions()

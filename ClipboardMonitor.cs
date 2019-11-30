@@ -7,7 +7,7 @@
     using System.Windows.Forms;
 
     [DefaultEvent(nameof(ClipboardChanged))]
-    public sealed class ClipboardMonitor : Control
+    public sealed class ClipboardMonitor : Control, IEquatable<ClipboardMonitor>
     {
         private IntPtr nextClipboardViewer;
 
@@ -48,7 +48,7 @@
                 case WM_DRAWCLIPBOARD:
                     {
                         this.OnClipboardChanged();
-                        SendMessage(nextClipboardViewer, m.Msg, m.WParam, m.LParam);
+                        SendMessage(this.nextClipboardViewer, m.Msg, m.WParam, m.LParam);
                         break;
                     }
                 case WM_CHANGECBCHAIN:
@@ -58,7 +58,10 @@
                             this.nextClipboardViewer = m.LParam;
                         }
                         else
-                            SendMessage(nextClipboardViewer, m.Msg, m.WParam, m.LParam);
+                        {
+                            SendMessage(this.nextClipboardViewer, m.Msg, m.WParam, m.LParam);
+                        }
+
                         break;
                     }
                 default:
@@ -90,13 +93,18 @@
                 MessageBox.Show(e.ToString());
             }
         }
+
+        public bool Equals(ClipboardMonitor other)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public sealed class ClipboardChangedEventArgs : EventArgs
     {
         internal readonly IDataObject DataObject;
 
-        public ClipboardChangedEventArgs(IDataObject dataObject)
+        internal ClipboardChangedEventArgs(IDataObject dataObject = null)
         {
             if (dataObject is null)
             {

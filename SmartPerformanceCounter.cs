@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace it
+﻿namespace it
 {
     using System;
     using System.Diagnostics;
