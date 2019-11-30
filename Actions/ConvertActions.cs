@@ -4,13 +4,18 @@
     using System.Text.RegularExpressions;
     using System.Windows.Forms;
 
-    internal sealed class ConvertActions : ActionBase
+    internal sealed class ConvertActions : ActionBase, System.IEquatable<ConvertActions>
     {
         private readonly Regex unitRegex =
             new Regex("(?<number>^[0-9]+([.,][0-9]{1,3})?)(\\s*)(?<from>[a-z]+[2-3]?) to (?<to>[a-z]+[2-3]?)");
 
-        public override bool Matches(string clipboardText)
+        public override bool Matches(string clipboardText = null)
         {
+            if (clipboardText is null)
+            {
+                throw new System.ArgumentNullException(nameof(clipboardText));
+            }
+
             var matches = this.unitRegex.Match(clipboardText);
             return matches.Success;
         }
@@ -225,8 +230,7 @@
                 }
 
                 // oppervlakte eenheden (area units)
-                double result = 0;
-
+                double result;
                 switch (to) // naar (to)
                 {
                     // lengte eenheden
@@ -427,6 +431,11 @@
             }
 
             return actionResult;
+        }
+
+        public bool Equals(ConvertActions other)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

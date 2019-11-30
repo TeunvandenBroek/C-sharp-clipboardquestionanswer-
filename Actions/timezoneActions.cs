@@ -7,11 +7,16 @@ namespace it.Actions
 
     internal sealed class TimezoneActions : IAction
     {
-        private  string country;
+        private string country;
         private string timeZoneId = string.Empty;
 
-        public bool Matches(string clipboardText)
+        public bool Matches(string clipboardText = null)
         {
+            if (clipboardText is null)
+            {
+                throw new ArgumentNullException(nameof(clipboardText));
+            }
+
             this.country = clipboardText.Trim().ToLowerInvariant();
             var keyValuePair = this.TryKeypair();
             return keyValuePair.Key != default;
@@ -219,7 +224,7 @@ namespace it.Actions
             }
 
             var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(this.timeZoneId);
-            var dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo);
+            var dateTime = TimeZoneInfo.ConvertTime(DateTimeOffset.Now, timeZoneInfo);
             actionResult.Description = dateTime.ToString("HH:mm", CultureInfo.CurrentCulture);
             return actionResult;
         }

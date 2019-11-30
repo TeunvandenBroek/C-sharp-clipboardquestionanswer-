@@ -4,12 +4,12 @@ namespace it.Actions
     using System.Text;
     using System.Threading;
 
-    internal sealed class RandomActions : IAction
+    internal sealed class RandomActions : IAction, IEquatable<RandomActions>
     {
         private readonly string[] commands = { "kop of munt", "heads or tails", "random password" };
         private readonly Random random = new Random();
 
-        public bool Matches(string clipboardText)
+        public bool Matches(string clipboardText = null)
         {
             foreach (var command in commands)
             {
@@ -81,6 +81,11 @@ namespace it.Actions
             }
 
             return actionResult;
+        }
+
+        public bool Equals(RandomActions other)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -5,23 +5,37 @@ namespace it.Actions
     using System.Globalization;
     using System.Threading;
 
-    public sealed class StopwatchActions : IAction
+    public sealed class StopwatchActions : IAction, IEquatable<StopwatchActions>
     {
+
         private string lastClipboard;
         private Stopwatch stopwatch = new Stopwatch();
 
         public StopwatchActions()
         {
-            if (this.stopwatch.IsRunning) this.stopwatch.Stop();
+            if (this.stopwatch.IsRunning)
+            {
+                this.stopwatch.Stop();
+            }
+        }
+
+        public bool Equals(StopwatchActions other)
+        {
+            throw new NotImplementedException();
         }
 
 
-        public bool Matches(string clipboardText)
+        public bool Matches(string clipboardText = null)
         {
+            if (clipboardText is null)
+            {
+                throw new ArgumentNullException(nameof(clipboardText));
+            }
+
             return clipboardText.IndexOf(nameof(this.stopwatch), StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
-        public ActionResult TryExecute(string clipboardText)
+        public ActionResult TryExecute(string clipboardText = null)
         {
             var actionResult = new ActionResult { Title = "Stopwatch" };
             var currentCulture = Thread.CurrentThread.CurrentCulture;
@@ -58,7 +72,7 @@ namespace it.Actions
                         else
                         {
                             this.stopwatch.Restart();
-                            actionResult.Description = FillStopwatchReset(this.stopwatch.Elapsed);
+                            actionResult.Description = this.FillStopwatchReset(this.stopwatch.Elapsed);
 
                             this.lastClipboard = clipboardText;
                             this.stopwatch.Reset();
@@ -425,7 +439,7 @@ namespace it.Actions
                     }
                 case 1043: // dutch
                     {
-                        description = $"Stopwatch gestopt op: {GetElaspedTime(timeSpan)}";
+                        description = $"Stopwatch gestopt op: {this.GetElaspedTime(timeSpan)}";
                         break;
                     }
                 default:

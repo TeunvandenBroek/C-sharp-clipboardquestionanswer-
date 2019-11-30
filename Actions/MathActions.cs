@@ -25,14 +25,24 @@ namespace it.Actions
         private readonly Regex mathRegex =
             new Regex(@"^(?<lhs>\d+(?:[,.]{1}\d)*)(([ ]*(?<operator>[+\-\:x\%\*/])[ ]*(?<rhs>\d+(?:[,.]{1}\d)*)+)+)");
 
-        public bool Matches(string clipboardText)
+        public bool Matches(string clipboardText = null)
         {
+            if (clipboardText is null)
+            {
+                throw new ArgumentNullException(nameof(clipboardText));
+            }
+
             var match = this.mathRegex.Match(clipboardText.Replace(',', '.'));
             return match.Success;
         }
 
-        public ActionResult TryExecute(string clipboardText)
+        public ActionResult TryExecute(string clipboardText = null)
         {
+            if (clipboardText is null)
+            {
+                throw new ArgumentNullException(nameof(clipboardText));
+            }
+
             var actionResult = new ActionResult(clipboardText);
 
             var match = this.mathRegex.Match(clipboardText.Replace(',', '.'));

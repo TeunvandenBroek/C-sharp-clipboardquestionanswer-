@@ -3,7 +3,7 @@ namespace it.Actions
     using System;
     using System.Globalization;
 
-    public sealed class TimespanActions : IAction
+    public sealed class TimespanActions : IAction, IEquatable<TimespanActions>
     {
 
         private readonly string[] dateFormats =
@@ -13,18 +13,18 @@ namespace it.Actions
         };
         private bool isUsingTimespan = false;
 
-        private DateTime? prevDate;
+        private DateTimeOffset? prevDate;
 
-        public bool Matches(string clipboardText)
+        public bool Matches(string clipboardText = null)
         {
-            return DateTime.TryParseExact(s: clipboardText, formats: this.dateFormats, provider: CultureInfo.CurrentCulture, style: DateTimeStyles.AssumeLocal, result: out DateTime newDate);
+            return DateTimeOffset.TryParseExact(clipboardText, formats: this.dateFormats, formatProvider: CultureInfo.CurrentCulture, styles: DateTimeStyles.AssumeLocal, result: out DateTimeOffset newDate);
         }
 
-        public ActionResult TryExecute(string clipboardText)
+        public ActionResult TryExecute(string clipboardText = null)
         {
             this.isUsingTimespan = !this.isUsingTimespan;
             var actionResult = new ActionResult(isProcessed: false);
-            if (DateTime.TryParseExact(s: clipboardText, formats: this.dateFormats, provider: CultureInfo.CurrentCulture, style: DateTimeStyles.AssumeLocal, result: out var newDate))
+            if (DateTimeOffset.TryParseExact(clipboardText, formats: this.dateFormats, CultureInfo.CurrentCulture,  DateTimeStyles.AssumeLocal, result: out var newDate))
             {
                 actionResult.IsProcessed = true;
 
@@ -42,6 +42,11 @@ namespace it.Actions
             }
 
             return actionResult;
+        }
+
+        public bool Equals(TimespanActions other)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -7,11 +7,12 @@ namespace it.Actions
     using System.Net.NetworkInformation;
     using System.Net.Sockets;
     using System.Runtime.InteropServices;
+    using System.Text;
     using System.Threading;
     using System.Windows.Forms;
     using Microsoft.Win32.SafeHandles;
 
-    internal sealed class DeviceActions : IAction, IDisposable
+    internal sealed class DeviceActions : IAction, IDisposable, IEquatable<DeviceActions>
     {
         private Process afsluiten;
 
@@ -58,7 +59,12 @@ namespace it.Actions
             this.ramCounter.Dispose();
         }
 
-        public bool Matches(string clipboardText)
+        public bool Equals(DeviceActions other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Matches(string clipboardText = null)
         {
             foreach (var command in this.commands)
             {
@@ -288,6 +294,7 @@ namespace it.Actions
 
                         return actionResult;
                     }
+
                 case "cpu":
                     {
                         // komt nu overeen met lezen van taakbeheer (Now matches read Task Manager)
@@ -315,6 +322,7 @@ namespace it.Actions
 
                         return actionResult;
                     }
+
                 case "wifi check":
                 case "heb ik internet?":
                     {
