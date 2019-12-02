@@ -212,6 +212,7 @@
     <Compile Include="Actions\StopwatchActions.cs" />
     <Compile Include="Actions\TimespanActions.cs" />
     <Compile Include="Actions\TimezoneActions.cs" />
+    <Compile Include="Actions\TryRomanActions.cs" />
     <Compile Include="Bootstrap.cs" />
     <Compile Include="ClipboardMonitor.cs">
       <SubType>Component</SubType>

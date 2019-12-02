@@ -52,6 +52,7 @@ namespace it
             ServiceCollection serviceDescriptors = new ServiceCollection();
 
             serviceDescriptors.AddSingleton<IAction, ConvertActions>();
+            serviceDescriptors.AddSingleton<IAction, TryRomanActions>();
             serviceDescriptors.AddSingleton<IAction, CountdownActions>();
             serviceDescriptors.AddSingleton<IAction, DeviceActions>();
             serviceDescriptors.AddSingleton<IAction, RandomActions>();
