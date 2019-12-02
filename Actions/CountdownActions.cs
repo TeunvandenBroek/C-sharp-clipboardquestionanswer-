@@ -1,6 +1,7 @@
 namespace it.Actions
 {
     using System;
+    using System.Globalization;
     using System.Threading;
 
     internal sealed class CountdownActions : IAction, IEquatable<CountdownActions>
@@ -18,7 +19,7 @@ namespace it.Actions
 
         ActionResult IAction.TryExecute(string clipboardText)
         {
-            TimeSpan.TryParse(clipboardText.Replace("timer ", string.Empty), out var ts);
+            TimeSpan.TryParse(clipboardText.Replace("timer ", string.Empty), CultureInfo.InvariantCulture, out var ts);
             var actionResult = new ActionResult();
             Thread.Sleep((int)ts.TotalMilliseconds);
             actionResult.Title = "Countdown timer";

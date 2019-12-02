@@ -7,7 +7,6 @@ namespace it.Actions
     using System.Net.NetworkInformation;
     using System.Net.Sockets;
     using System.Runtime.InteropServices;
-    using System.Text;
     using System.Threading;
     using System.Windows.Forms;
     using Microsoft.Win32.SafeHandles;

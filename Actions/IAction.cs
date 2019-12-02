@@ -28,7 +28,7 @@ namespace it.Actions
         bool Matches(string clipboardText = null);
     }
 
-    internal abstract class ActionBase : IAction, System.IEquatable<ActionBase>
+    internal abstract class ActionBase : IAction, IEquatable<ActionBase>
     {
 
         public bool Equals(ActionBase other)
