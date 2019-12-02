@@ -17,7 +17,7 @@ namespace it.Actions
                 throw new ArgumentException("message", nameof(clipboardText));
             }
 
-            return clipboardText.Contains("Romeins cijfer");
+            return clipboardText.Contains("Roman number");
         }
 
         static TryRomanActions()
