@@ -13,7 +13,7 @@ namespace it.Actions
         {
             foreach (string command in commands)
             {
-                if (command.Equals(clipboardText.ToLower(), StringComparison.Ordinal))
+                if (command.Equals(clipboardText, StringComparison.Ordinal))
                 {
                     return true;
                 }

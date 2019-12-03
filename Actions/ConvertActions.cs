@@ -20,7 +20,6 @@
             return matches.Success;
         }
 
-
         public override ActionResult TryExecute(string clipboardText)
         {
             var actionResult = new ActionResult();
