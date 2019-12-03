@@ -63,6 +63,9 @@
     <Reference Include="AssetsOptimizer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\AssetsOptimizer.1.0.0.0\lib\net40\AssetsOptimizer.dll</HintPath>
     </Reference>
+    <Reference Include="AutoParse, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\AutoParse.1.0.0\lib\net40\AutoParse.dll</HintPath>
+    </Reference>
     <Reference Include="Boycotter, Version=1.2.6012.32358, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Boycotter.1.2.3.1\lib\Boycotter.dll</HintPath>
     </Reference>
@@ -265,8 +268,10 @@
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="packages\ExceptionAnalyzer.1.0.5\tools\analyzers\ExceptionAnalyzer.dll" />
+    <Analyzer Include="packages\InjectionAnalyzer.1.0.6265.34345\analyzers\dotnet\cs\InjectionAnalyzer.dll" />
     <Analyzer Include="packages\OzCode.Analyzers.AddTryCatchAnalyzer.1.4.6337.20200\analyzers\dotnet\cs\MefImportExceptionAnalyzer.dll" />
     <Analyzer Include="packages\ToStringWithoutOverrideAnalyzer.0.6.0.0\analyzers\dotnet\cs\ToStringWithoutOverrideAnalyzer.dll" />
+    <Analyzer Include="packages\UselessIfAnalyzer.0.0.6099.19184\analyzers\dotnet\cs\UselessIfAnalyzer.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\Fody.6.0.0\build\Fody.targets" Condition="Exists('packages\Fody.6.0.0\build\Fody.targets')" />

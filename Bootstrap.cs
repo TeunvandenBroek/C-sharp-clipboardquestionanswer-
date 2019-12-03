@@ -150,7 +150,7 @@ namespace it
 
         internal static void EnsureWindowStartup(bool isStartingWithWindows)
         {
-            string keyName = "Clipboard Assistant";
+            const string keyName = "Clipboard Assistant";
             string keyValue = Assembly.GetExecutingAssembly().Location;
 
             RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);

@@ -63,8 +63,7 @@
 
         private void DoCleaningCheck()
         {
-            var now = Stopwatch.GetTimestamp();
-            if (now - this.cpuCounterLastAccessedTimestamp <= this.time.Ticks)
+            if (Stopwatch.GetTimestamp() - this.cpuCounterLastAccessedTimestamp <= this.time.Ticks)
             {
                 return;
             }
@@ -75,14 +74,6 @@
                 this.value.Close();
                 this.value.Dispose();
                 this.value = null;
-            }
-        }
-
-        private void ThrowIfDisposed()
-        {
-            if (this.disposed)
-            {
-                throw new ObjectDisposedException(this.GetType().FullName);
             }
         }
     }
