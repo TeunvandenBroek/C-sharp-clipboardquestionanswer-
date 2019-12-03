@@ -49,7 +49,7 @@ namespace it
         private void ConfigureDependancies()
         {
             // Add configure services
-            ServiceCollection serviceDescriptors = new ServiceCollection();
+            var serviceDescriptors = new ServiceCollection();
 
             serviceDescriptors.AddSingleton<IAction, ConvertActions>();
             serviceDescriptors.AddSingleton<IAction, TryRomanActions>();
@@ -138,7 +138,10 @@ namespace it
                 throw new ArgumentNullException(nameof(clipboardText));
             }
 
-            if (string.Equals(Clipboard.GetText(), clipboardText, StringComparison.Ordinal)) Clipboard.Clear();
+            if (string.Equals(Clipboard.GetText(), clipboardText, StringComparison.Ordinal))
+            {
+                Clipboard.Clear();
+            }
 
             notifyIcon.Icon = SystemIcons.Exclamation;
             notifyIcon.BalloonTipTitle = actionResult.Title;
@@ -154,7 +157,7 @@ namespace it
             string keyValue = Assembly.GetExecutingAssembly().Location;
 
             RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
-            if (key == null) return;
+            if (key is null) return;
 
             string value = key.GetValue(keyName, null) as string;
 

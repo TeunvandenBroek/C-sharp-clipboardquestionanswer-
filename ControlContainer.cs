@@ -14,6 +14,10 @@
         {
             if (component is null)
                 throw new System.ArgumentNullException(nameof(component));
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new System.ArgumentException("message", nameof(name));
+            }
         }
 
         public void Dispose()
