@@ -11,7 +11,7 @@ namespace it.Actions
 
         public bool Matches(string clipboardText = null)
         {
-            foreach (var command in commands)
+            foreach (string command in commands)
             {
                 if (command.Equals(clipboardText.ToLower(), StringComparison.Ordinal))
                 {

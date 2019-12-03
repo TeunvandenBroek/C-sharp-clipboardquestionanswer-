@@ -2,23 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace it.Actions
 {
     internal sealed class TryRomanActions : IAction
     {
-        public static readonly Dictionary<char, int> RomanNumberDictionary;
         public static readonly Dictionary<int, string> NumberRomanDictionary;
-        public bool Matches(string clipboardText = null)
-        {
-            if (string.IsNullOrWhiteSpace(clipboardText))
-            {
-                throw new ArgumentException("message", nameof(clipboardText));
-            }
 
-            return clipboardText.Contains("Roman number");
-        }
+        public static readonly Dictionary<char, int> RomanNumberDictionary;
+
+        private readonly Regex roman = new Regex("^([1-3]?[0-9]{3}|[1-9][0-9]{0,2})(?= to roman)");
 
         static TryRomanActions()
         {
@@ -51,22 +46,6 @@ namespace it.Actions
         };
         }
 
-        public static string To(int number)
-        {
-            var roman = new StringBuilder();
-
-            foreach (var item in NumberRomanDictionary)
-            {
-                while (number >= item.Key)
-                {
-                    roman.Append(item.Value);
-                    number -= item.Key;
-                }
-            }
-
-            return roman.ToString();
-        }
-
         public static int From(string roman)
         {
             int total = 0;
@@ -96,10 +75,35 @@ namespace it.Actions
             return total;
         }
 
+        public static string To(int number)
+        {
+            var roman = new StringBuilder();
+
+            foreach (var item in NumberRomanDictionary)
+            {
+                while (number >= item.Key)
+                {
+                    roman.Append(item.Value);
+                    number -= item.Key;
+                }
+            }
+
+            return roman.ToString();
+        }
+        public bool Matches(string clipboardText = null)
+        {
+            if (string.IsNullOrWhiteSpace(clipboardText))
+            {
+                throw new ArgumentException("message", nameof(clipboardText));
+            }
+
+            return clipboardText.Contains("romeins cijfer");
+        }
+
         public ActionResult TryExecute(string clipboardText = null)
         {
             var actionResult = new ActionResult();
-            return new ActionResult(isProcessed: false);
+            string valueString = clipboardText.Substring(0, clipboardText.Length - 12);
             actionResult.IsProcessed = false;
             return actionResult;
         }
