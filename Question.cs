@@ -4,8 +4,8 @@
     {
         public Question(string text, string answer)
         {
-            this.Text = text;
-            this.Answer = answer;
+            Text = text;
+            Answer = answer;
         }
 
         public string Text { get; private set; }

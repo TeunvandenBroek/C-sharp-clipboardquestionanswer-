@@ -8,7 +8,7 @@
         /// <param name="components"><see cref="Components"/></param>
         public ControlContainer(ComponentCollection components = default)
         {
-            this.Components = components;
+            Components = components;
         }
     }
 }

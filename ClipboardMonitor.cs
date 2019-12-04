@@ -13,10 +13,10 @@
 
         public ClipboardMonitor()
         {
-            this.BackColor = Color.Red;
-            this.Visible = false;
+            BackColor = Color.Red;
+            Visible = false;
 
-            this.nextClipboardViewer = (IntPtr)SetClipboardViewer((int)this.Handle);
+            nextClipboardViewer = (IntPtr)SetClipboardViewer((int)Handle);
         }
 
         /// <summary>
@@ -28,7 +28,7 @@
         {
             try
             {
-                ChangeClipboardChain(this.Handle, this.nextClipboardViewer);
+                ChangeClipboardChain(Handle, nextClipboardViewer);
             }
             catch (Exception)
             {
@@ -47,19 +47,19 @@
             {
                 case WM_DRAWCLIPBOARD:
                     {
-                        this.OnClipboardChanged();
-                        SendMessage(this.nextClipboardViewer, m.Msg, m.WParam, m.LParam);
+                        OnClipboardChanged();
+                        SendMessage(nextClipboardViewer, m.Msg, m.WParam, m.LParam);
                         break;
                     }
                 case WM_CHANGECBCHAIN:
                     {
-                        if (m.WParam == this.nextClipboardViewer)
+                        if (m.WParam == nextClipboardViewer)
                         {
-                            this.nextClipboardViewer = m.LParam;
+                            nextClipboardViewer = m.LParam;
                         }
                         else
                         {
-                            SendMessage(this.nextClipboardViewer, m.Msg, m.WParam, m.LParam);
+                            SendMessage(nextClipboardViewer, m.Msg, m.WParam, m.LParam);
                         }
 
                         break;
@@ -73,10 +73,11 @@
         }
 
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
+        [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool ChangeClipboardChain(IntPtr hWndRemove, IntPtr hWndNewNext);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        private static extern int SendMessage(IntPtr hwnd, int wMsg, IntPtr wParam, IntPtr lParam);
+        private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
 
         [DllImport("User32.dll")]
         private static extern int SetClipboardViewer(int hWndNewViewer);
@@ -85,8 +86,8 @@
         {
             try
             {
-                var iData = Clipboard.GetDataObject();
-                this.ClipboardChanged?.Invoke(this, new ClipboardChangedEventArgs(iData));
+                IDataObject iData = Clipboard.GetDataObject();
+                ClipboardChanged?.Invoke(this, new ClipboardChangedEventArgs(iData));
             }
             catch (Exception e)
             {
@@ -111,7 +112,7 @@
                 throw new ArgumentNullException(nameof(dataObject));
             }
 
-            this.DataObject = dataObject;
+            DataObject = dataObject;
         }
     }
 }

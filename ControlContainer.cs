@@ -13,7 +13,10 @@
         public void Add(IComponent component, string name)
         {
             if (component is null)
+            {
                 throw new System.ArgumentNullException(nameof(component));
+            }
+
             if (string.IsNullOrEmpty(name))
             {
                 throw new System.ArgumentException("message", nameof(name));
@@ -22,7 +25,7 @@
 
         public void Dispose()
         {
-            this.Components = null;
+            Components = null;
         }
 
         public bool Equals(ControlContainer other)
@@ -36,6 +39,10 @@
             {
                 throw new System.ArgumentNullException(nameof(component));
             }
+        }
+        public ControlContainer(ControlContainer obj)
+        {
+            Components = obj.Components;
         }
     }
 }

@@ -6,7 +6,7 @@
         /// <param name="isValueCreated"><see cref="IsValueCreated"/></param>
         internal SmartPerformanceCounter(bool isValueCreated = default)
         {
-            this.IsValueCreated = isValueCreated;
+            IsValueCreated = isValueCreated;
         }
 
         public bool Equals(SmartPerformanceCounter other)

@@ -29,51 +29,51 @@
         {
             get
             {
-                lock (this.@lock)
+                lock (@lock)
                 {
-                    if (!this.IsValueCreated)
+                    if (!IsValueCreated)
                     {
-                        this.value?.Dispose();
-                        this.value = this.factory();
-                        this.IsValueCreated = true;
+                        value?.Dispose();
+                        value = factory();
+                        IsValueCreated = true;
                     }
                 }
 
-                this.cpuCounterLastAccessedTimestamp = Stopwatch.GetTimestamp();
-                return this.value;
+                cpuCounterLastAccessedTimestamp = Stopwatch.GetTimestamp();
+                return value;
             }
         }
 
         public void Dispose()
         {
-            if (this.disposed)
+            if (disposed)
             {
                 return;
             }
 
-            this.disposed = true;
-            this.value?.Dispose();
+            disposed = true;
+            value?.Dispose();
         }
 
         public async Task FunctionAsync()
         {
-            await Task.Delay(this.time).ConfigureAwait(false);
-            this.DoCleaningCheck();
+            await Task.Delay(time).ConfigureAwait(false);
+            DoCleaningCheck();
         }
 
         private void DoCleaningCheck()
         {
-            if (Stopwatch.GetTimestamp() - this.cpuCounterLastAccessedTimestamp <= this.time.Ticks)
+            if (Stopwatch.GetTimestamp() - cpuCounterLastAccessedTimestamp <= time.Ticks)
             {
                 return;
             }
 
-            lock (this.@lock)
+            lock (@lock)
             {
-                this.IsValueCreated = false;
-                this.value.Close();
-                this.value.Dispose();
-                this.value = null;
+                IsValueCreated = false;
+                value.Close();
+                value.Dispose();
+                value = null;
             }
         }
     }
