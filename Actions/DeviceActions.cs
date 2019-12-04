@@ -72,6 +72,9 @@ namespace it.Actions
                     return true;
                 }
             }
+
+            if (isCountingWords) return true;
+
             return false;
         }
 
@@ -424,26 +427,25 @@ namespace it.Actions
                                 }
                         }
                     }
-
                 default:
                     {
-                        actionResult.IsProcessed = false;
-                        return actionResult;
+                        if (isCountingWords)
+                        {
+                            string[] words = clipboardText.Split(new char[] { ' ' });
+                            int numberOfWords = words.Length;
+                            isCountingWords = false;
+                            actionResult.Title = "Number of words are: ";
+                            actionResult.Description = numberOfWords.ToString();
+                        }
+                        else
+                        {
+                            actionResult.IsProcessed = false;
+                        }
+                        break;
                     }
             }
 
-            if (isCountingWords)
-            {
-                string[] words = clipboardText.Split(new char[] { ' ' });
-                int numberOfWords = words.Length;
-                isCountingWords = false;
-                actionResult.Title = "Number of words are: ";
-                actionResult.Description = numberOfWords.ToString();
-            }
-            else
-            {
-                actionResult.IsProcessed = false;
-            }
+
 
             return actionResult;
         }
