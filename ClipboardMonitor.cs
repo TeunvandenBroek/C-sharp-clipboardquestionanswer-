@@ -49,6 +49,8 @@
                     {
                         OnClipboardChanged();
                         SendMessage(nextClipboardViewer, m.Msg, m.WParam, m.LParam);
+                        GC.Collect();
+                        GC.WaitForPendingFinalizers();
                         break;
                     }
                 case WM_CHANGECBCHAIN:
@@ -60,6 +62,8 @@
                         else
                         {
                             SendMessage(nextClipboardViewer, m.Msg, m.WParam, m.LParam);
+                            GC.Collect();
+                            GC.WaitForPendingFinalizers();
                         }
 
                         break;

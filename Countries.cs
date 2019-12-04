@@ -153,7 +153,6 @@
                  "samoa", "tokelau", "tonga"
             },
         };
-
         public static Dictionary<string, UtcOffset> UtcOffsetByCountry { get; } = CountriesByUtcOffset
         .SelectMany(x => x.Value.Select(c => (Offset: x.Key, Country: c)))
      .ToDictionary(x => x.Country, x => x.Offset, System.StringComparer.Ordinal);

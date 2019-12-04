@@ -311,6 +311,12 @@
   <ItemGroup>
     <Analyzer Include="packages\AsyncFixer.1.1.6\analyzers\dotnet\cs\AsyncFixer.dll" />
     <Analyzer Include="packages\EntityFrameworkPerformanceAnalyzer.1.0.6319.40789\analyzers\dotnet\cs\EntityFrameworkAnalyzer.dll" />
+    <Analyzer Include="packages\Enums.NET.Analyzer.3.0.1\analyzers\dotnet\cs\Enums.NET.Analyzer.dll" />
+    <Analyzer Include="packages\ErrorProne.NET.0.1.5898.41180\analyzers\dotnet\cs\ErrorProne.NET.dll" />
+    <Analyzer Include="packages\ErrorProne.NET.Structs.0.1.2\analyzers\dotnet\cs\ErrorProne.NET.Core.dll" />
+    <Analyzer Include="packages\ErrorProne.NET.Structs.0.1.2\analyzers\dotnet\cs\ErrorProne.Net.StructAnalyzers.dll" />
+    <Analyzer Include="packages\ErrorProne.NET.Structs.0.1.2\analyzers\dotnet\cs\RuntimeContracts.dll" />
+    <Analyzer Include="packages\ExceptionAnalyzer.1.0.5\tools\analyzers\ExceptionAnalyzer.dll" />
     <Analyzer Include="packages\GCop.Conditional.2.6.1\analyzers\dotnet\cs\GCop.Conditional.dll" />
     <Analyzer Include="packages\GCop.String.2.6.1\analyzers\dotnet\cs\GCop.String.dll" />
     <Analyzer Include="packages\Microsoft.CodeAnalysis.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />

@@ -117,9 +117,8 @@ namespace it
 
                 if (clipboardText.Length > 2)
                 {
-                    for (int i = 0; i < questionList.Count; i++)
+                    foreach (Question question in questionList)
                     {
-                        Question question = questionList[i];
                         if (question.Text.Contains(clipboardText))
                         {
                             ProcessResult(new ActionResult(question.Text, question.Answer), clipboardText);
