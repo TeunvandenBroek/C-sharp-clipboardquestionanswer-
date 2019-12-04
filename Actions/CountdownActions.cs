@@ -6,7 +6,7 @@ namespace it.Actions
 
     internal sealed class CountdownActions : IAction, IEquatable<CountdownActions>
     {
-        public bool Matches(string clipboardText = null)
+        public bool Matches(string clipboardText)
         {
             if (string.IsNullOrWhiteSpace(clipboardText))
             {

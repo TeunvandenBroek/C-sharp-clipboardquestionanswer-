@@ -25,7 +25,7 @@ namespace it.Actions
         private readonly Regex mathRegex =
             new Regex(@"^(?<lhs>\d+(?:[,.]{1}\d)*)(([ ]*(?<operator>[+\-\:x\%\*/])[ ]*(?<rhs>\d+(?:[,.]{1}\d)*)+)+)");
 
-        public bool Matches(string clipboardText = null)
+        public bool Matches(string clipboardText)
         {
             if (clipboardText is null)
             {
@@ -36,7 +36,7 @@ namespace it.Actions
             return match.Success;
         }
 
-        public ActionResult TryExecute(string clipboardText = null)
+        public ActionResult TryExecute(string clipboardText)
         {
             if (clipboardText is null)
             {

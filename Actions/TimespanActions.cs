@@ -15,12 +15,12 @@ namespace it.Actions
 
         private DateTimeOffset? prevDate;
 
-        public bool Matches(string clipboardText = null)
+        public bool Matches(string clipboardText)
         {
             return DateTimeOffset.TryParseExact(clipboardText, formats: this.dateFormats, formatProvider: CultureInfo.CurrentCulture, styles: DateTimeStyles.AssumeLocal, result: out DateTimeOffset newDate);
         }
 
-        public ActionResult TryExecute(string clipboardText = null)
+        public ActionResult TryExecute(string clipboardText)
         {
             this.isUsingTimespan = !this.isUsingTimespan;
             var actionResult = new ActionResult(isProcessed: false);

@@ -10,7 +10,7 @@ namespace it.Actions
         private string country;
         private string timeZoneId = string.Empty;
 
-        public bool Matches(string clipboardText = null)
+        public bool Matches(string clipboardText)
         {
             if (clipboardText is null)
             {

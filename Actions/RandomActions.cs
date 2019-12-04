@@ -9,7 +9,7 @@ namespace it.Actions
         private readonly string[] commands = { "kop of munt", "heads or tails", "random password" };
         private readonly Random random = new Random();
 
-        public bool Matches(string clipboardText = null)
+        public bool Matches(string clipboardText)
         {
             foreach (string command in commands)
             {

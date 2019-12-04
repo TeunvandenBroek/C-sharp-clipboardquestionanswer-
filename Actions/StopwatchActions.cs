@@ -25,7 +25,7 @@ namespace it.Actions
         }
 
 
-        public bool Matches(string clipboardText = null)
+        public bool Matches(string clipboardText)
         {
             if (clipboardText is null)
             {
@@ -35,7 +35,7 @@ namespace it.Actions
             return clipboardText.IndexOf(nameof(this.stopwatch), StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
-        public ActionResult TryExecute(string clipboardText = null)
+        public ActionResult TryExecute(string clipboardText)
         {
             var actionResult = new ActionResult { Title = "Stopwatch" };
             var currentCulture = Thread.CurrentThread.CurrentCulture;

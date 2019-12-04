@@ -35,7 +35,7 @@
                 var number = double.Parse(matches.Groups["number"].Value);
                 var from = matches.Groups["from"].Value;
                 var to = matches.Groups["to"].Value;
-                double meter = 0, gram = 0, liter = 0, oppervlakte = 0;
+                double meter = 0, gram = 0, liter = 0, oppervlakte = 0, snelheid = 0;
                 switch (from)
                 {
                     case "mm":
@@ -222,9 +222,20 @@
                             oppervlakte = number * 1000000;
                             break;
                         }
+                    case "kmh":
+                        {
+                            snelheid = number;
+                            break;
+                        }
+                    case "ms":
+                        {
+                            snelheid = number * 3.6;
+                            break;
+                        }
                     default:
                         {
-                            throw new System.Exception("Unexpected Case");
+                            actionResult.IsProcessed = false;
+                            return actionResult;
                         }
                 }
 
@@ -415,6 +426,16 @@
                     case "km2":
                         {
                             result = oppervlakte / 1000000;
+                            break;
+                        }
+                    case "kmh":
+                        {
+                            result = snelheid;
+                            break;
+                        }
+                    case "ms":
+                        {
+                            result = snelheid / 3.6;
                             break;
                         }
                     default:
