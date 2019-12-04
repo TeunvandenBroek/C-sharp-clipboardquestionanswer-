@@ -17,27 +17,27 @@ namespace it.Actions
 
         public bool Matches(string clipboardText)
         {
-            return DateTimeOffset.TryParseExact(clipboardText, formats: this.dateFormats, formatProvider: CultureInfo.CurrentCulture, styles: DateTimeStyles.AssumeLocal, result: out DateTimeOffset newDate);
+            return DateTimeOffset.TryParseExact(clipboardText, formats: dateFormats, formatProvider: CultureInfo.CurrentCulture, styles: DateTimeStyles.AssumeLocal, result: out DateTimeOffset newDate);
         }
 
         public ActionResult TryExecute(string clipboardText)
         {
-            this.isUsingTimespan = !this.isUsingTimespan;
-            var actionResult = new ActionResult(isProcessed: false);
-            if (DateTimeOffset.TryParseExact(clipboardText, formats: this.dateFormats, CultureInfo.CurrentCulture,  DateTimeStyles.AssumeLocal, result: out var newDate))
+            isUsingTimespan = !isUsingTimespan;
+            ActionResult actionResult = new ActionResult(isProcessed: false);
+            if (DateTimeOffset.TryParseExact(clipboardText, formats: dateFormats, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, result: out DateTimeOffset newDate))
             {
                 actionResult.IsProcessed = true;
 
-                if (this.prevDate.HasValue)
+                if (prevDate.HasValue)
                 {
-                    var difference = newDate - this.prevDate;
-                    this.prevDate = null;
+                    TimeSpan? difference = newDate - prevDate;
+                    prevDate = null;
                     actionResult.Title = "Days between:";
                     actionResult.Description = difference.Value.Days.ToString(CultureInfo.InvariantCulture);
                 }
                 else
                 {
-                    this.prevDate = newDate;
+                    prevDate = newDate;
                 }
             }
 

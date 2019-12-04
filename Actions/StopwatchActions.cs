@@ -13,9 +13,9 @@ namespace it.Actions
 
         public StopwatchActions()
         {
-            if (this.stopwatch.IsRunning)
+            if (stopwatch.IsRunning)
             {
-                this.stopwatch.Stop();
+                stopwatch.Stop();
             }
         }
 
@@ -32,32 +32,32 @@ namespace it.Actions
                 throw new ArgumentNullException(nameof(clipboardText));
             }
 
-            return clipboardText.IndexOf(nameof(this.stopwatch), StringComparison.OrdinalIgnoreCase) >= 0;
+            return clipboardText.IndexOf(nameof(stopwatch), StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         public ActionResult TryExecute(string clipboardText)
         {
-            var actionResult = new ActionResult { Title = "Stopwatch" };
-            var currentCulture = Thread.CurrentThread.CurrentCulture;
+            ActionResult actionResult = new ActionResult { Title = "Stopwatch" };
+            CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
 
             // moved this from every case statement to up here. Not sure what to do if the clipboard text matches.
             // I don't think this code is needed at all.
-            if (!string.Equals(clipboardText, this.lastClipboard, StringComparison.Ordinal))
+            if (!string.Equals(clipboardText, lastClipboard, StringComparison.Ordinal))
             {
-                this.lastClipboard = clipboardText;
+                lastClipboard = clipboardText;
             }
 
             switch (clipboardText)
             {
                 case "start stopwatch": //start
                     {
-                        if (this.stopwatch.IsRunning)
+                        if (stopwatch.IsRunning)
                         {
                             actionResult.Description = FillStopwatchAlreadyRunning();
                         }
                         else
                         {
-                            this.stopwatch.Start();
+                            stopwatch.Start();
                             actionResult.Description = FillStopwatchStarted();
                         }
 
@@ -65,20 +65,20 @@ namespace it.Actions
                     }
                 case "reset stopwatch": //reset
                     {
-                        if (this.stopwatch.IsRunning)
+                        if (stopwatch.IsRunning)
                         {
                             actionResult.Description = FillStopwatchAlreadyRunning();
                         }
                         else
                         {
-                            this.stopwatch.Restart();
-                            actionResult.Description = this.FillStopwatchReset(this.stopwatch.Elapsed);
+                            stopwatch.Restart();
+                            actionResult.Description = FillStopwatchReset(stopwatch.Elapsed);
 
-                            this.lastClipboard = clipboardText;
-                            this.stopwatch.Reset();
-                            this.stopwatch = new Stopwatch();
-                            this.stopwatch.Start();
-                            var ts = this.stopwatch.Elapsed;
+                            lastClipboard = clipboardText;
+                            stopwatch.Reset();
+                            stopwatch = new Stopwatch();
+                            stopwatch.Start();
+                            TimeSpan ts = stopwatch.Elapsed;
                             switch (currentCulture.LCID)
                             {
                                 case 1033: // english-us
@@ -107,18 +107,18 @@ namespace it.Actions
                     }
                 case "pause stopwatch": //  pause
                     {
-                        if (!this.stopwatch.IsRunning)
+                        if (!stopwatch.IsRunning)
                         {
                             actionResult.Description = FillStopwatchNotRunning();
                         }
                         else
                         {
-                            this.stopwatch.Stop();
-                            actionResult.Description = this.FillStopwatchPause(this.stopwatch.Elapsed);
+                            stopwatch.Stop();
+                            actionResult.Description = FillStopwatchPause(stopwatch.Elapsed);
 
-                            this.lastClipboard = clipboardText;
-                            var ts = this.stopwatch.Elapsed;
-                            this.stopwatch.Stop();
+                            lastClipboard = clipboardText;
+                            TimeSpan ts = stopwatch.Elapsed;
+                            stopwatch.Stop();
 
                             switch (currentCulture.LCID)
                             {
@@ -148,18 +148,18 @@ namespace it.Actions
                     }
                 case "resume stopwatch":
                     {
-                        if (this.stopwatch.IsRunning)
+                        if (stopwatch.IsRunning)
                         {
                             actionResult.Description = FillStopwatchAlreadyRunning();
                         }
                         else
                         {
-                            this.stopwatch.Start();
-                            actionResult.Description = this.FillStopwatchResume(this.stopwatch.Elapsed);
+                            stopwatch.Start();
+                            actionResult.Description = FillStopwatchResume(stopwatch.Elapsed);
 
-                            this.lastClipboard = clipboardText;
-                            var ts = this.stopwatch.Elapsed;
-                            this.stopwatch.Start();
+                            lastClipboard = clipboardText;
+                            TimeSpan ts = stopwatch.Elapsed;
+                            stopwatch.Start();
                             switch (currentCulture.LCID)
                             {
                                 case 1033: // english-us
@@ -188,19 +188,19 @@ namespace it.Actions
                 case "stop stopwatch": //stop
                     {
                         {
-                            if (!this.stopwatch.IsRunning)
+                            if (!stopwatch.IsRunning)
                             {
                                 actionResult.Description = FillStopwatchNotRunning();
                             }
                             else
                             {
-                                this.stopwatch.Stop();
+                                stopwatch.Stop();
                                 actionResult.Description = FillStopwatchStop(stopwatch.Elapsed);
                             }
                         }
-                        this.lastClipboard = null;
-                        this.stopwatch.Stop();
-                        var ts = this.stopwatch.Elapsed;
+                        lastClipboard = null;
+                        stopwatch.Stop();
+                        TimeSpan ts = stopwatch.Elapsed;
                         switch (currentCulture.LCID)
                         {
                             case 1033: // english-us
@@ -341,12 +341,12 @@ namespace it.Actions
             {
                 case 1033: // english-us
                     {
-                        description = $"Stopwatch paused on: {this.GetElaspedTime(timeSpan)}";
+                        description = $"Stopwatch paused on: {GetElaspedTime(timeSpan)}";
                         break;
                     }
                 case 1043: // dutch
                     {
-                        description = $"Stopwatch gepauzeerd op: {this.GetElaspedTime(timeSpan)}";
+                        description = $"Stopwatch gepauzeerd op: {GetElaspedTime(timeSpan)}";
                         break;
                     }
 
@@ -403,12 +403,12 @@ namespace it.Actions
             {
                 case 1033: // english-us
                     {
-                        description = $"Stopwatch resumed on: {this.GetElaspedTime(timeSpan)}";
+                        description = $"Stopwatch resumed on: {GetElaspedTime(timeSpan)}";
                         break;
                     }
                 case 1043: // dutch
                     {
-                        description = $"Stopwatch hervat op: {this.GetElaspedTime(timeSpan)}";
+                        description = $"Stopwatch hervat op: {GetElaspedTime(timeSpan)}";
                         break;
                     }
 
@@ -439,7 +439,7 @@ namespace it.Actions
                     }
                 case 1043: // dutch
                     {
-                        description = $"Stopwatch gestopt op: {this.GetElaspedTime(timeSpan)}";
+                        description = $"Stopwatch gestopt op: {GetElaspedTime(timeSpan)}";
                         break;
                     }
                 default:
@@ -467,13 +467,13 @@ namespace it.Actions
                 case 1033: // english-us
                     {
                         description =
-                           $"{stopwatch.Elapsed.Hours} hours, {this.stopwatch.Elapsed.Hours} minutes,  {this.stopwatch.Elapsed.Hours} seconds";
+                           $"{stopwatch.Elapsed.Hours} hours, {stopwatch.Elapsed.Hours} minutes,  {stopwatch.Elapsed.Hours} seconds";
                         break;
                     }
                 case 1043: // dutch
                     {
                         description =
-                           $"{stopwatch.Elapsed.Hours} uur, {this.stopwatch.Elapsed.Hours} minuten,  {this.stopwatch.Elapsed.Hours}secondes";
+                           $"{stopwatch.Elapsed.Hours} uur, {stopwatch.Elapsed.Hours} minuten,  {stopwatch.Elapsed.Hours}secondes";
                         break;
                     }
 

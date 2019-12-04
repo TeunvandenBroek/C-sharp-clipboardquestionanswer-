@@ -17,214 +17,214 @@ namespace it.Actions
                 throw new ArgumentNullException(nameof(clipboardText));
             }
 
-            this.country = clipboardText.Trim().ToLowerInvariant();
-            var keyValuePair = this.TryKeypair();
+            country = clipboardText.Trim().ToLowerInvariant();
+            KeyValuePair<string, Countries.UtcOffset> keyValuePair = TryKeypair();
             return keyValuePair.Key != default;
         }
 
         ActionResult IAction.TryExecute(string clipboardText)
         {
-            var actionResult = new ActionResult();
-            this.country = clipboardText.Trim().ToLowerInvariant();
-            var keyValuePair = this.TryKeypair();
+            ActionResult actionResult = new ActionResult();
+            country = clipboardText.Trim().ToLowerInvariant();
+            KeyValuePair<string, Countries.UtcOffset> keyValuePair = TryKeypair();
             if (keyValuePair.Key == default)
             {
                 actionResult.IsProcessed = false;
                 return actionResult;
             }
 
-            actionResult.Title = this.country;
+            actionResult.Title = country;
             switch (keyValuePair.Value)
             {
                 case Countries.UtcOffset.UtcMinusTwelve:
-                {
-                    this.timeZoneId = "Dateline Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "Dateline Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcMinusEleven:
-                {
-                    this.timeZoneId = "Samoa Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "Samoa Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcMinusTen:
-                {
-                    this.timeZoneId = "Hawaiian Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "Hawaiian Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcMinusNine:
-                {
-                    this.timeZoneId = "Alaskan Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "Alaskan Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcMinusEight:
-                {
-                    this.timeZoneId = "Pacific Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "Pacific Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcMinusSeven:
-                {
-                    this.timeZoneId = "US Mountain Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "US Mountain Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcMinusSix:
-                {
-                    this.timeZoneId = "Central America Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "Central America Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcMinusFive:
-                {
-                    this.timeZoneId = "SA Pacific Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "SA Pacific Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcMinusFour:
-                {
-                    this.timeZoneId = "Atlantic Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "Atlantic Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcMinusThreepoinfive:
-                {
-                    this.timeZoneId = "Newfoundland Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "Newfoundland Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcMinusThree:
-                {
-                    this.timeZoneId = "E. South America Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "E. South America Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcMinusTwo:
-                {
-                    this.timeZoneId = "Mid-Atlantic Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "Mid-Atlantic Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcMinusOne:
-                {
-                    this.timeZoneId = "Cape Verde Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "Cape Verde Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcZero:
-                {
-                    this.timeZoneId = "GMT Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "GMT Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcPlusOne:
-                {
-                    this.timeZoneId = "Central European Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "Central European Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcPlusTwo:
-                {
-                    this.timeZoneId = "Jordan Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "Jordan Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcPlusThree:
-                {
-                    this.timeZoneId = "Arabic Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "Arabic Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcPlusThreepoinfive:
-                {
-                    this.timeZoneId = "Iran Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "Iran Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcPlusFour:
-                {
-                    this.timeZoneId = "Mauritius Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "Mauritius Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcPlusFourpointfive:
-                {
-                    this.timeZoneId = "Afghanistan Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "Afghanistan Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcPlusFive:
-                {
-                    this.timeZoneId = "Ekaterinburg Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "Ekaterinburg Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcPlusSix:
-                {
-                    this.timeZoneId = "N. Central Asia Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "N. Central Asia Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcPlusSeven:
-                {
-                    this.timeZoneId = "SE Asia Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "SE Asia Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcPlusEight:
-                {
-                    this.timeZoneId = "China Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "China Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcPlusNine:
-                {
-                    this.timeZoneId = "Korea Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "Korea Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcPlusTen:
-                {
-                    this.timeZoneId = "E. Australia Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "E. Australia Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcPlusEleven:
-                {
-                    this.timeZoneId = "Central Pacific Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "Central Pacific Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcPlusTwelve:
-                {
-                    this.timeZoneId = "New Zealand Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "New Zealand Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcPlusThirteen:
-                {
-                    this.timeZoneId = "Tonga Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "Tonga Standard Time";
+                        break;
+                    }
 
                 case Countries.UtcOffset.UtcPlusFivepointfive:
-                {
-                    this.timeZoneId = "India Standard Time";
-                    break;
-                }
+                    {
+                        timeZoneId = "India Standard Time";
+                        break;
+                    }
 
                 default:
-                {
-                    actionResult.IsProcessed = false;
-                    return actionResult;
-                }
+                    {
+                        actionResult.IsProcessed = false;
+                        return actionResult;
+                    }
             }
 
-            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(this.timeZoneId);
-            var dateTime = TimeZoneInfo.ConvertTime(DateTimeOffset.Now, timeZoneInfo);
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+            DateTimeOffset dateTime = TimeZoneInfo.ConvertTime(DateTimeOffset.Now, timeZoneInfo);
             actionResult.Description = dateTime.ToString("HH:mm", CultureInfo.CurrentCulture);
             return actionResult;
         }
@@ -233,7 +233,7 @@ namespace it.Actions
         {
             bool predicate(KeyValuePair<string, Countries.UtcOffset> x)
             {
-                return x.Key.Contains(this.country);
+                return x.Key.Contains(country);
             }
 
             return Countries.UtcOffsetByCountry.FirstOrDefault(predicate);

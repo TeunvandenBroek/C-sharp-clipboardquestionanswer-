@@ -11,8 +11,9 @@ namespace it.Actions
 
         public bool Matches(string clipboardText)
         {
-            foreach (string command in commands)
+            for (int i = 0; i < commands.Length; i++)
             {
+                string command = commands[i];
                 if (command.Equals(clipboardText, StringComparison.Ordinal))
                 {
                     return true;
@@ -24,15 +25,15 @@ namespace it.Actions
 
         ActionResult IAction.TryExecute(string clipboardText)
         {
-            var currentCulture = Thread.CurrentThread.CurrentCulture;
-            var actionResult = new ActionResult();
+            System.Globalization.CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
+            ActionResult actionResult = new ActionResult();
 
             switch (clipboardText)
             {
                 case "kop of munt":
                 case "heads or tails":
                     {
-                        var isHeads = (int)this.random.NextDouble() % 2 > 0;
+                        bool isHeads = (int)random.NextDouble() % 2 > 0;
 
                         switch (currentCulture.LCID)
                         {
@@ -62,11 +63,11 @@ namespace it.Actions
                         const int minLength = 8;
                         const int maxLength = 12;
                         const string charAvailable = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789-";
-                        var password = new StringBuilder();
-                        var passwordLength = this.random.Next(minLength, maxLength + 1);
+                        StringBuilder password = new StringBuilder();
+                        int passwordLength = random.Next(minLength, maxLength + 1);
                         while (passwordLength-- > 0)
                         {
-                            password.Append(charAvailable[this.random.Next(charAvailable.Length)]);
+                            password.Append(charAvailable[random.Next(charAvailable.Length)]);
                         }
 
                         actionResult.Title = "Random password";

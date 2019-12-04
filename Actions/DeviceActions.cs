@@ -1,5 +1,6 @@
 namespace it.Actions
 {
+    using Microsoft.Win32.SafeHandles;
     using System;
     using System.Diagnostics;
     using System.Globalization;
@@ -9,7 +10,6 @@ namespace it.Actions
     using System.Runtime.InteropServices;
     using System.Threading;
     using System.Windows.Forms;
-    using Microsoft.Win32.SafeHandles;
 
     internal sealed class DeviceActions : IAction, IDisposable, IEquatable<DeviceActions>
     {
@@ -24,7 +24,7 @@ namespace it.Actions
             () => new PerformanceCounter("Processor", "% Processor Time", "_Total"), TimeSpan.FromMinutes(1));
 
 
-        private readonly SafeHandle handle = new SafeFileHandle(IntPtr.Zero, true);
+        private readonly SafeFileHandle handle = new SafeFileHandle(IntPtr.Zero, true);
         private bool isCountingWords;
 
         private Process kladblok;
@@ -48,14 +48,14 @@ namespace it.Actions
 
         public void Dispose()
         {
-            this.handle?.Dispose();
-            this.afsluiten?.Dispose();
-            this.reboot?.Dispose();
-            this.taskmananger?.Dispose();
-            this.vergrendel?.Dispose();
-            this.kladblok?.Dispose();
-            this.cpuCounter?.Dispose();
-            this.ramCounter.Dispose();
+            handle?.Dispose();
+            afsluiten?.Dispose();
+            reboot?.Dispose();
+            taskmananger?.Dispose();
+            vergrendel?.Dispose();
+            kladblok?.Dispose();
+            cpuCounter?.Dispose();
+            ramCounter.Dispose();
         }
 
         public bool Equals(DeviceActions other)
@@ -65,9 +65,9 @@ namespace it.Actions
 
         public bool Matches(string clipboardText = null)
         {
-            foreach (var command in this.commands)
+            foreach (string command in commands)
             {
-                if (command.Equals(clipboardText.ToLower(), StringComparison.Ordinal))
+                if (command.Equals(clipboardText, StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
                 }
@@ -77,14 +77,15 @@ namespace it.Actions
 
 
         [DllImport("Shell32.dll", CharSet = CharSet.Unicode)]
+
         private static extern uint SHEmptyRecycleBin(IntPtr hwnd, string pszRootPath, Recycle dwFlags);
 
         ActionResult IAction.TryExecute(string clipboardText)
         {
-            var currentCulture = Thread.CurrentThread.CurrentCulture;
-            var actionResult = new ActionResult(clipboardText);
+            CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
+            ActionResult actionResult = new ActionResult(clipboardText);
 
-            switch (clipboardText.ToLower())
+            switch (clipboardText.ToLower(CultureInfo.InvariantCulture))
             {
                 case "sluit":
                     {
@@ -93,10 +94,10 @@ namespace it.Actions
                     }
 
                 case "opnieuw opstarten":
-                case nameof(this.reboot):
+                case nameof(reboot):
                     {
-                        this.reboot?.Dispose();
-                        this.reboot = Process.Start("shutdown", "/r /t 0");
+                        reboot?.Dispose();
+                        reboot = Process.Start("shutdown", "/r /t 0");
                         return actionResult;
                     }
 
@@ -110,15 +111,15 @@ namespace it.Actions
                 case "taakbeheer":
                 case "task mananger":
                     {
-                        this.taskmananger?.Dispose();
-                        this.taskmananger = Process.Start("taskmgr.exe");
+                        taskmananger?.Dispose();
+                        taskmananger = Process.Start("taskmgr.exe");
                         return actionResult;
                     }
 
                 case "notepad":
                 case "kladblok":
                     {
-                        this.kladblok = Process.Start("notepad.exe");
+                        kladblok = Process.Start("notepad.exe");
                         return actionResult;
                     }
 
@@ -153,15 +154,15 @@ namespace it.Actions
                 case "vergrendel":
                 case "lock":
                     {
-                        this.vergrendel?.Dispose();
-                        this.vergrendel = Process.Start(@"C:\WINDOWS\system32\rundll32.exe", "user32.dll,LockWorkStation");
+                        vergrendel?.Dispose();
+                        vergrendel = Process.Start(@"C:\WINDOWS\system32\rundll32.exe", "user32.dll,LockWorkStation");
                         break;
                     }
                 case "afsluiten":
                 case "shut down":
                     {
-                        this.afsluiten?.Dispose();
-                        this.afsluiten = Process.Start("shutdown", "/s /t 0");
+                        afsluiten?.Dispose();
+                        afsluiten = Process.Start("shutdown", "/s /t 0");
                         break;
                     }
                 //om je momentele ram geheugen te laten zien (To display your momentary RAM memory)
@@ -171,24 +172,20 @@ namespace it.Actions
                         {
                             case 1033: // english-us
                                 {
-                                    using (var pc = this.ramCounter.Value)
-                                    {
-                                        actionResult.Title = "RAM Memory";
-                                        actionResult.Description =
-                                            pc.NextValue().ToString(CultureInfo.InvariantCulture) + " MB of RAM in your system";
-                                    }
+                                    using PerformanceCounter pc = ramCounter.Value;
+                                    actionResult.Title = "RAM Memory";
+                                    actionResult.Description =
+                                        pc.NextValue().ToString(CultureInfo.InvariantCulture) + " MB of RAM in your system";
 
                                     break;
                                 }
                             case 1043: // dutch
                                 {
-                                    using (var pc = this.ramCounter.Value)
-                                    {
-                                        actionResult.Title = "Ram geheugen";
-                                        actionResult.Description =
-                                            pc.NextValue().ToString(CultureInfo.InvariantCulture) +
-                                            " MB ram-geheugen over in je systeem";
-                                    }
+                                    using PerformanceCounter pc = ramCounter.Value;
+                                    actionResult.Title = "Ram geheugen";
+                                    actionResult.Description =
+                                        pc.NextValue().ToString(CultureInfo.InvariantCulture) +
+                                        " MB ram-geheugen over in je systeem";
 
                                     break;
                                 }
@@ -231,8 +228,8 @@ namespace it.Actions
                 case "mac":
                 case "mac address":
                     {
-                        var sMacAddress = string.Empty;
-                        foreach (var adapter in NetworkInterface.GetAllNetworkInterfaces())
+                        string sMacAddress = string.Empty;
+                        foreach (NetworkInterface adapter in NetworkInterface.GetAllNetworkInterfaces())
                         {
                             if (string.IsNullOrEmpty(sMacAddress))
                             {
@@ -267,7 +264,7 @@ namespace it.Actions
                 case "computer naam":
                 case "computer name":
                     {
-                        var dnsName = Dns.GetHostName();
+                        string dnsName = Dns.GetHostName();
                         Clipboard.SetText(dnsName);
 
                         switch (currentCulture.LCID)
@@ -297,7 +294,7 @@ namespace it.Actions
                 case "cpu":
                     {
                         // komt nu overeen met lezen van taakbeheer (Now matches read Task Manager)
-                        var secondValue = this.cpuCounter.Value.NextValue();
+                        float secondValue = cpuCounter.Value.NextValue();
                         switch (currentCulture.LCID)
                         {
                             case 1033: // english-us
@@ -327,8 +324,8 @@ namespace it.Actions
                     {
                         try
                         {
-                            using (var client = new WebClient())
-                            using (var stream = client.OpenRead("http://www.google.com"))
+                            using (WebClient client = new WebClient())
+                            using (System.IO.Stream stream = client.OpenRead("http://www.google.com"))
                             {
                                 switch (currentCulture.LCID)
                                 {
@@ -378,11 +375,11 @@ namespace it.Actions
                     }
                 case "count words":
                     {
-                        if (!this.isCountingWords)
+                        if (!isCountingWords)
                         {
                             actionResult.Title = null;
                             actionResult.Description = null;
-                            this.isCountingWords = true;
+                            isCountingWords = true;
                         }
 
                         return actionResult;
@@ -390,13 +387,13 @@ namespace it.Actions
                 case "ip":
                     {
                         string externalIpAddress = null;
-                        using (var webClient = new WebClient())
+                        using (WebClient webClient = new WebClient())
                         {
-                            var externalIp = webClient.DownloadString("http://icanhazip.com");
+                            string externalIp = webClient.DownloadString("http://icanhazip.com");
                             if (!string.IsNullOrEmpty(externalIp))
                             {
-                                var iPHostEntry = Dns.GetHostEntry(Dns.GetHostName());
-                                foreach (var ipAddress in iPHostEntry.AddressList)
+                                IPHostEntry iPHostEntry = Dns.GetHostEntry(Dns.GetHostName());
+                                foreach (IPAddress ipAddress in iPHostEntry.AddressList)
                                 {
                                     if (ipAddress.AddressFamily == AddressFamily.InterNetwork)
                                     {
@@ -435,11 +432,11 @@ namespace it.Actions
                     }
             }
 
-            if (this.isCountingWords)
+            if (isCountingWords)
             {
-                var words = clipboardText.Split(new char[] { ' ' });
-                var numberOfWords = words.Length;
-                this.isCountingWords = false;
+                string[] words = clipboardText.Split(new char[] { ' ' });
+                int numberOfWords = words.Length;
+                isCountingWords = false;
                 actionResult.Title = "Number of words are: ";
                 actionResult.Description = numberOfWords.ToString();
             }

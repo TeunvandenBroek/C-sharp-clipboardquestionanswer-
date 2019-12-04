@@ -19,8 +19,8 @@ namespace it.Actions
 
         ActionResult IAction.TryExecute(string clipboardText)
         {
-            TimeSpan.TryParse(clipboardText.Replace("timer ", string.Empty), CultureInfo.InvariantCulture, out var ts);
-            var actionResult = new ActionResult();
+            TimeSpan.TryParse(clipboardText.Replace("timer ", string.Empty), CultureInfo.InvariantCulture, out TimeSpan ts);
+            ActionResult actionResult = new ActionResult();
             Thread.Sleep((int)ts.TotalMilliseconds);
             actionResult.Title = "Countdown timer";
             actionResult.Description = "time is over";

@@ -16,15 +16,15 @@
                 throw new System.ArgumentNullException(nameof(clipboardText));
             }
 
-            var matches = this.unitRegex.Match(clipboardText);
+            Match matches = unitRegex.Match(clipboardText);
             return matches.Success;
         }
 
         public override ActionResult TryExecute(string clipboardText)
         {
-            var actionResult = new ActionResult();
+            ActionResult actionResult = new ActionResult();
 
-            var matches = this.unitRegex.Match(clipboardText);
+            Match matches = unitRegex.Match(clipboardText);
 
             if (!matches.Success)
             {
@@ -32,9 +32,9 @@
             }
             else
             {
-                var number = double.Parse(matches.Groups["number"].Value);
-                var from = matches.Groups["from"].Value;
-                var to = matches.Groups["to"].Value;
+                double number = double.Parse(matches.Groups["number"].Value);
+                string from = matches.Groups["from"].Value;
+                string to = matches.Groups["to"].Value;
                 double meter = 0, gram = 0, liter = 0, oppervlakte = 0, snelheid = 0;
                 switch (from)
                 {
@@ -447,7 +447,7 @@
 
                 Clipboard.SetText(result.ToString(CultureInfo.CurrentCulture));
                 actionResult.Title = clipboardText;
-                actionResult.Description = result+ to;
+                actionResult.Description = result + to;
             }
 
             return actionResult;

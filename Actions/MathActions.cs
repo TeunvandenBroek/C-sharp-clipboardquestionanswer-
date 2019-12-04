@@ -32,7 +32,7 @@ namespace it.Actions
                 throw new ArgumentNullException(nameof(clipboardText));
             }
 
-            var match = this.mathRegex.Match(clipboardText.Replace(',', '.'));
+            Match match = mathRegex.Match(clipboardText.Replace(',', '.'));
             return match.Success;
         }
 
@@ -43,32 +43,32 @@ namespace it.Actions
                 throw new ArgumentNullException(nameof(clipboardText));
             }
 
-            var actionResult = new ActionResult(clipboardText);
+            ActionResult actionResult = new ActionResult(clipboardText);
 
-            var match = this.mathRegex.Match(clipboardText.Replace(',', '.'));
+            Match match = mathRegex.Match(clipboardText.Replace(',', '.'));
             if (!match.Success)
             {
                 actionResult.IsProcessed = false;
             }
             else
             {
-                var operators = (from Capture capture
+                List<string> operators = (from Capture capture
                         in match.Groups["operator"].Captures
-                                 select capture.Value).ToList();
+                                          select capture.Value).ToList();
 
-                var lhs = double.Parse(match.Groups["lhs"].Value, CultureInfo.InvariantCulture);
+                double lhs = double.Parse(match.Groups["lhs"].Value, CultureInfo.InvariantCulture);
 
-                var rhss = (from Capture capture
+                double[] rhss = (from Capture capture
                         in match.Groups["rhs"].Captures
-                            select double.Parse(capture.Value, CultureInfo.InvariantCulture)).ToArray();
+                                 select double.Parse(capture.Value, CultureInfo.InvariantCulture)).ToArray();
 
-                var answer = lhs;
+                double answer = lhs;
 
-                var i = 0;
+                int i = 0;
 
-                for (var i2 = 0; i2 < rhss.Length; i2++)
+                for (int i2 = 0; i2 < rhss.Length; i2++)
                 {
-                    answer = this.binaryOperators[operators[i++]](answer, rhss[i2]);
+                    answer = binaryOperators[operators[i++]](answer, rhss[i2]);
                 }
 
                 Clipboard.SetText(answer.ToString(CultureInfo.CurrentCulture));
