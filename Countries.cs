@@ -155,8 +155,8 @@
         };
 
         public static Dictionary<string, UtcOffset> UtcOffsetByCountry { get; } = CountriesByUtcOffset
-                .SelectMany(x => x.Value.Select(c => (Offset: x.Key, Country: c)))
-             .ToDictionary(x => x.Country, x => x.Offset, System.StringComparer.Ordinal);
+        .SelectMany(x => x.Value.Select(c => (Offset: x.Key, Country: c)))
+     .ToDictionary(x => x.Country, x => x.Offset, System.StringComparer.Ordinal);
         internal static Dictionary<UtcOffset, string[]> CountriesByUtcOffset => countriesByUtcOffset;
 
         public static class Offset
