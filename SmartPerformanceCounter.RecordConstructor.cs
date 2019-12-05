@@ -1,4 +1,6 @@
-﻿namespace it
+﻿using System;
+
+namespace it
 {
     public sealed partial class SmartPerformanceCounter : System.IEquatable<SmartPerformanceCounter>
     {
