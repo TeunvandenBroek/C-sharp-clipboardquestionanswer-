@@ -97,14 +97,27 @@ namespace it.Actions
                 throw new ArgumentException("message", nameof(clipboardText));
             }
 
-            return clipboardText.Contains("romeins cijfer");
+            return clipboardText.EndsWith(" to roman");
         }
 
         public ActionResult TryExecute(string clipboardText = null)
         {
             var actionResult = new ActionResult();
-            string valueString = clipboardText.Substring(0, clipboardText.Length - 12);
-            actionResult.IsProcessed = false;
+
+            var match = roman.Match(clipboardText);
+            if (match.Success)
+            {
+                int number = int.Parse(match.Groups[0].Value);
+
+                actionResult.Title = "Nummer naar romeins";
+                actionResult.Description = $"{number} = {To(number)}";
+                actionResult.IsProcessed = true;
+            }
+            else
+            {
+                actionResult.IsProcessed = false;
+            }
+
             return actionResult;
         }
     }
