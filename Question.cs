@@ -8,7 +8,7 @@
             Answer = answer;
         }
 
-        public string Text { get; set; }
-        public string Answer { get; set; }
+        public string Text { get; private set; }
+        public string Answer { get; private set; }
     }
 }

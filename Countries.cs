@@ -3,18 +3,8 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    internal static partial class Countries
+    internal partial class Countries
     {
-        public static class Offset
-        {
-            public const byte Hours = 4;
-
-            public const byte HalfHours = 2;
-
-            public const byte QuarterHours = 1;
-
-            public const byte ThreeQuarters = 3 * QuarterHours;
-        }
 
         private static readonly Dictionary<UtcOffset, string[]> countriesByUtcOffset = new Dictionary<UtcOffset, string[]>
         {
@@ -24,11 +14,11 @@
             },
             [UtcOffset.UtcMinusEleven] = new[]
             {
-                "amerikaans-Samoa","midway-eilanden","niue"
+                "amerikaans-Samoa","midway-eilanden","niue",
             },
             [UtcOffset.UtcMinusTen] = new[]
             {
-                "cookeilanden","Jonhnston-atol","Hawai"
+                "cookeilanden","Jonhnston-atol","Hawai",
             },
             [UtcOffset.UtcMinusNine] = new[]
             {
@@ -90,7 +80,7 @@
                 "malta", "monaco", "montenegro", "namibie", "nederland", "niger", "nigeria",
                 "noord-macedonie", "noorwegen", "oostenrijk", "polen", "sao tome en principe",
                 "san marino", "servie", "slowakije", "slovenie", "spanje", "spitsbergen en jan mayen",
-                "tsjaad", "tsjechie",  "tunesie", "vaticaanstad", "zweden", "zwitserland"
+                "tsjaad", "tsjechie",  "tunesie", "vaticaanstad", "zweden", "zwitserland",
             },
             [UtcOffset.UtcPlusTwo] = new[]
             {
@@ -163,10 +153,20 @@
                  "samoa", "tokelau", "tonga"
             },
         };
-
         public static Dictionary<string, UtcOffset> UtcOffsetByCountry { get; } = CountriesByUtcOffset
-                .SelectMany(x => x.Value.Select(c => (Offset: x.Key, Country: c)))
-             .ToDictionary(x => x.Country, x => x.Offset, System.StringComparer.Ordinal);
+        .SelectMany(x => x.Value.Select(c => (Offset: x.Key, Country: c)))
+     .ToDictionary(x => x.Country, x => x.Offset, System.StringComparer.Ordinal);
         internal static Dictionary<UtcOffset, string[]> CountriesByUtcOffset => countriesByUtcOffset;
+
+        public static class Offset
+        {
+            public const byte Hours = 4;
+
+            public const byte HalfHours = 2;
+
+            public const byte QuarterHours = 1;
+
+            public const byte ThreeQuarters = 3 * QuarterHours;
+        }
     }
 }

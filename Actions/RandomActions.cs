@@ -1,21 +1,21 @@
-using System;
-using System.Text;
-using System.Threading;
-
 namespace it.Actions
 {
-    internal class RandomActions : IAction
+    using System;
+    using System.Text;
+    using System.Threading;
+
+    internal sealed class RandomActions : IAction, IEquatable<RandomActions>
     {
-        private readonly Random _random = new Random();
-
-
         private readonly string[] commands = { "kop of munt", "heads or tails", "random password" };
+        private readonly Random random = new Random();
 
         public bool Matches(string clipboardText)
         {
-            foreach (string command in commands)
+            for (int i = 0; i < commands.Length; i++)
             {
-                if (command.Equals(clipboardText.ToLower(), StringComparison.Ordinal)) {
+                string command = commands[i];
+                if (command.Equals(clipboardText, StringComparison.Ordinal))
+                {
                     return true;
                 }
             }
@@ -25,51 +25,68 @@ namespace it.Actions
 
         ActionResult IAction.TryExecute(string clipboardText)
         {
-            var currentCulture = Thread.CurrentThread.CurrentCulture;
-            var actionResult = new ActionResult();
+            System.Globalization.CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
+            ActionResult actionResult = new ActionResult();
 
             switch (clipboardText)
             {
                 case "kop of munt":
                 case "heads or tails":
-                {
-                    var isHeads = (int) _random.NextDouble() % 2 > 0;
+                    {
+                        bool isHeads = (int)random.NextDouble() % 2 > 0;
 
                         switch (currentCulture.LCID)
                         {
                             case 1033: // english-us
-                                actionResult.Title = "heads or tails?";
-                                actionResult.Description = isHeads ? "Heads" : "Tails";
-                                break;
+                                {
+                                    actionResult.Title = "heads or tails?";
+                                    actionResult.Description = isHeads ? "Heads" : "Tails";
+                                    break;
+                                }
                             case 1043: // dutch
-                                actionResult.Title = "Kop of munt?";
-                                actionResult.Description = isHeads ? "Kop" : "Munt";
-                                break;
+                                {
+                                    actionResult.Title = "Kop of munt?";
+                                    actionResult.Description = isHeads ? "Kop" : "Munt";
+                                    break;
+                                }
                             default:
-                                actionResult.IsProcessed = false;
-                                break;
+                                {
+                                    actionResult.IsProcessed = false;
+                                    break;
+                                }
                         }
 
                         break;
-                }
+                    }
                 case "random password":
-                {
-                    const int minLength = 8;
-                    const int maxLength = 12;
-                    const string charAvailable = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789-";
-                    var password = new StringBuilder();
-                    var passwordLength = _random.Next(minLength, maxLength + 1);
-                    while (passwordLength-- > 0) password.Append(charAvailable[_random.Next(charAvailable.Length)]);
-                    actionResult.Title = "Random password";
-                    actionResult.Description = password.ToString();
-                }
+                    {
+                        const int minLength = 8;
+                        const int maxLength = 12;
+                        const string charAvailable = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789-";
+                        StringBuilder password = new StringBuilder();
+                        int passwordLength = random.Next(minLength, maxLength + 1);
+                        while (passwordLength-- > 0)
+                        {
+                            password.Append(charAvailable[random.Next(charAvailable.Length)]);
+                        }
+
+                        actionResult.Title = "Random password";
+                        actionResult.Description = password.ToString();
+                    }
                     break;
                 default:
-                    actionResult.IsProcessed = false;
-                    break;
+                    {
+                        actionResult.IsProcessed = false;
+                        break;
+                    }
             }
 
             return actionResult;
+        }
+
+        public bool Equals(RandomActions other)
+        {
+            throw new NotImplementedException();
         }
     }
 }

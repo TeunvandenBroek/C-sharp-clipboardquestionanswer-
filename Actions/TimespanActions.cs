@@ -1,45 +1,39 @@
-using System;
-using System.Globalization;
-
 namespace it.Actions
 {
-    public class TimespanActions : IAction
-    {
-        private bool IsUsingTimespan = false;
+    using System;
+    using System.Globalization;
 
-        private readonly string[] DateFormats =
+    public sealed class TimespanActions : IAction, IEquatable<TimespanActions>
+    {
+
+        private readonly string[] dateFormats =
         {
             "dd.MM.yyyy",
-            "dd-MM-yyyy"
+            "dd-MM-yyyy",
         };
+        private bool isUsingTimespan;
 
-        private DateTime? prevDate;
-        public int Priority => 0;
+        private DateTimeOffset? prevDate;
 
         public bool Matches(string clipboardText)
         {
-            return DateTime.TryParseExact(clipboardText, DateFormats, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out DateTime newDate);
+            return DateTimeOffset.TryParseExact(clipboardText, formats: dateFormats, formatProvider: CultureInfo.CurrentCulture, styles: DateTimeStyles.AssumeLocal, result: out DateTimeOffset newDate);
         }
 
         public ActionResult TryExecute(string clipboardText)
         {
-            IsUsingTimespan = !IsUsingTimespan;
-            var actionResult = new ActionResult(isProcessed: false);
-
-            if (DateTime.TryParseExact(clipboardText, DateFormats, CultureInfo.CurrentCulture,
-                DateTimeStyles.AssumeLocal, out var newDate))
+            isUsingTimespan = !isUsingTimespan;
+            ActionResult actionResult = new ActionResult(isProcessed: false);
+            if (DateTimeOffset.TryParseExact(clipboardText, formats: dateFormats, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, result: out DateTimeOffset newDate))
             {
                 actionResult.IsProcessed = true;
 
                 if (prevDate.HasValue)
                 {
-                    var difference = newDate - prevDate;
-                    if (difference.HasValue)
-                    {
-                        prevDate = null;
-                        actionResult.Title = "Days between:";
-                        actionResult.Description = difference.Value.Days.ToString(CultureInfo.InvariantCulture);
-                    }
+                    TimeSpan? difference = newDate - prevDate;
+                    prevDate = null;
+                    actionResult.Title = "Days between:";
+                    actionResult.Description = difference.Value.Days.ToString(CultureInfo.InvariantCulture);
                 }
                 else
                 {
@@ -48,6 +42,11 @@ namespace it.Actions
             }
 
             return actionResult;
+        }
+
+        public bool Equals(TimespanActions other)
+        {
+            throw new NotImplementedException();
         }
     }
 }

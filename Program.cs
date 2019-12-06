@@ -1,14 +1,15 @@
-using System;
-using System.Windows.Forms;
-
 namespace it
 {
+    using System;
+    using System.Windows.Forms;
+
     internal sealed class Program : IDisposable
     {
-        //private static Form1 _disposable;
 
+        private static Bootstrap bootstrap;
         public void Dispose()
         {
+            bootstrap?.Dispose();
         }
 
         /// <summary>
@@ -19,12 +20,8 @@ namespace it
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
-            var bootstrap = new Bootstrap();
+            bootstrap = new Bootstrap();
             Bootstrap.Startup();
-
-
-            //_disposable = new Form1();
             Application.Run();
         }
     }

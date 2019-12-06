@@ -1,25 +1,25 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
-
 namespace it.Actions
 {
-    public class MathActions : IAction
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
+    using System.Text.RegularExpressions;
+    using System.Windows.Forms;
+
+    public sealed class MathActions : IAction
     {
         private readonly Dictionary<string, Func<double, double, double>> binaryOperators =
-            new Dictionary<string, Func<double, double, double>>
-                (StringComparer.Ordinal)
+            new Dictionary<string, Func<double, double, double>>(
+                StringComparer.Ordinal)
                 {
-                    {"+", (a, b) => a + b},
-                    {"x", (a, b) => a * b},
-                    {"*", (a, b) => a * b},
-                    {"-", (a, b) => a - b},
-                    {"/", (a, b) => b == 0 ? double.NaN : a / b},
-                    {":", (a, b) => b == 0 ? double.NaN : a / b},
-                    {"%", (a, b) => a / b * 100}
+                    { "+", (a, b) => a + b },
+                    { "x", (a, b) => a * b },
+                    { "*", (a, b) => a * b },
+                    { "-", (a, b) => a - b },
+                    { "/", (a, b) => b == 0 ? double.NaN : a / b },
+                    { ":", (a, b) => b == 0 ? double.NaN : a / b },
+                    { "%", (a, b) => a / b * 100 },
                 };
 
         private readonly Regex mathRegex =
@@ -27,36 +27,49 @@ namespace it.Actions
 
         public bool Matches(string clipboardText)
         {
-            var match = mathRegex.Match(clipboardText.Replace(',', '.'));
+            if (clipboardText is null)
+            {
+                throw new ArgumentNullException(nameof(clipboardText));
+            }
+
+            Match match = mathRegex.Match(clipboardText.Replace(',', '.'));
             return match.Success;
         }
 
         public ActionResult TryExecute(string clipboardText)
         {
-            var actionResult = new ActionResult(clipboardText);
+            if (clipboardText is null)
+            {
+                throw new ArgumentNullException(nameof(clipboardText));
+            }
 
-            var match = mathRegex.Match(clipboardText.Replace(',', '.'));
+            ActionResult actionResult = new ActionResult(clipboardText);
+
+            Match match = mathRegex.Match(clipboardText.Replace(',', '.'));
             if (!match.Success)
             {
                 actionResult.IsProcessed = false;
             }
             else
             {
-                var operators = (from Capture capture
+                List<string> operators = (from Capture capture
                         in match.Groups["operator"].Captures
-                                 select capture.Value).ToList();
+                                          select capture.Value).ToList();
 
-                var lhs = double.Parse(match.Groups["lhs"].Value, CultureInfo.InvariantCulture);
+                double lhs = double.Parse(match.Groups["lhs"].Value, CultureInfo.InvariantCulture);
 
-                var rhss = (from Capture capture
+                double[] rhss = (from Capture capture
                         in match.Groups["rhs"].Captures
-                            select double.Parse(capture.Value, CultureInfo.InvariantCulture)).ToArray();
+                                 select double.Parse(capture.Value, CultureInfo.InvariantCulture)).ToArray();
 
-                var answer = lhs;
+                double answer = lhs;
 
-                var i = 0;
+                int i = 0;
 
-                for (var i2 = 0; i2 < rhss.Length; i2++) answer = binaryOperators[operators[i++]](answer, rhss[i2]);
+                for (int i2 = 0; i2 < rhss.Length; i2++)
+                {
+                    answer = binaryOperators[operators[i++]](answer, rhss[i2]);
+                }
 
                 Clipboard.SetText(answer.ToString(CultureInfo.CurrentCulture));
                 actionResult.Description = answer.ToString(CultureInfo.CurrentCulture);
