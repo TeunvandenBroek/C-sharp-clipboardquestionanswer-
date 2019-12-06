@@ -28,10 +28,11 @@
         {
             try
             {
-                ChangeClipboardChain(Handle, nextClipboardViewer);
+                _ = ChangeClipboardChain(Handle, nextClipboardViewer);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Console.WriteLine(e.ToString());
             }
 
             base.Dispose(disposing);
@@ -48,7 +49,7 @@
                 case WM_DRAWCLIPBOARD:
                     {
                         OnClipboardChanged();
-                        SendMessage(nextClipboardViewer, m.Msg, m.WParam, m.LParam);
+                        _ = SendMessage(nextClipboardViewer, m.Msg, m.WParam, m.LParam);
                         GC.Collect();
                         GC.WaitForPendingFinalizers();
                         break;
@@ -61,7 +62,7 @@
                         }
                         else
                         {
-                            SendMessage(nextClipboardViewer, m.Msg, m.WParam, m.LParam);
+                            _ = SendMessage(nextClipboardViewer, m.Msg, m.WParam, m.LParam);
                             GC.Collect();
                             GC.WaitForPendingFinalizers();
                         }
@@ -95,7 +96,7 @@
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.ToString());
+                _ = MessageBox.Show(e.ToString());
             }
         }
 

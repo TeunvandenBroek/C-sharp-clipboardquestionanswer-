@@ -17,17 +17,15 @@ namespace it.Actions
 
         public bool Matches(string clipboardText)
         {
-            return DateTimeOffset.TryParseExact(clipboardText, formats: dateFormats, formatProvider: CultureInfo.CurrentCulture, styles: DateTimeStyles.AssumeLocal, result: out DateTimeOffset newDate);
+            return DateTimeOffset.TryParseExact(clipboardText, formats: dateFormats, formatProvider: CultureInfo.CurrentCulture, styles: DateTimeStyles.AssumeLocal, result: out _);
         }
 
         public ActionResult TryExecute(string clipboardText)
         {
             isUsingTimespan = !isUsingTimespan;
-            ActionResult actionResult = new ActionResult(isProcessed: false);
+            ActionResult actionResult = new ActionResult();
             if (DateTimeOffset.TryParseExact(clipboardText, formats: dateFormats, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, result: out DateTimeOffset newDate))
             {
-                actionResult.IsProcessed = true;
-
                 if (prevDate.HasValue)
                 {
                     TimeSpan? difference = newDate - prevDate;

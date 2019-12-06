@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace it.Actions
 {
@@ -50,7 +48,7 @@ namespace it.Actions
         {
             int total = 0;
 
-            int current, previous = 0;
+            int current, previous;
             char currentRoman, previousRoman = '\0';
 
             for (int i = 0; i < roman.Length; i++)
@@ -77,13 +75,13 @@ namespace it.Actions
 
         public static string To(int number)
         {
-            var roman = new StringBuilder();
+            StringBuilder roman = new StringBuilder();
 
-            foreach (var item in NumberRomanDictionary)
+            foreach (KeyValuePair<int, string> item in NumberRomanDictionary)
             {
                 while (number >= item.Key)
                 {
-                    roman.Append(item.Value);
+                    _ = roman.Append(item.Value);
                     number -= item.Key;
                 }
             }
@@ -102,20 +100,15 @@ namespace it.Actions
 
         public ActionResult TryExecute(string clipboardText = null)
         {
-            var actionResult = new ActionResult();
+            ActionResult actionResult = new ActionResult();
 
-            var match = roman.Match(clipboardText);
+            Match match = roman.Match(clipboardText);
             if (match.Success)
             {
                 int number = int.Parse(match.Groups[0].Value);
 
                 actionResult.Title = "Nummer naar romeins";
                 actionResult.Description = $"{number} = {To(number)}";
-                actionResult.IsProcessed = true;
-            }
-            else
-            {
-                actionResult.IsProcessed = false;
             }
 
             return actionResult;

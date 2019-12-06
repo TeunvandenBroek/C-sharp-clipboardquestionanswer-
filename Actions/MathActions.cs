@@ -38,42 +38,31 @@ namespace it.Actions
 
         public ActionResult TryExecute(string clipboardText)
         {
-            if (clipboardText is null)
-            {
-                throw new ArgumentNullException(nameof(clipboardText));
-            }
 
             ActionResult actionResult = new ActionResult(clipboardText);
 
             Match match = mathRegex.Match(clipboardText.Replace(',', '.'));
-            if (!match.Success)
+            List<string> operators = (from Capture capture
+                       in match.Groups["operator"].Captures
+                                      select capture.Value).ToList();
+
+            double lhs = double.Parse(match.Groups["lhs"].Value, CultureInfo.InvariantCulture);
+
+            double[] rhss = (from Capture capture
+                    in match.Groups["rhs"].Captures
+                             select double.Parse(capture.Value, CultureInfo.InvariantCulture)).ToArray();
+
+            double answer = lhs;
+
+            int i = 0;
+
+            for (int i2 = 0; i2 < rhss.Length; i2++)
             {
-                actionResult.IsProcessed = false;
+                answer = binaryOperators[operators[i++]](answer, rhss[i2]);
             }
-            else
-            {
-                List<string> operators = (from Capture capture
-                        in match.Groups["operator"].Captures
-                                          select capture.Value).ToList();
 
-                double lhs = double.Parse(match.Groups["lhs"].Value, CultureInfo.InvariantCulture);
-
-                double[] rhss = (from Capture capture
-                        in match.Groups["rhs"].Captures
-                                 select double.Parse(capture.Value, CultureInfo.InvariantCulture)).ToArray();
-
-                double answer = lhs;
-
-                int i = 0;
-
-                for (int i2 = 0; i2 < rhss.Length; i2++)
-                {
-                    answer = binaryOperators[operators[i++]](answer, rhss[i2]);
-                }
-
-                Clipboard.SetText(answer.ToString(CultureInfo.CurrentCulture));
-                actionResult.Description = answer.ToString(CultureInfo.CurrentCulture);
-            }
+            Clipboard.SetText(answer.ToString(CultureInfo.CurrentCulture));
+            actionResult.Description = answer.ToString(CultureInfo.CurrentCulture);
 
             return actionResult;
         }
