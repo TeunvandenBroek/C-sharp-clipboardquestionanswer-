@@ -109,28 +109,28 @@ namespace it
 
 
 
-                foreach (var action in new List<IAction>(serviceProvider.GetServices<IAction>()))
-                {
-                    // disconnect events from the clipboard.
-                    clipboardMonitor.ClipboardChanged -= ClipboardMonitor_ClipboardChanged;
-                    // run the action
-                    actionResult = action.TryExecute(clipboardText);
-                    // re attach the event
-                    clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
+                //foreach (var action in new List<IAction>(serviceProvider.GetServices<IAction>()))
+                //{
+                //    // disconnect events from the clipboard.
+                //    clipboardMonitor.ClipboardChanged -= ClipboardMonitor_ClipboardChanged;
+                //    // run the action
+                //    actionResult = action.TryExecute(clipboardText);
+                //    // re attach the event
+                //    clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
 
-                    // if this action processed the command, exit the loop.
-                    if (actionResult.IsProcessed)
-                    {
-                        // if the result is not null, and has a title and description
-                        if (!string.IsNullOrWhiteSpace(actionResult.Title) ||
-                            !string.IsNullOrWhiteSpace(actionResult.Description))
-                        {
-                            ProcessResult(actionResult, clipboardText);
-                        }
+                //    // if this action processed the command, exit the loop.
+                //    if (actionResult.IsProcessed)
+                //    {
+                //        // if the result is not null, and has a title and description
+                //        if (!string.IsNullOrWhiteSpace(actionResult.Title) ||
+                //            !string.IsNullOrWhiteSpace(actionResult.Description))
+                //        {
+                //            ProcessResult(actionResult, clipboardText);
+                //        }
 
-                        break;
-                    }
-                }
+                //        break;
+                //    }
+                //}
 
                 if (clipboardText.Length > 2)
                     foreach (var question in questionList)
