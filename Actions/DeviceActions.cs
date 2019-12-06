@@ -73,9 +73,7 @@ namespace it.Actions
                 }
             }
 
-            if (isCountingWords) return true;
-
-            return false;
+            return isCountingWords;
         }
 
 
@@ -107,7 +105,7 @@ namespace it.Actions
                 case "slaapstand":
                 case "sleep":
                     {
-                        Application.SetSuspendState(PowerState.Hibernate, true, true);
+                        _ = Application.SetSuspendState(PowerState.Hibernate, true, true);
                         return actionResult;
                     }
 
@@ -132,7 +130,7 @@ namespace it.Actions
                 case "empty bin":
                 case "empty recycling bin":
                     {
-                        SHEmptyRecycleBin(IntPtr.Zero, null, Recycle.SHRB_NOCONFIRMATION);
+                        _ = SHEmptyRecycleBin(IntPtr.Zero, null, Recycle.SHRB_NOCONFIRMATION);
                         switch (currentCulture.LCID)
                         {
                             case 1033: // english-us
@@ -147,7 +145,6 @@ namespace it.Actions
                                 }
                             default:
                                 {
-                                    actionResult.IsProcessed = false;
                                     return actionResult;
                                 }
                         }
@@ -194,7 +191,6 @@ namespace it.Actions
                                 }
                             default:
                                 {
-                                    actionResult.IsProcessed = false;
                                     return actionResult;
                                 }
                         }
@@ -220,7 +216,6 @@ namespace it.Actions
                                 }
                             default:
                                 {
-                                    actionResult.IsProcessed = false;
                                     return actionResult;
                                 }
                         }
@@ -236,7 +231,7 @@ namespace it.Actions
                         {
                             if (string.IsNullOrEmpty(sMacAddress))
                             {
-                                adapter.GetPhysicalAddress().ToString();
+                                _ = adapter.GetPhysicalAddress().ToString();
                                 return actionResult;
                             }
                         }
@@ -257,7 +252,6 @@ namespace it.Actions
                                 }
                             default:
                                 {
-                                    actionResult.IsProcessed = false;
                                     return actionResult;
                                 }
                         }
@@ -286,7 +280,6 @@ namespace it.Actions
                                 }
                             default:
                                 {
-                                    actionResult.IsProcessed = false;
                                     return actionResult;
                                 }
                         }
@@ -314,7 +307,6 @@ namespace it.Actions
                                 }
                             default:
                                 {
-                                    actionResult.IsProcessed = false;
                                     return actionResult;
                                 }
                         }
@@ -344,7 +336,6 @@ namespace it.Actions
                                         }
                                     default:
                                         {
-                                            actionResult.IsProcessed = false;
                                             return actionResult;
                                         }
                                 }
@@ -366,15 +357,12 @@ namespace it.Actions
                                         actionResult.Description = "Je hebt geen internet";
                                         break;
                                     }
-                                default:
-                                    {
-                                        actionResult.IsProcessed = false;
-                                        return actionResult;
-                                    }
-                            }
-                        }
 
-                        return actionResult;
+                                default:
+                                    break;
+                            }
+                            return actionResult;
+                        }
                     }
                 case "count words":
                     {
@@ -422,7 +410,6 @@ namespace it.Actions
                                 }
                             default:
                                 {
-                                    actionResult.IsProcessed = false;
                                     return actionResult;
                                 }
                         }
@@ -436,10 +423,6 @@ namespace it.Actions
                             isCountingWords = false;
                             actionResult.Title = "Number of words are: ";
                             actionResult.Description = numberOfWords.ToString();
-                        }
-                        else
-                        {
-                            actionResult.IsProcessed = false;
                         }
                         break;
                     }

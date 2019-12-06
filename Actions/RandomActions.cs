@@ -49,11 +49,9 @@ namespace it.Actions
                                     actionResult.Description = isHeads ? "Kop" : "Munt";
                                     break;
                                 }
+
                             default:
-                                {
-                                    actionResult.IsProcessed = false;
-                                    break;
-                                }
+                                break;
                         }
 
                         break;
@@ -67,7 +65,7 @@ namespace it.Actions
                         int passwordLength = random.Next(minLength, maxLength + 1);
                         while (passwordLength-- > 0)
                         {
-                            password.Append(charAvailable[random.Next(charAvailable.Length)]);
+                            _ = password.Append(charAvailable[random.Next(charAvailable.Length)]);
                         }
 
                         actionResult.Title = "Random password";
@@ -75,10 +73,7 @@ namespace it.Actions
                     }
                     break;
                 default:
-                    {
-                        actionResult.IsProcessed = false;
-                        break;
-                    }
+                    break;
             }
 
             return actionResult;

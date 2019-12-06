@@ -37,12 +37,12 @@ namespace it.Actions
 
         public ActionResult TryExecute(string clipboardText)
         {
-            ActionResult actionResult = new ActionResult { Title = "Stopwatch" };
+            ActionResult actionResult = new ActionResult("Stopwatch");
             CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
 
             // moved this from every case statement to up here. Not sure what to do if the clipboard text matches.
             // I don't think this code is needed at all.
-            if (!string.Equals(clipboardText, lastClipboard, StringComparison.Ordinal))
+            if (!string.Equals(clipboardText, lastClipboard))
             {
                 lastClipboard = clipboardText;
             }
@@ -72,7 +72,7 @@ namespace it.Actions
                         else
                         {
                             stopwatch.Restart();
-                            actionResult.Description = FillStopwatchReset(stopwatch.Elapsed);
+                            actionResult.Description = FillStopwatchReset();
 
                             lastClipboard = clipboardText;
                             stopwatch.Reset();
@@ -95,11 +95,9 @@ namespace it.Actions
                                             $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes";
                                         break;
                                     }
+
                                 default:
-                                    {
-                                        actionResult.IsProcessed = false;
-                                        return actionResult;
-                                    }
+                                    break;
                             }
                         }
 
@@ -114,7 +112,7 @@ namespace it.Actions
                         else
                         {
                             stopwatch.Stop();
-                            actionResult.Description = FillStopwatchPause(stopwatch.Elapsed);
+                            actionResult.Description = FillStopwatchPause();
 
                             lastClipboard = clipboardText;
                             TimeSpan ts = stopwatch.Elapsed;
@@ -136,11 +134,9 @@ namespace it.Actions
                                             $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes";
                                         break;
                                     }
+
                                 default:
-                                    {
-                                        actionResult.IsProcessed = false;
-                                        return actionResult;
-                                    }
+                                    break;
                             }
                         }
 
@@ -155,7 +151,7 @@ namespace it.Actions
                         else
                         {
                             stopwatch.Start();
-                            actionResult.Description = FillStopwatchResume(stopwatch.Elapsed);
+                            actionResult.Description = FillStopwatchResume();
 
                             lastClipboard = clipboardText;
                             TimeSpan ts = stopwatch.Elapsed;
@@ -176,11 +172,9 @@ namespace it.Actions
                                             $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes";
                                         break;
                                     }
+
                                 default:
-                                    {
-                                        actionResult.IsProcessed = false;
-                                        return actionResult;
-                                    }
+                                    break;
                             }
                         }
                     }
@@ -195,7 +189,7 @@ namespace it.Actions
                             else
                             {
                                 stopwatch.Stop();
-                                actionResult.Description = FillStopwatchStop(stopwatch.Elapsed);
+                                actionResult.Description = FillStopwatchStop();
                             }
                         }
                         lastClipboard = null;
@@ -217,20 +211,15 @@ namespace it.Actions
                                         $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes";
                                     break;
                                 }
-                            default:
-                                {
-                                    actionResult.IsProcessed = false;
-                                    return actionResult;
-                                }
-                        }
 
+                            default:
+                                break;
+                        }
                         break;
                     }
+
                 default:
-                    {
-                        actionResult.IsProcessed = false;
-                        return actionResult;
-                    }
+                    break;
             }
 
             return actionResult;
@@ -328,7 +317,7 @@ namespace it.Actions
             return description;
         }
 
-        private string FillStopwatchPause(TimeSpan timeSpan, CultureInfo currentCulture = null)
+        private string FillStopwatchPause(CultureInfo currentCulture = null)
         {
             if (currentCulture is null)
             {
@@ -341,12 +330,12 @@ namespace it.Actions
             {
                 case 1033: // english-us
                     {
-                        description = $"Stopwatch paused on: {GetElaspedTime(timeSpan)}";
+                        description = $"Stopwatch paused on: {GetElaspedTime()}";
                         break;
                     }
                 case 1043: // dutch
                     {
-                        description = $"Stopwatch gepauzeerd op: {GetElaspedTime(timeSpan)}";
+                        description = $"Stopwatch gepauzeerd op: {GetElaspedTime()}";
                         break;
                     }
 
@@ -359,7 +348,7 @@ namespace it.Actions
             return description;
         }
 
-        private string FillStopwatchReset(TimeSpan timeSpan, CultureInfo currentCulture = null)
+        private string FillStopwatchReset(CultureInfo currentCulture = null)
         {
             if (currentCulture is null)
             {
@@ -372,12 +361,12 @@ namespace it.Actions
             {
                 case 1033: // english-us
                     {
-                        description = $"Stopwatch reset to: {GetElaspedTime(timeSpan)}";
+                        description = $"Stopwatch reset to: {GetElaspedTime()}";
                         break;
                     }
                 case 1043: // dutch
                     {
-                        description = $"Stopwatch resetten naar: {GetElaspedTime(timeSpan)}";
+                        description = $"Stopwatch resetten naar: {GetElaspedTime()}";
                         break;
                     }
 
@@ -390,7 +379,7 @@ namespace it.Actions
             return description;
         }
 
-        private string FillStopwatchResume(TimeSpan timeSpan, CultureInfo currentCulture = null)
+        private string FillStopwatchResume(CultureInfo currentCulture = null)
         {
             if (currentCulture is null)
             {
@@ -403,12 +392,12 @@ namespace it.Actions
             {
                 case 1033: // english-us
                     {
-                        description = $"Stopwatch resumed on: {GetElaspedTime(timeSpan)}";
+                        description = $"Stopwatch resumed on: {GetElaspedTime()}";
                         break;
                     }
                 case 1043: // dutch
                     {
-                        description = $"Stopwatch hervat op: {GetElaspedTime(timeSpan)}";
+                        description = $"Stopwatch hervat op: {GetElaspedTime()}";
                         break;
                     }
 
@@ -421,7 +410,7 @@ namespace it.Actions
             return description;
         }
 
-        private string FillStopwatchStop(TimeSpan timeSpan, CultureInfo currentCulture = null)
+        private string FillStopwatchStop(CultureInfo currentCulture = null)
         {
             if (currentCulture is null)
             {
@@ -434,18 +423,17 @@ namespace it.Actions
             {
                 case 1033: // english-us
                     {
-                        description = $"Stopwatch stopped on: {GetElaspedTime(timeSpan)}";
+                        description = $"Stopwatch stopped on: {GetElaspedTime()}";
                         break;
                     }
                 case 1043: // dutch
                     {
-                        description = $"Stopwatch gestopt op: {GetElaspedTime(timeSpan)}";
+                        description = $"Stopwatch gestopt op: {GetElaspedTime()}";
                         break;
                     }
+
                 default:
-                    {
-                        break;
-                    }
+                    break;
             }
 
             return description;
@@ -453,7 +441,7 @@ namespace it.Actions
 
         #region Stopwatch Fill Methods
 
-        private string GetElaspedTime(TimeSpan timeSpan, CultureInfo currentCulture = null)
+        private string GetElaspedTime(CultureInfo currentCulture = null)
         {
             if (currentCulture is null)
             {

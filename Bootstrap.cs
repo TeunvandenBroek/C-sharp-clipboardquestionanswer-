@@ -51,15 +51,15 @@ namespace it
             // Add configure services
             ServiceCollection serviceDescriptors = new ServiceCollection();
 
-            serviceDescriptors.AddSingleton<IAction, ConvertActions>();
-            serviceDescriptors.AddSingleton<IAction, TryRomanActions>();
-            serviceDescriptors.AddSingleton<IAction, CountdownActions>();
-            serviceDescriptors.AddSingleton<IAction, DeviceActions>();
-            serviceDescriptors.AddSingleton<IAction, RandomActions>();
-            serviceDescriptors.AddSingleton<IAction, StopwatchActions>();
-            serviceDescriptors.AddSingleton<IAction, TimespanActions>();
-            serviceDescriptors.AddSingleton<IAction, TimezoneActions>();
-            serviceDescriptors.AddSingleton<IAction, MathActions>();
+            _ = serviceDescriptors.AddSingleton<IAction, ConvertActions>();
+            _ = serviceDescriptors.AddSingleton<IAction, TryRomanActions>();
+            _ = serviceDescriptors.AddSingleton<IAction, CountdownActions>();
+            _ = serviceDescriptors.AddSingleton<IAction, DeviceActions>();
+            _ = serviceDescriptors.AddSingleton<IAction, RandomActions>();
+            _ = serviceDescriptors.AddSingleton<IAction, StopwatchActions>();
+            _ = serviceDescriptors.AddSingleton<IAction, TimespanActions>();
+            _ = serviceDescriptors.AddSingleton<IAction, TimezoneActions>();
+            _ = serviceDescriptors.AddSingleton<IAction, MathActions>();
             (serviceProvider as IDisposable)?.Dispose();
             serviceProvider = serviceDescriptors.BuildServiceProvider();
         }
@@ -96,15 +96,10 @@ namespace it
             try
             {
                 IAction service = serviceProvider.GetServices<IAction>().FirstOrDefault(s => s.Matches(clipboardText));
-                ActionResult actionResult = null;
-                // run the action
-                if (service is object)
+                if (service != null)
                 {
-                    actionResult = service.TryExecute(clipboardText);
-                }
-                // re attach the event
-                if (actionResult is object && actionResult.IsProcessed)
-                {
+                    ActionResult actionResult = service.TryExecute(clipboardText);
+                    // re attach the event
                     if (!string.IsNullOrWhiteSpace(actionResult.Title) || !string.IsNullOrWhiteSpace(actionResult.Description))
                     {
                         clipboardMonitor.ClipboardChanged -= ClipboardMonitor_ClipboardChanged;
@@ -113,7 +108,6 @@ namespace it
                     }
                     return;
                 }
-
 
                 if (clipboardText.Length > 2)
                 {
@@ -129,16 +123,9 @@ namespace it
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                _ = MessageBox.Show(ex.ToString());
             }
         }
-
-
-
-        private static void ClearClipboard(string clipboardText)
-        {
-        }
-
 
         private void ProcessResult(ActionResult actionResult, string clipboardText)
         {
@@ -180,11 +167,10 @@ namespace it
                     key.SetValue(keyName, Assembly.GetExecutingAssembly().Location);
                 }
             }
-            else
-                if (!string.IsNullOrWhiteSpace(value))
-                {
+            else if (!string.IsNullOrWhiteSpace(value))
+            {
                 key.DeleteValue(keyName);
-                }
+            }
 
             key.Close();
             key.Dispose();

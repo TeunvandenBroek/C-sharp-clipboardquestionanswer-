@@ -27,11 +27,6 @@ namespace it.Actions
             ActionResult actionResult = new ActionResult();
             country = clipboardText.Trim().ToLowerInvariant();
             KeyValuePair<string, Countries.UtcOffset> keyValuePair = TryKeypair();
-            if (keyValuePair.Key == default)
-            {
-                actionResult.IsProcessed = false;
-                return actionResult;
-            }
 
             actionResult.Title = country;
             switch (keyValuePair.Value)
@@ -216,11 +211,11 @@ namespace it.Actions
                         break;
                     }
 
+                case Countries.UtcOffset.UtcPlusFivepointThreeQuarters:
+                case Countries.UtcOffset.UtcPlusSixpointfive:
+                    break;
                 default:
-                    {
-                        actionResult.IsProcessed = false;
-                        return actionResult;
-                    }
+                    break;
             }
 
             TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);

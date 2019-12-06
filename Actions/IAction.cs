@@ -3,16 +3,14 @@
 
 namespace it.Actions
 {
-    public sealed partial class ActionResult : System.IEquatable<ActionResult>
+    public sealed partial class ActionResult : IEquatable<ActionResult>
     {
-        internal ActionResult(string title = null, string description = null, bool isProcessed = true)
+        internal ActionResult(string title = null, string description = null)
         {
             Title = title;
             Description = description;
-            IsProcessed = isProcessed;
         }
         internal string Description { get; set; }
-        internal bool IsProcessed { get; set; }
 
         internal string Title { get; set; }
 
@@ -33,7 +31,7 @@ namespace it.Actions
 
         public bool Equals(ActionBase other)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
         public abstract bool Matches(string clipboardText = null);
         public abstract ActionResult TryExecute(string clipboardText = null);
