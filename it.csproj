@@ -129,6 +129,12 @@
     <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
     </Reference>
+    <Reference Include="New.Instance, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\New.Instance.0.1.0\lib\net40-client\New.Instance.dll</HintPath>
+    </Reference>
+    <Reference Include="Open.Disposable, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Open.Disposable.2.3.0\lib\netstandard2.0\Open.Disposable.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.AppContext.4.3.0\lib\net46\System.AppContext.dll</HintPath>
@@ -252,6 +258,7 @@
     <Compile Include="Actions\CountdownActions.cs" />
     <Compile Include="Actions\IAction.cs" />
     <Compile Include="Actions\MathActions.cs" />
+    <Compile Include="Actions\NativeMethods.cs" />
     <Compile Include="Actions\RandomActions.cs" />
     <Compile Include="Actions\StopwatchActions.cs" />
     <Compile Include="Actions\TimespanActions.cs" />

@@ -96,7 +96,7 @@ namespace it
             try
             {
                 IAction service = serviceProvider.GetServices<IAction>().FirstOrDefault(s => s.Matches(clipboardText));
-                if (service != null)
+                if (service is object)
                 {
                     ActionResult actionResult = service.TryExecute(clipboardText);
                     // re attach the event

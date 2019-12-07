@@ -65,6 +65,7 @@
                             _ = SendMessage(nextClipboardViewer, m.Msg, m.WParam, m.LParam);
                             GC.Collect();
                             GC.WaitForPendingFinalizers();
+                            GC.Collect();
                         }
 
                         break;

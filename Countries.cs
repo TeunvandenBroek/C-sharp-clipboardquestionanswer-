@@ -10,7 +10,7 @@
         {
             [UtcOffset.UtcMinusTwelve] = new[]
             {
-                "baker","howland"
+                "baker", "howland"
             },
             [UtcOffset.UtcMinusEleven] = new[]
             {
