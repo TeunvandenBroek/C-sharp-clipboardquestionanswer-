@@ -17,14 +17,14 @@ namespace it.Actions
 
         public bool Matches(string clipboardText)
         {
-            return DateTimeOffset.TryParseExact(clipboardText, formats: dateFormats, formatProvider: CultureInfo.CurrentCulture, styles: DateTimeStyles.AssumeLocal, result: out _);
+            return DateTimeOffset.TryParseExact(clipboardText, dateFormats, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out _);
         }
 
         public ActionResult TryExecute(string clipboardText)
         {
             isUsingTimespan = !isUsingTimespan;
             ActionResult actionResult = new ActionResult();
-            if (DateTimeOffset.TryParseExact(clipboardText, formats: dateFormats, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, result: out DateTimeOffset newDate))
+            if (DateTimeOffset.TryParseExact(clipboardText, dateFormats, CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out DateTimeOffset newDate))
             {
                 if (prevDate.HasValue)
                 {

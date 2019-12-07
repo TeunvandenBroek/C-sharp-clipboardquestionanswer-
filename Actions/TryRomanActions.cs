@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -95,7 +96,7 @@ namespace it.Actions
                 throw new ArgumentException("message", nameof(clipboardText));
             }
 
-            return clipboardText.EndsWith(" to roman");
+            return clipboardText.EndsWith(" to roman", StringComparison.Ordinal);
         }
 
         public ActionResult TryExecute(string clipboardText = null)
@@ -105,7 +106,7 @@ namespace it.Actions
             Match match = roman.Match(clipboardText);
             if (match.Success)
             {
-                int number = int.Parse(match.Groups[0].Value);
+                int number = int.Parse(match.Groups[0].Value, CultureInfo.InvariantCulture);
 
                 actionResult.Title = "Nummer naar romeins";
                 actionResult.Description = $"{number} = {To(number)}";

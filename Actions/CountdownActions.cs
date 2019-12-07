@@ -13,7 +13,7 @@ namespace it.Actions
                 throw new ArgumentException("message", nameof(clipboardText));
             }
 
-            return clipboardText.StartsWith("timer", StringComparison.Ordinal) && TimeSpan.TryParse(clipboardText.Replace("timer ", string.Empty), out TimeSpan ts);
+            return clipboardText.StartsWith("timer", StringComparison.Ordinal) && TimeSpan.TryParse(clipboardText.Replace("timer ", string.Empty), out TimeSpan _);
         }
 
 

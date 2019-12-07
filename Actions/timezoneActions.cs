@@ -210,10 +210,6 @@ namespace it.Actions
                         timeZoneId = "India Standard Time";
                         break;
                     }
-
-                case Countries.UtcOffset.UtcPlusFivepointThreeQuarters:
-                case Countries.UtcOffset.UtcPlusSixpointfive:
-                    break;
                 default:
                     break;
             }

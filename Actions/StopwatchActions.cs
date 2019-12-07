@@ -42,7 +42,7 @@ namespace it.Actions
 
             // moved this from every case statement to up here. Not sure what to do if the clipboard text matches.
             // I don't think this code is needed at all.
-            if (!string.Equals(clipboardText, lastClipboard))
+            if (!string.Equals(clipboardText, lastClipboard, StringComparison.Ordinal))
             {
                 lastClipboard = clipboardText;
             }
