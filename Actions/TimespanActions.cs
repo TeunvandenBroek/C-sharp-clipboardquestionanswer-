@@ -9,7 +9,10 @@ namespace it.Actions
         private readonly string[] dateFormats =
         {
             "dd.MM.yyyy",
-            "dd-MM-yyyy",
+            "dd-MM-yyyy", 
+            //american format
+            "MM.dd.yyyy",
+            "MM-dd-yyyy",
         };
         private bool isUsingTimespan;
 

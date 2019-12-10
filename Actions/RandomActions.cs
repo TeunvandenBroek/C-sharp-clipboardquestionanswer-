@@ -8,7 +8,7 @@ namespace it.Actions
     {
         private readonly string[] commands = { "kop of munt", "heads or tails", "random password" };
         private readonly Random random = new Random();
-
+       
         public bool Matches(string clipboardText)
         {
             for (int i = 0; i < commands.Length; i++)
@@ -33,7 +33,7 @@ namespace it.Actions
                 case "kop of munt":
                 case "heads or tails":
                     {
-                        bool isHeads = (int)random.NextDouble() % 2 > 0;
+                        bool isHeads = random.NextDouble() > 0.5;
 
                         switch (currentCulture.LCID)
                         {

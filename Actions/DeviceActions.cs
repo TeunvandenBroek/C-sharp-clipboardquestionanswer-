@@ -427,9 +427,6 @@ namespace it.Actions
                         break;
                     }
             }
-
-
-
             return actionResult;
         }
     }

@@ -7,10 +7,10 @@ using System.Text.RegularExpressions;
 namespace it.Actions
 {
     internal sealed class TryRomanActions : IAction
-    {
-        public static readonly Dictionary<int, string> NumberRomanDictionary;
+    { 
+        public static readonly IReadOnlyDictionary<int, string> NumberRomanDictionary;
 
-        public static readonly Dictionary<char, int> RomanNumberDictionary;
+        public static readonly IReadOnlyDictionary<char, int> RomanNumberDictionary;
 
         private readonly Regex roman = new Regex("^([1-3]?[0-9]{3}|[1-9][0-9]{0,2})(?= to roman)");
 

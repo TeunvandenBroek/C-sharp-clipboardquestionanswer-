@@ -9,7 +9,7 @@ namespace it.Actions
 
     public sealed class MathActions : IAction
     {
-        private readonly Dictionary<string, Func<double, double, double>> binaryOperators =
+        private readonly IReadOnlyDictionary<string, Func<double, double, double>> binaryOperators =
             new Dictionary<string, Func<double, double, double>>(
                 StringComparer.Ordinal)
                 {
@@ -35,14 +35,13 @@ namespace it.Actions
             Match match = mathRegex.Match(clipboardText.Replace(',', '.'));
             return match.Success;
         }
-
         public ActionResult TryExecute(string clipboardText)
         {
 
             ActionResult actionResult = new ActionResult(clipboardText);
 
             Match match = mathRegex.Match(clipboardText.Replace(',', '.'));
-            List<string> operators = (from Capture capture
+            IReadOnlyList<string> operators = (from Capture capture
                        in match.Groups["operator"].Captures
                                       select capture.Value).ToList();
 
@@ -67,4 +66,4 @@ namespace it.Actions
             return actionResult;
         }
     }
-}
+} 
