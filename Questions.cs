@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace it
 {
     public static class Questions
     {
-        private static readonly Dictionary<string, string> QuestionDict = new Dictionary<string, string>
-        (System.StringComparer.Ordinal)
+        private static readonly IReadOnlyDictionary<string, string> QuestionDict = new Dictionary<string, string>
+        (StringComparer.CurrentCultureIgnoreCase)
         {
             //Add question/answer to list
             //hoofdstuk 3 it
@@ -1037,17 +1038,17 @@ namespace it
         };
 
 
-        public static Dictionary<string, string> GetQuestionDict()
-        {
+        public static IReadOnlyDictionary<string, string> GetQuestionDict()
+        { 
             return GetQuestionDict1();
         }
 
-        public static Dictionary<string, string> GetQuestionDict1()
+        public static IReadOnlyDictionary<string, string> GetQuestionDict1()
         {
             return QuestionDict;
         }
 
-        internal static List<Question> LoadQuestions()
+        internal static IReadOnlyList<Question> LoadQuestions()
         {
             return GetQuestionDict().Select(item => new Question(item.Key, item.Value)).ToList();
         }

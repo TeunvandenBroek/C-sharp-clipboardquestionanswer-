@@ -19,7 +19,7 @@ namespace it
         private readonly ClipboardMonitor clipboardMonitor = new ClipboardMonitor();
         private readonly ControlContainer container = new ControlContainer();
         private readonly NotifyIcon notifyIcon;
-        private readonly List<Question> questionList = Questions.LoadQuestions();
+        private readonly IReadOnlyList<Question> questionList = Questions.LoadQuestions();
 
         // Container to hold the actions
         private ServiceProvider serviceProvider;

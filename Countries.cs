@@ -1,12 +1,13 @@
 ﻿namespace it
 {
+
     using System.Collections.Generic;
     using System.Linq;
 
     internal partial class Countries
     {
 
-        private static readonly Dictionary<UtcOffset, string[]> countriesByUtcOffset = new Dictionary<UtcOffset, string[]>
+        private static readonly IReadOnlyDictionary<UtcOffset, string[]> countriesByUtcOffset = new Dictionary<UtcOffset, string[]>
         {
             [UtcOffset.UtcMinusTwelve] = new[]
             {
@@ -148,15 +149,16 @@
             {
                  "fijl","kiribati","marshalleilanden","nauru","nieuw-zeeland","tuvalu","wake-eiland","wallis en futuna"
             },
-            [UtcOffset.UtcPlusThirteen] = new[]
+            [UtcOffset.UtcPlusThirteen] = new []
             {
                  "samoa", "tokelau", "tonga"
             },
         };
-        public static Dictionary<string, UtcOffset> UtcOffsetByCountry { get; } = CountriesByUtcOffset
+        public static IReadOnlyDictionary<string, UtcOffset> UtcOffsetByCountry { get; } = CountriesByUtcOffset
         .SelectMany(x => x.Value.Select(c => (Offset: x.Key, Country: c)))
-     .ToDictionary(x => x.Country, x => x.Offset, System.StringComparer.Ordinal);
-        internal static Dictionary<UtcOffset, string[]> CountriesByUtcOffset => countriesByUtcOffset;
+        .ToDictionary(x => x.Country, x => x.Offset, System.StringComparer.Ordinal);
+
+        internal static IReadOnlyDictionary<UtcOffset, string[]> CountriesByUtcOffset => countriesByUtcOffset;
 
         public static class Offset
         {
