@@ -10,5 +10,10 @@
         {
             Components = components;
         }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as ControlContainer);
+        }
     }
 }

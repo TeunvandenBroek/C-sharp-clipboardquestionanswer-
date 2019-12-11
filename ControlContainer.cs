@@ -45,5 +45,10 @@
         {
             Components = obj.Components;
         }
+
+        public override int GetHashCode()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

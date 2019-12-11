@@ -2,7 +2,7 @@
 
 namespace it
 {
-    public sealed partial class SmartPerformanceCounter : System.IEquatable<SmartPerformanceCounter>
+    public sealed partial class SmartPerformanceCounter : IEquatable<SmartPerformanceCounter>
     {
         /// <summary>Record Constructor</summary>
         /// <param name="isValueCreated"><see cref="IsValueCreated"/></param>
@@ -19,6 +19,16 @@ namespace it
             }
 
             throw new System.NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as SmartPerformanceCounter);
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
         }
     }
 }
