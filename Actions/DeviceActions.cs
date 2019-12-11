@@ -434,5 +434,15 @@ namespace it.Actions
         {
             return Equals(obj as DeviceActions);
         }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }

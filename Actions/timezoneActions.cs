@@ -5,10 +5,30 @@ namespace it.Actions
     using System.Globalization;
     using System.Linq;
 
-    internal sealed class TimezoneActions : IAction
+    internal sealed class TimezoneActions : IAction, IEquatable<TimezoneActions>
     {
         private string country;
         private string timeZoneId = string.Empty;
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as TimezoneActions);
+        }
+
+        public bool Equals(TimezoneActions other)
+        {
+            return other != null &&
+                   country == other.country &&
+                   timeZoneId == other.timeZoneId;
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = 1733548200;
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(country);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(timeZoneId);
+            return hashCode;
+        }
 
         public bool Matches(string clipboardText)
         {

@@ -1,6 +1,7 @@
 namespace it.Actions
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
 
     public sealed class TimespanActions : IAction, IEquatable<TimespanActions>
@@ -53,6 +54,25 @@ namespace it.Actions
         public override bool Equals(object obj)
         {
             return Equals(obj as TimespanActions);
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = 953797473;
+            hashCode = hashCode * -1521134295 + EqualityComparer<string[]>.Default.GetHashCode(dateFormats);
+            hashCode = hashCode * -1521134295 + isUsingTimespan.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<DateTimeOffset?>.Default.GetHashCode(prevDate);
+            return hashCode;
+        }
+
+        public static bool operator ==(TimespanActions left, TimespanActions right)
+        {
+            return EqualityComparer<TimespanActions>.Default.Equals(left, right);
+        }
+
+        public static bool operator !=(TimespanActions left, TimespanActions right)
+        {
+            return !(left == right);
         }
     }
 }

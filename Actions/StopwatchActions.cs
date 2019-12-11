@@ -479,6 +479,11 @@ namespace it.Actions
             return Equals(obj as StopwatchActions);
         }
 
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion Stopwatch Fill Methods
     }
 }
