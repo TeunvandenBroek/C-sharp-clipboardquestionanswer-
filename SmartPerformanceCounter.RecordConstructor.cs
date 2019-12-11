@@ -15,10 +15,10 @@ namespace it
         {
             if (other is null)
             {
-                throw new System.ArgumentNullException(nameof(other));
+                throw new ArgumentNullException(nameof(other));
             }
 
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override bool Equals(object obj)
