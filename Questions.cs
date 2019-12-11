@@ -1039,7 +1039,7 @@ namespace it
 
 
         public static IReadOnlyDictionary<string, string> GetQuestionDict()
-        { 
+        {
             return GetQuestionDict1();
         }
 

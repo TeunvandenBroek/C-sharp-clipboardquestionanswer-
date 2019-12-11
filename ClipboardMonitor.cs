@@ -2,124 +2,116 @@
 {
     using System;
     using System.ComponentModel;
-    using System.Drawing;
     using System.Runtime.InteropServices;
     using System.Windows.Forms;
 
-    [DefaultEvent(nameof(ClipboardChanged))]
-    public sealed class ClipboardMonitor : Control, IEquatable<ClipboardMonitor>
+    [DefaultEvent("ClipboardChanged")]
+    internal sealed class ClipboardMonitor : Control
     {
-        private IntPtr nextClipboardViewer;
-
         public ClipboardMonitor()
         {
-            BackColor = Color.Red;
-            Visible = false;
-
-            nextClipboardViewer = (IntPtr)SetClipboardViewer((int)Handle);
+            CreateHandle();
+            try
+            {
+                NextViewerPtr = NativeMethods.SetClipboardViewer(Handle);
+            }
+            catch (EntryPointNotFoundException) { }
         }
 
-        /// <summary>
-        ///     Clipboard contents changed.
-        /// </summary>
+        ~ClipboardMonitor()
+        {
+            Dispose(disposing: false);
+        }
+
+        private IntPtr NextViewerPtr;
+
         public event EventHandler<ClipboardChangedEventArgs> ClipboardChanged;
+
 
         protected override void Dispose(bool disposing)
         {
-            try
+            if (NextViewerPtr != IntPtr.Zero)
             {
-                _ = ChangeClipboardChain(Handle, nextClipboardViewer);
+                _ = NativeMethods.ChangeClipboardChain(Handle, NextViewerPtr);
+                NextViewerPtr = IntPtr.Zero;
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-
-            base.Dispose(disposing);
         }
+
 
         protected override void WndProc(ref Message m)
         {
-            // defined in winuser.h
-            const int WM_DRAWCLIPBOARD = 0x308;
-            const int WM_CHANGECBCHAIN = 0x030D;
-
-            switch (m.Msg)
             {
-                case WM_DRAWCLIPBOARD:
-                    {
-                        OnClipboardChanged();
-                        _ = SendMessage(nextClipboardViewer, m.Msg, m.WParam, m.LParam);
+                switch (m.Msg)
+                {
+                    case NativeMethods.WM_DRAWCLIPBOARD:
+                        _ = NativeMethods.SendMessage(NextViewerPtr, m.Msg, m.WParam, m.LParam);
                         GC.Collect();
                         GC.WaitForPendingFinalizers();
-                        GC.Collect();
+                        OnClipboardChanged();
                         break;
-                    }
-                case WM_CHANGECBCHAIN:
-                    {
-                        if (m.WParam == nextClipboardViewer)
+
+                    case NativeMethods.WM_CHANGECBCHAIN:
+                        if (m.WParam == NextViewerPtr)
                         {
-                            nextClipboardViewer = m.LParam;
+                            NextViewerPtr = m.LParam;
                         }
                         else
                         {
-                            _ = SendMessage(nextClipboardViewer, m.Msg, m.WParam, m.LParam);
-                            GC.Collect();
-                            GC.WaitForPendingFinalizers();
-                            GC.Collect();
+                            _ = NativeMethods.SendMessage(NextViewerPtr, m.Msg, m.WParam, m.LParam);
                         }
-
                         break;
-                    }
-                default:
-                    {
+
+                    default:
                         base.WndProc(ref m);
                         break;
-                    }
+                }
             }
         }
 
-        [DllImport("User32.dll", CharSet = CharSet.Auto)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool ChangeClipboardChain(IntPtr hWndRemove, IntPtr hWndNewNext);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
-
-        [DllImport("User32.dll")]
-        private static extern int SetClipboardViewer(int hWndNewViewer);
 
         private void OnClipboardChanged()
         {
             try
             {
-                IDataObject iData = Clipboard.GetDataObject();
-                ClipboardChanged?.Invoke(this, new ClipboardChangedEventArgs(iData));
+                IDataObject dataObject = Clipboard.GetDataObject();
+                if (dataObject != null)
+                {
+                    ClipboardChanged?.Invoke(this, new ClipboardChangedEventArgs(dataObject));
+                }
             }
-            catch (Exception e)
-            {
-                _ = MessageBox.Show(e.ToString());
-            }
+            catch (ExternalException) { }
         }
 
-        public bool Equals(ClipboardMonitor other)
+
+
+        private static class NativeMethods
         {
-            throw new NotImplementedException();
+
+            internal const int WM_DRAWCLIPBOARD = 0x0308;
+            internal const int WM_CHANGECBCHAIN = 0x030D;
+
+
+            [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+            internal static extern IntPtr SetClipboardViewer(IntPtr hWndNewViewer);
+
+            [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            internal static extern bool ChangeClipboardChain(IntPtr hWndRemove, IntPtr hWndNewNext);
+
+            [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+            internal static extern IntPtr SendMessage(IntPtr hwnd, int wMsg, IntPtr wParam, IntPtr lParam);
+
         }
     }
 
-    public sealed class ClipboardChangedEventArgs : EventArgs
+
+    internal sealed class ClipboardChangedEventArgs : EventArgs
     {
-        internal readonly IDataObject DataObject;
-
-        internal ClipboardChangedEventArgs(IDataObject dataObject = null)
+        public ClipboardChangedEventArgs(IDataObject dataObject)
         {
-            if (dataObject is null)
-            {
-                throw new ArgumentNullException(nameof(dataObject));
-            }
-
             DataObject = dataObject;
         }
+
+        public IDataObject DataObject { get; }
     }
 }

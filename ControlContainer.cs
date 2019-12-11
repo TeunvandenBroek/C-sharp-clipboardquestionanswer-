@@ -40,6 +40,7 @@
                 throw new System.ArgumentNullException(nameof(component));
             }
         }
+
         public ControlContainer(ControlContainer obj)
         {
             Components = obj.Components;

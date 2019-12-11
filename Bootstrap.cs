@@ -14,7 +14,7 @@ namespace it
     ///     The bootstrap class is provided to allow the application to run with out a form.
     ///     We can use a form however in the future by adding it to here.
     /// </summary>
-    internal sealed class Bootstrap : IDisposable
+    internal class Bootstrap : IDisposable
     {
         private readonly ClipboardMonitor clipboardMonitor = new ClipboardMonitor();
         private readonly ControlContainer container = new ControlContainer();
@@ -32,19 +32,51 @@ namespace it
                 Visible = true,
             };
 
+
             ConfigureDependancies();
 
             clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
         }
 
+        private bool disposed;
 
         public void Dispose()
         {
-            (serviceProvider as IDisposable)?.Dispose();
-            notifyIcon?.Dispose();
-            container?.Dispose();
-            clipboardMonitor?.Dispose();
+            GC.SuppressFinalize(this);
+            Dispose(true);
         }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+            {
+                return;
+            }
+            disposed = true;
+
+            if (disposing)
+            {
+                
+            }
+            if (serviceProvider != null)
+            {
+                (serviceProvider as IDisposable)?.Dispose();
+                serviceProvider = null;
+            }
+            if (notifyIcon != null)
+            {
+                notifyIcon?.Dispose();
+            }
+            if (container != null)
+            {
+                container?.Dispose();
+            }
+            if (clipboardMonitor != null)
+            {
+                clipboardMonitor?.Dispose();
+            }
+        }
+
 
         private void ConfigureDependancies()
         {
