@@ -8,7 +8,7 @@ namespace it.Actions
     {
         private readonly string[] commands = { "kop of munt", "heads or tails", "random password" };
         private readonly Random random = new Random();
-       
+
         public bool Matches(string clipboardText)
         {
             for (int i = 0; i < commands.Length; i++)
@@ -82,6 +82,11 @@ namespace it.Actions
         public bool Equals(RandomActions other)
         {
             throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as RandomActions);
         }
     }
 }

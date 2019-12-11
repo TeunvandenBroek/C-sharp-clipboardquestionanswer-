@@ -474,6 +474,11 @@ namespace it.Actions
             return description;
         }
 
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as StopwatchActions);
+        }
+
         #endregion Stopwatch Fill Methods
     }
 }

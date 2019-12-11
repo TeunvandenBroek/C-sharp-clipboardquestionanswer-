@@ -444,5 +444,15 @@
         {
             throw new System.NotImplementedException();
         }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as ConvertActions);
+        }
+
+        public override int GetHashCode()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

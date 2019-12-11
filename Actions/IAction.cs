@@ -18,6 +18,11 @@ namespace it.Actions
         {
             throw new NotImplementedException();
         }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as ActionResult);
+        }
     }
 
     internal interface IAction

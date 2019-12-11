@@ -429,5 +429,10 @@ namespace it.Actions
             }
             return actionResult;
         }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as DeviceActions);
+        }
     }
 }

@@ -31,5 +31,15 @@ namespace it.Actions
         {
             throw new NotImplementedException();
         }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as CountdownActions);
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
