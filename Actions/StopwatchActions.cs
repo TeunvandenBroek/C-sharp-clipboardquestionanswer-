@@ -249,7 +249,7 @@ namespace it.Actions
 
                 default:
                     {
-                        throw new Exception("Unexpected Case");
+                        throw new InvalidOperationException("Unexpected Case");
                     }
             }
 
@@ -279,7 +279,7 @@ namespace it.Actions
 
                 default:
                     {
-                        throw new Exception("Unexpected Case");
+                        throw new InvalidOperationException("Unexpected Case");
                     }
             }
 
@@ -310,7 +310,7 @@ namespace it.Actions
 
                 default:
                     {
-                        throw new Exception("Unexpected Case");
+                        throw new InvalidOperationException("Unexpected Case");
                     }
             }
 
@@ -341,7 +341,7 @@ namespace it.Actions
 
                 default:
                     {
-                        throw new Exception("Unexpected Case");
+                        throw new InvalidOperationException("Unexpected Case");
                     }
             }
 
@@ -372,7 +372,7 @@ namespace it.Actions
 
                 default:
                     {
-                        throw new Exception("Unexpected Case");
+                        throw new InvalidOperationException("Unexpected Case");
                     }
             }
 
@@ -403,7 +403,7 @@ namespace it.Actions
 
                 default:
                     {
-                        throw new Exception("Unexpected Case");
+                        throw new InvalidOperationException("Unexpected Case");
                     }
             }
 
@@ -467,7 +467,7 @@ namespace it.Actions
 
                 default:
                     {
-                        throw new Exception("Unexpected Case");
+                        throw new InvalidOperationException("Unexpected Case");
                     }
             }
 

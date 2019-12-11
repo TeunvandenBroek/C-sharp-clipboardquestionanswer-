@@ -19,7 +19,7 @@ namespace it.Actions
 
         ActionResult IAction.TryExecute(string clipboardText)
         {
-            TimeSpan.TryParse(clipboardText.Replace("timer ", string.Empty), CultureInfo.InvariantCulture, out TimeSpan ts);
+            _ = TimeSpan.TryParse(clipboardText.Replace("timer ", string.Empty), CultureInfo.InvariantCulture, out TimeSpan ts);
             ActionResult actionResult = new ActionResult();
             Thread.Sleep((int)ts.TotalMilliseconds);
             actionResult.Title = "Countdown timer";
