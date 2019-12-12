@@ -91,6 +91,7 @@ namespace it
             _ = serviceDescriptors.AddSingleton<IAction, StopwatchActions>();
             _ = serviceDescriptors.AddSingleton<IAction, TimespanActions>();
             _ = serviceDescriptors.AddSingleton<IAction, TimezoneActions>();
+            _ = serviceDescriptors.AddSingleton<IAction, BmiActions>();
             _ = serviceDescriptors.AddSingleton<IAction, MathActions>();
             (serviceProvider as IDisposable)?.Dispose();
             serviceProvider = serviceDescriptors.BuildServiceProvider();
