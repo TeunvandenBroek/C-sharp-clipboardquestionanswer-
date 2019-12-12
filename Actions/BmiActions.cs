@@ -8,7 +8,7 @@ namespace it.Actions
 {
     public sealed class BmiActions : IAction
     {
-        private readonly Regex bmi = new Regex("^(<age>[0-9]+)(?<weight> [0-9]+)kg(?<height>[0-9]+)(?= cm to bmi)");
+        private readonly Regex bmi = new Regex("^(?<age>[0-9]+)years (?<weight>[0-9]+)kg (?<height>[0-9]+)cm(?= to bmi)");
         private IReadOnlyDictionary<(double From, double To), string> BmiToDictionary = new Dictionary<(double From, double To), string>
         {
             {(0, 15),"Very severely underweight"},
