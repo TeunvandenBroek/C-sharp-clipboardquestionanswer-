@@ -5,7 +5,7 @@ namespace it.Actions
     using System.Globalization;
     using System.Threading;
 
-    public sealed class StopwatchActions : IAction, IEquatable<StopwatchActions>
+    public sealed class StopwatchActions : IAction
     {
 
         private string lastClipboard;
@@ -18,12 +18,6 @@ namespace it.Actions
                 stopwatch.Stop();
             }
         }
-
-        public bool Equals(StopwatchActions other)
-        {
-            throw new NotImplementedException();
-        }
-
 
         public bool Matches(string clipboardText)
         {

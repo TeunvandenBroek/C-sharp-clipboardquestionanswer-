@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace it.Actions
 {
-    internal sealed class TryRomanActions : IAction, IEquatable<TryRomanActions>
+    internal sealed class TryRomanActions : IAction
     { 
         public static readonly IReadOnlyDictionary<int, string> NumberRomanDictionary;
 
@@ -95,16 +95,6 @@ namespace it.Actions
             return Equals(obj as TryRomanActions);
         }
 
-        public bool Equals(TryRomanActions other)
-        {
-            return other != null &&
-                   EqualityComparer<Regex>.Default.Equals(roman, other.roman);
-        }
-
-        public override int GetHashCode()
-        {
-            return -218822014 + EqualityComparer<Regex>.Default.GetHashCode(roman);
-        }
 
         public bool Matches(string clipboardText = null)
         {
@@ -130,16 +120,6 @@ namespace it.Actions
             }
 
             return actionResult;
-        }
-
-        public static bool operator ==(TryRomanActions left, TryRomanActions right)
-        {
-            return EqualityComparer<TryRomanActions>.Default.Equals(left, right);
-        }
-
-        public static bool operator !=(TryRomanActions left, TryRomanActions right)
-        {
-            return !(left == right);
         }
     }
 }

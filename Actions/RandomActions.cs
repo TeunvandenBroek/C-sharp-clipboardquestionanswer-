@@ -5,7 +5,7 @@ namespace it.Actions
     using System.Text;
     using System.Threading;
 
-    internal sealed class RandomActions : IAction, IEquatable<RandomActions>
+    internal sealed class RandomActions : IAction
     {
         private readonly string[] commands = { "kop of munt", "heads or tails", "random password" };
         private readonly Random random = new Random();
@@ -80,37 +80,9 @@ namespace it.Actions
             return actionResult;
         }
 
-        public bool Equals(RandomActions other)
-        {
-            throw new NotImplementedException();
-        }
-
         public override bool Equals(object obj)
         {
             return Equals(obj as RandomActions);
-        }
-
-        public override int GetHashCode()
-        {
-            var hashCode = 289468973;
-            hashCode = hashCode * -1521134295 + EqualityComparer<string[]>.Default.GetHashCode(commands);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Random>.Default.GetHashCode(random);
-            return hashCode;
-        }
-
-        public override string ToString()
-        {
-            return base.ToString();
-        }
-
-        public static bool operator ==(RandomActions left, RandomActions right)
-        {
-            return EqualityComparer<RandomActions>.Default.Equals(left, right);
-        }
-
-        public static bool operator !=(RandomActions left, RandomActions right)
-        {
-            return !(left == right);
         }
     }
 }

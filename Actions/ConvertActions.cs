@@ -4,7 +4,7 @@
     using System.Text.RegularExpressions;
     using System.Windows.Forms;
 
-    internal sealed class ConvertActions : ActionBase, System.IEquatable<ConvertActions>
+    internal sealed class ConvertActions : ActionBase
     {
         private readonly Regex unitRegex =
             new Regex("(?<number>^[0-9]+([.,][0-9]{1,3})?)(\\s*)(?<from>[a-z]+[2-3]?) (to|naar) (?<to>[a-z]+[2-3]?)", RegexOptions.Compiled);
@@ -440,24 +440,9 @@
             return actionResult;
         }
 
-        public bool Equals(ConvertActions other)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public override bool Equals(object obj)
         {
             return Equals(obj as ConvertActions);
-        }
-
-        public override int GetHashCode()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override string ToString()
-        {
-            return base.ToString();
         }
     }
 }

@@ -4,7 +4,7 @@ namespace it.Actions
     using System.Globalization;
     using System.Threading;
 
-    internal sealed class CountdownActions : IAction, IEquatable<CountdownActions>
+    internal sealed class CountdownActions : IAction
     {
         public bool Matches(string clipboardText)
         {
@@ -27,24 +27,9 @@ namespace it.Actions
             return actionResult;
         }
 
-        public bool Equals(CountdownActions other)
-        {
-            throw new NotImplementedException();
-        }
-
         public override bool Equals(object obj)
         {
             return Equals(obj as CountdownActions);
-        }
-
-        public override int GetHashCode()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string ToString()
-        {
-            return base.ToString();
         }
     }
 }

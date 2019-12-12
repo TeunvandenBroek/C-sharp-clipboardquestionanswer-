@@ -11,7 +11,7 @@ namespace it.Actions
     using System.Threading;
     using System.Windows.Forms;
 
-    internal sealed class DeviceActions : IAction, IDisposable, IEquatable<DeviceActions>
+    internal sealed class DeviceActions : IAction, IDisposable
     {
         private Process afsluiten;
 
@@ -433,16 +433,6 @@ namespace it.Actions
         public override bool Equals(object obj)
         {
             return Equals(obj as DeviceActions);
-        }
-
-        public override int GetHashCode()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string ToString()
-        {
-            return base.ToString();
         }
     }
 }
