@@ -7,7 +7,7 @@ namespace it.Actions
     using System.Text.RegularExpressions;
     using System.Windows.Forms;
 
-    public sealed class MathActions : IAction, IEquatable<MathActions>
+    public sealed class MathActions : IAction
     {
         private readonly IReadOnlyDictionary<string, Func<double, double, double>> binaryOperators =
             new Dictionary<string, Func<double, double, double>>(
@@ -28,21 +28,6 @@ namespace it.Actions
         public override bool Equals(object obj)
         {
             return Equals(obj as MathActions);
-        }
-
-        public bool Equals(MathActions other)
-        {
-            return other != null &&
-                   EqualityComparer<IReadOnlyDictionary<string, Func<double, double, double>>>.Default.Equals(binaryOperators, other.binaryOperators) &&
-                   EqualityComparer<Regex>.Default.Equals(mathRegex, other.mathRegex);
-        }
-
-        public override int GetHashCode()
-        {
-            var hashCode = 1935864899;
-            hashCode = hashCode * -1521134295 + EqualityComparer<IReadOnlyDictionary<string, Func<double, double, double>>>.Default.GetHashCode(binaryOperators);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Regex>.Default.GetHashCode(mathRegex);
-            return hashCode;
         }
 
         public bool Matches(string clipboardText)
@@ -84,16 +69,6 @@ namespace it.Actions
             actionResult.Description = answer.ToString(CultureInfo.CurrentCulture);
 
             return actionResult;
-        }
-
-        public static bool operator ==(MathActions left, MathActions right)
-        {
-            return EqualityComparer<MathActions>.Default.Equals(left, right);
-        }
-
-        public static bool operator !=(MathActions left, MathActions right)
-        {
-            return !(left == right);
         }
     }
 } 
