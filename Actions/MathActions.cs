@@ -48,7 +48,7 @@ namespace it.Actions
             Match match = mathRegex.Match(clipboardText.Replace(',', '.'));
             IReadOnlyList<string> operators = (from Capture capture
                        in match.Groups["operator"].Captures
-                                      select capture.Value).ToList();
+                                               select capture.Value).ToList();
 
             double lhs = double.Parse(match.Groups["lhs"].Value, CultureInfo.InvariantCulture);
 
