@@ -6,7 +6,8 @@
 
     internal partial class Countries
     {
-        private static readonly Lazy<IReadOnlyDictionary<UtcOffset, string[]>> countriesByUtcOffset = new Lazy<IReadOnlyDictionary<UtcOffset, string[]>>(() => new Dictionary<UtcOffset, string[]>
+        private static readonly Lazy<IReadOnlyDictionary<UtcOffset, string[]>> 
+        countriesByUtcOffset = new Lazy<IReadOnlyDictionary<UtcOffset, string[]>>(() => new Dictionary<UtcOffset, string[]>
         {
             [UtcOffset.UtcMinusTwelve] = new[]
             {
