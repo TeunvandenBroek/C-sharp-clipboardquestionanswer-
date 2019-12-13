@@ -160,7 +160,8 @@
 
         internal static IReadOnlyDictionary<UtcOffset, string[]> CountriesByUtcOffset => countriesByUtcOffset;
 
-        public static class Offset
+    
+        public readonly struct Offset
         {
             public const byte Hours = 4;
 
