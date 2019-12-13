@@ -9,6 +9,7 @@ namespace it.Actions
 
     public sealed class MathActions : IAction
     {
+
         private readonly IReadOnlyDictionary<string, Func<double, double, double>> binaryOperators =
             new Dictionary<string, Func<double, double, double>>(
                 StringComparer.Ordinal)
@@ -24,11 +25,13 @@ namespace it.Actions
 
         private readonly Regex mathRegex =
             new Regex(@"^(?<lhs>\d+(?:[,.]{1}\d)*)(([ ]*(?<operator>[+\-\:x\%\*/])[ ]*(?<rhs>\d+(?:[,.]{1}\d)*)+)+)");
+        
 
         public override bool Equals(object obj)
         {
             return Equals(obj as MathActions);
         }
+
 
         public bool Matches(string clipboardText)
         {
@@ -50,7 +53,7 @@ namespace it.Actions
                        in match.Groups["operator"].Captures
                                                select capture.Value).ToList();
 
-            double lhs = double.Parse(match.Groups["lhs"].Value, CultureInfo.InvariantCulture);
+            double lhs; double.TryParse(match.Groups["lhs"].Value, out lhs);
 
             double[] rhss = (from Capture capture
                     in match.Groups["rhs"].Captures

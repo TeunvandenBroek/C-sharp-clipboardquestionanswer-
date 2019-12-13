@@ -47,6 +47,11 @@ namespace it.Actions
 
         public static int From(string roman)
         {
+            if (string.IsNullOrWhiteSpace(roman))
+            {
+                throw new ArgumentException("message", nameof(roman));
+            }
+
             int total = 0;
 
             int current, previous;
@@ -73,11 +78,10 @@ namespace it.Actions
 
             return total;
         }
-
+       
         public static string To(int number)
         {
-            StringBuilder roman = new StringBuilder();
-
+            StringBuilder roman = new StringBuilder(1);
             foreach (KeyValuePair<int, string> item in NumberRomanDictionary)
             {
                 while (number >= item.Key)

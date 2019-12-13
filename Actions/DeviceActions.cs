@@ -70,12 +70,13 @@ namespace it.Actions
 
         public bool Matches(string clipboardText = null)
         {
-            foreach (string command in commands)
+            for (int i = 0; i < commands.Length; i++)
             {
+                string command = commands[i];
                 if (command.Equals(clipboardText, StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
-                }
+                } 
             }
 
             return isCountingWords;
@@ -232,8 +233,10 @@ namespace it.Actions
                 case "mac address":
                     {
                         string sMacAddress = string.Empty;
-                        foreach (NetworkInterface adapter in NetworkInterface.GetAllNetworkInterfaces())
+                        NetworkInterface[] array = NetworkInterface.GetAllNetworkInterfaces();
+                        for (int i = 0; i < array.Length; i++)
                         {
+                            NetworkInterface adapter = array[i]; 
                             if (string.IsNullOrEmpty(sMacAddress))
                             {
                                 _ = adapter.GetPhysicalAddress().ToString();
@@ -341,7 +344,7 @@ namespace it.Actions
                                         }
                                     default:
                                         {
-                                            return actionResult;
+                                            return  actionResult;
                                         }
                                 }
                             }
@@ -389,8 +392,9 @@ namespace it.Actions
                             if (!string.IsNullOrEmpty(externalIp))
                             {
                                 IPHostEntry iPHostEntry = Dns.GetHostEntry(Dns.GetHostName());
-                                foreach (IPAddress ipAddress in iPHostEntry.AddressList)
-                                {
+                                for (int i = 0; i < iPHostEntry.AddressList.Length; i++)
+                                { 
+                                    IPAddress ipAddress = iPHostEntry.AddressList[i];
                                     if (ipAddress.AddressFamily == AddressFamily.InterNetwork)
                                     {
                                         externalIpAddress = externalIp;

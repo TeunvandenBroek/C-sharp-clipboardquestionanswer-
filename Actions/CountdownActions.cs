@@ -1,6 +1,7 @@
 namespace it.Actions
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.Threading;
 
@@ -15,7 +16,7 @@ namespace it.Actions
 
             return clipboardText.StartsWith("timer", StringComparison.Ordinal) && TimeSpan.TryParse(clipboardText.Replace("timer ", string.Empty), out TimeSpan _);
         }
-
+        
 
         ActionResult IAction.TryExecute(string clipboardText)
         {

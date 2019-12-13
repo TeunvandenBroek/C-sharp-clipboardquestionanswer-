@@ -1,6 +1,7 @@
 namespace it.Actions
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
     using System.Threading;
@@ -18,7 +19,6 @@ namespace it.Actions
                 stopwatch.Stop();
             }
         }
-
         public bool Matches(string clipboardText)
         {
             if (clipboardText is null)
@@ -39,6 +39,7 @@ namespace it.Actions
             if (!string.Equals(clipboardText, lastClipboard, StringComparison.Ordinal))
             {
                 lastClipboard = clipboardText;
+                GC.Collect();
             }
 
             switch (clipboardText)

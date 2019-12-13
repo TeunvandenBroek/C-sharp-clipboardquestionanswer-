@@ -22,6 +22,7 @@ namespace it.Actions
             }
             return false;
         }
+       
 
 
         ActionResult IAction.TryExecute(string clipboardText)
