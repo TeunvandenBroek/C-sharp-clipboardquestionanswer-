@@ -90,6 +90,7 @@ namespace it
             _ = serviceDescriptors.AddSingleton<IAction, RandomActions>();
             _ = serviceDescriptors.AddSingleton<IAction, StopwatchActions>();
             _ = serviceDescriptors.AddSingleton<IAction, TimespanActions>();
+            _ = serviceDescriptors.AddSingleton<IAction, numberToHex>();
             _ = serviceDescriptors.AddSingleton<IAction, TimezoneActions>();
             _ = serviceDescriptors.AddSingleton<IAction, BmiActions>();
             _ = serviceDescriptors.AddSingleton<IAction, MathActions>();
@@ -104,7 +105,7 @@ namespace it
         }
 
         private void ClipboardMonitor_ClipboardChanged(object sender, ClipboardChangedEventArgs e)
-        {
+        { 
             // retrieve the text from the clipboard
             if (e.DataObject.GetData(DataFormats.Text) is string clipboardText)
             {
@@ -140,12 +141,13 @@ namespace it
                         clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
                     }
                     return;
-                }
+                } 
 
                 if (clipboardText.Length > 2)
                 {
-                    foreach (Question question in questionList)
+                    for (int i = 0; i < questionList.Count; i++)
                     {
+                        Question question = questionList[i];
                         if (question.Text.Contains(clipboardText))
                         {
                             ProcessResult(new ActionResult(question.Text, question.Answer), clipboardText);

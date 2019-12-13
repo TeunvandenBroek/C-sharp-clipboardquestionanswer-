@@ -6,8 +6,7 @@ namespace it
 {
     public static class Questions
     {
-        private static readonly IReadOnlyDictionary<string, string> QuestionDict = new Dictionary<string, string>
-        (StringComparer.CurrentCultureIgnoreCase)
+        private static readonly Lazy<IReadOnlyDictionary<string, string>> QuestionDict = new Lazy<IReadOnlyDictionary<string, string>>(() => new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
             //Add question/answer to list
             //hoofdstuk 3 it
@@ -1035,17 +1034,16 @@ namespace it
             ["Kristel legt plakplinten langs de muur van haar woonkamer."] = "23,70",
 
             ["straat"] = "b (het meest rechtsonder",
-        };
+        });
 
 
         public static IReadOnlyDictionary<string, string> GetQuestionDict()
         {
             return GetQuestionDict1();
         }
-
         public static IReadOnlyDictionary<string, string> GetQuestionDict1()
         {
-            return QuestionDict;
+            return QuestionDict.Value;
         }
 
         internal static IReadOnlyList<Question> LoadQuestions()

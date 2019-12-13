@@ -1,4 +1,6 @@
-﻿namespace it
+﻿using System;
+
+namespace it
 {
     internal static partial class Countries
     {

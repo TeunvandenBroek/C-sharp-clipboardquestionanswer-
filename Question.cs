@@ -1,4 +1,7 @@
-﻿namespace it
+﻿using System;
+using System.Collections.Generic;
+
+namespace it
 {
     public sealed class Question
     {
@@ -10,5 +13,6 @@
 
         public string Text { get; private set; }
         public string Answer { get; private set; }
+        
     }
 }

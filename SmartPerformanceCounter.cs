@@ -6,7 +6,6 @@
 
     public sealed partial class SmartPerformanceCounter : IDisposable
     {
-
         private readonly object @lock = new object();
 
         private long cpuCounterLastAccessedTimestamp;

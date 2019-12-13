@@ -73,6 +73,9 @@
     <StartupObject>it.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AdvancedStringBuilder, Version=0.1.0.0, Culture=neutral, PublicKeyToken=e818a2fc08933ddb, processorArchitecture=MSIL">
+      <HintPath>packages\AdvancedStringBuilder.0.1.0\lib\net45\AdvancedStringBuilder.dll</HintPath>
+    </Reference>
     <Reference Include="AutoParse, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\AutoParse.1.0.0\lib\net40\AutoParse.dll</HintPath>
     </Reference>
@@ -81,6 +84,9 @@
     </Reference>
     <Reference Include="BeetleX.FastHttpApi, Version=1.5.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\BeetleX.FastHttpApi.1.5.6\lib\netstandard2.0\BeetleX.FastHttpApi.dll</HintPath>
+    </Reference>
+    <Reference Include="CachedQuickLz, Version=1.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\CachedQuickLz.1.3.1\lib\net46\CachedQuickLz.dll</HintPath>
     </Reference>
     <Reference Include="CleanCode.NET.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=07e642e5e3acaab2, processorArchitecture=MSIL">
       <HintPath>packages\SwitchAnalyzer.0.6.10\lib\netstandard1.3\CleanCode.NET.Common.dll</HintPath>
@@ -97,6 +103,9 @@
     <Reference Include="Essentions, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Essentions.1.2.0\lib\net45\Essentions.dll</HintPath>
     </Reference>
+    <Reference Include="ForeachGrid.Linq, Version=1.2.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\ForeachGrid.Linq.1.2.4\lib\ForeachGrid.Linq.dll</HintPath>
+    </Reference>
     <Reference Include="FSharp.Core, Version=4.7.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\FSharp.Core.4.7.0\lib\net45\FSharp.Core.dll</HintPath>
     </Reference>
@@ -105,6 +114,9 @@
     </Reference>
     <Reference Include="Linq.Expression.Optimizer, Version=1.0.6.0, Culture=neutral, PublicKeyToken=34b6af2337893e15, processorArchitecture=MSIL">
       <HintPath>packages\Linq.Expression.Optimizer.1.0.13\lib\net45\Linq.Expression.Optimizer.dll</HintPath>
+    </Reference>
+    <Reference Include="MadReflection.Rupture, Version=0.1.1.0, Culture=neutral, PublicKeyToken=43f7b630156f0b36, processorArchitecture=MSIL">
+      <HintPath>packages\MadReflection.Rupture.0.1.1\lib\net45\MadReflection.Rupture.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.1.1.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
@@ -155,6 +167,9 @@
     </Reference>
     <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="NCode.ArrayLeases, Version=1.0.0.0, Culture=neutral, PublicKeyToken=145a7f8fbb17f9f4, processorArchitecture=MSIL">
+      <HintPath>packages\NCode.ArrayLeases.1.0.0\lib\net45\NCode.ArrayLeases.dll</HintPath>
     </Reference>
     <Reference Include="New.Instance, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\New.Instance.0.1.0\lib\net40-client\New.Instance.dll</HintPath>
@@ -325,6 +340,7 @@
     <Compile Include="Actions\CountdownActions.cs" />
     <Compile Include="Actions\IAction.cs" />
     <Compile Include="Actions\MathActions.cs" />
+    <Compile Include="Actions\numberToHex.cs" />
     <Compile Include="Actions\RandomActions.cs" />
     <Compile Include="Actions\StopwatchActions.cs" />
     <Compile Include="Actions\TimespanActions.cs" />
@@ -338,6 +354,7 @@
     <Compile Include="ControlContainer.RecordConstructor.cs" />
     <Compile Include="Countries.cs" />
     <Compile Include="Actions\DeviceActions.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Question.cs" />
@@ -394,6 +411,7 @@
     <Analyzer Include="packages\ExceptionAnalyzer.1.0.5\tools\analyzers\ExceptionAnalyzer.dll" />
     <Analyzer Include="packages\GCop.Conditional.2.6.1\analyzers\dotnet\cs\GCop.Conditional.dll" />
     <Analyzer Include="packages\GCop.String.2.6.1\analyzers\dotnet\cs\GCop.String.dll" />
+    <Analyzer Include="packages\LazyMixinAnalyzer.2.3.0.0\tools\analyzers\LazyMixinAnalyzer.dll" />
     <Analyzer Include="packages\Meziantou.Analyzer.1.0.284\analyzers\dotnet\cs\Meziantou.Analyzer.dll" />
     <Analyzer Include="packages\Microsoft.CodeAnalysis.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="packages\Microsoft.CodeAnalysis.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
@@ -409,6 +427,7 @@
     <Analyzer Include="packages\Microsoft.VisualStudio.Threading.Analyzers.16.4.33\analyzers\cs\Microsoft.VisualStudio.Threading.Analyzers.CodeFixes.dll" />
     <Analyzer Include="packages\Microsoft.VisualStudio.Threading.Analyzers.16.4.33\analyzers\cs\Microsoft.VisualStudio.Threading.Analyzers.dll" />
     <Analyzer Include="packages\MoqAnalyzer.1.0.5922.38414\analyzers\dotnet\cs\MoqAnalyzer.dll" />
+    <Analyzer Include="packages\OzCode.Analyzers.AddTryCatchAnalyzer.1.4.6337.20200\analyzers\dotnet\cs\MefImportExceptionAnalyzer.dll" />
     <Analyzer Include="packages\RecordConstructorGenerator.3.3.0\tools\analyzers\C#\RecordConstructorGenerator.dll" />
     <Analyzer Include="packages\RecordConstructorGenerator.3.3.0\tools\analyzers\C#\System.Composition.AttributedModel.dll" />
     <Analyzer Include="packages\RecordConstructorGenerator.3.3.0\tools\analyzers\C#\System.Composition.Convention.dll" />
@@ -438,4 +457,5 @@
   </Target>
   <Import Project="packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
   <Import Project="packages\Microsoft.VisualStudio.Threading.Analyzers.16.4.33\build\Microsoft.VisualStudio.Threading.Analyzers.targets" Condition="Exists('packages\Microsoft.VisualStudio.Threading.Analyzers.16.4.33\build\Microsoft.VisualStudio.Threading.Analyzers.targets')" />
+  <ProjectExtensions />
 </Project>
