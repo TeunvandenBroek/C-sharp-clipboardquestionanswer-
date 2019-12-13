@@ -60,6 +60,11 @@ namespace it.Actions
 
         public bool Equals(DeviceActions other)
         {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
             throw new NotImplementedException();
         }
 

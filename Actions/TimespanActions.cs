@@ -1,7 +1,6 @@
 namespace it.Actions
 {
     using System;
-    using System.Collections.Generic;
     using System.Globalization;
 
     public sealed class TimespanActions : IAction

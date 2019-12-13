@@ -7,7 +7,7 @@
     internal sealed class ConvertActions : ActionBase
     {
         private readonly Regex unitRegex =
-            new Regex("(?<number>^[0-9]+([.,][0-9]{1,3})?)(\\s*)(?<from>[a-z]+[2-3]?) (to|naar) (?<to>[a-z]+[2-3]?)", RegexOptions.Compiled);
+            new Regex("(?<number>^[0-9]+([.,][0-9]{1,3})?)(\\s*)(?<from>[a-z]+[2-3]?) (to|naar) (?<to>[a-z]+[2-3]?)");
 
         public override bool Matches(string clipboardText = null)
         {

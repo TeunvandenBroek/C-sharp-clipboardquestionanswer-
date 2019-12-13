@@ -8,13 +8,13 @@ namespace it.Actions
 {
     public sealed class BmiActions : IAction
     {
-        private readonly Regex bmi = new Regex("^(?<age>[0-9]+)years (?<weight>[0-9]+)kg (?<height>[0-9]+)cm(?= to bmi)");
-        private readonly IReadOnlyDictionary<(double From, double To), string> BmiToDictionary = new Dictionary<(double From, double To), string>
+        private readonly Regex bmi = new Regex("^(?<age>[0-9]+)(years|jaar) (?<weight>[0-9]+)kg (?<height>[0-9]+)cm(?= to bmi)");
+        private readonly IReadOnlyDictionary<(decimal From, decimal To), string> BmiToDictionary = new Dictionary<(decimal From, decimal To), string>
         {
             {(0, 15),"Very severely underweight"},
             {(15, 16),"Severely underweight"},
-            {(16, 18.5),"Underweight"},
-            {(18.5, 25),"Normal"},
+            {(16, 18.5m),"Underweight"},
+            {(18.5m, 25),"Normal"},
             {(25, 30),"Overweight"},
             {(30, 35),"Moderately Obese"},
             {(35, 40),"Severly Obese"},
@@ -36,11 +36,12 @@ namespace it.Actions
             Match match = bmi.Match(clipboardText);
             if (match.Success)
             {
-                int age = int.Parse(match.Groups["age"].Value, CultureInfo.InvariantCulture);
-                int weight = int.Parse(match.Groups["weight"].Value, CultureInfo.InvariantCulture);
-                int height = int.Parse(match.Groups["height"].Value, CultureInfo.InvariantCulture);
-                var bmi = weight / Math.Pow(height / 100, 2);
-                var bmiDescription = BmiToDictionary.First(kvp => kvp.Key.From <= bmi && bmi < kvp.Key.To).Value;
+                decimal age = decimal.Parse(match.Groups["age"].Value, CultureInfo.InvariantCulture);
+                decimal weight = decimal.Parse(match.Groups["weight"].Value, CultureInfo.InvariantCulture);
+                double height = double.Parse(match.Groups["height"].Value, CultureInfo.InvariantCulture);
+                decimal bmi = (decimal)Math.Pow(height / 100, 2);
+                bmi = Decimal.Round(Decimal.Divide(weight, bmi), 2);
+                string bmiDescription = BmiToDictionary.First(kvp => kvp.Key.From <= bmi && bmi < kvp.Key.To).Value;
                 actionResult.Title = "Calculate bmi";
                 actionResult.Description = $"{bmi}, {bmiDescription}";
             }
