@@ -25,7 +25,7 @@ namespace it.Actions
             Match match = hex.Match(clipboardText);
             if (match.Success)
             {
-                int number = int.Parse(match.Groups["hex"].Value, CultureInfo.InvariantCulture);
+                int number = int.Parse(match.Groups["number"].Value, CultureInfo.InvariantCulture);
                 actionResult.Title = "Calculate hex";
                 actionResult.Description = $"{clipboardText}, {hex}";
             }
