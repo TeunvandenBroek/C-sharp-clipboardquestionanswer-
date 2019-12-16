@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace it.Actions
 {
-    public sealed class BmiActions : IAction
+    public sealed class BmiActions : IAction 
     {
         private readonly Regex bmi = new Regex("^(?<age>[0-9]+)(years|jaar) (?<weight>[0-9]+)kg (?<height>[0-9]+)cm(?= to bmi)");
         private readonly IReadOnlyDictionary<(decimal From, decimal To), string> BmiToDictionary = new Dictionary<(decimal From, decimal To), string>

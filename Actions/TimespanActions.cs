@@ -14,6 +14,7 @@ namespace it.Actions
             "MM.dd.yyyy",
             "MM-dd-yyyy",
         };
+
         private bool isUsingTimespan;
 
         private DateTimeOffset? prevDate;

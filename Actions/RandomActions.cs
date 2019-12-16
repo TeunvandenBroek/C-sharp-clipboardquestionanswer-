@@ -23,8 +23,6 @@ namespace it.Actions
             return false;
         }
        
-
-
         ActionResult IAction.TryExecute(string clipboardText)
         {
             System.Globalization.CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
