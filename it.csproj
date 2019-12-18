@@ -73,9 +73,6 @@
     <StartupObject>it.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AdvancedStringBuilder, Version=0.1.0.0, Culture=neutral, PublicKeyToken=e818a2fc08933ddb, processorArchitecture=MSIL">
-      <HintPath>packages\AdvancedStringBuilder.0.1.0\lib\net45\AdvancedStringBuilder.dll</HintPath>
-    </Reference>
     <Reference Include="AutoParse, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\AutoParse.1.0.0\lib\net40\AutoParse.dll</HintPath>
     </Reference>
@@ -88,11 +85,14 @@
     <Reference Include="CachedQuickLz, Version=1.3.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\CachedQuickLz.1.3.1\lib\net46\CachedQuickLz.dll</HintPath>
     </Reference>
+    <Reference Include="ChannelAdam.Disposing, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\ChannelAdam.Disposing.2.0.0\lib\netstandard1.3\ChannelAdam.Disposing.dll</HintPath>
+    </Reference>
     <Reference Include="CleanCode.NET.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=07e642e5e3acaab2, processorArchitecture=MSIL">
       <HintPath>packages\SwitchAnalyzer.0.6.10\lib\netstandard1.3\CleanCode.NET.Common.dll</HintPath>
     </Reference>
-    <Reference Include="CodeBenchmark, Version=0.6.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\CodeBenchmark.0.6.2\lib\netstandard2.0\CodeBenchmark.dll</HintPath>
+    <Reference Include="CommandLine, Version=2.4.3.0, Culture=neutral, PublicKeyToken=de6f01bd326f8c32, processorArchitecture=MSIL">
+      <HintPath>packages\CommandLineParser.2.4.3\lib\netstandard2.0\CommandLine.dll</HintPath>
     </Reference>
     <Reference Include="DependentTaskRunner, Version=1.0.6370.25830, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\DependentTaskRunner.1.0.6370.25830\lib\net452\DependentTaskRunner.dll</HintPath>
@@ -114,6 +114,9 @@
     </Reference>
     <Reference Include="Linq.Expression.Optimizer, Version=1.0.6.0, Culture=neutral, PublicKeyToken=34b6af2337893e15, processorArchitecture=MSIL">
       <HintPath>packages\Linq.Expression.Optimizer.1.0.13\lib\net45\Linq.Expression.Optimizer.dll</HintPath>
+    </Reference>
+    <Reference Include="LiteStringBuilder, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\LiteStringBuilder.1.0.3\lib\net46\LiteStringBuilder.dll</HintPath>
     </Reference>
     <Reference Include="MadReflection.Rupture, Version=0.1.1.0, Culture=neutral, PublicKeyToken=43f7b630156f0b36, processorArchitecture=MSIL">
       <HintPath>packages\MadReflection.Rupture.0.1.1\lib\net45\MadReflection.Rupture.dll</HintPath>
@@ -139,6 +142,9 @@
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis.Workspaces, Version=3.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.CodeAnalysis.Workspaces.Common.3.4.0\lib\netstandard2.0\Microsoft.CodeAnalysis.Workspaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.DotNet.PlatformAbstractions, Version=2.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.DotNet.PlatformAbstractions.2.1.0\lib\net45\Microsoft.DotNet.PlatformAbstractions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Caching.Abstractions, Version=3.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Extensions.Caching.Abstractions.3.1.0\lib\netstandard2.0\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
@@ -167,6 +173,9 @@
     </Reference>
     <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Win32.Registry, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Win32.Registry.4.5.0\lib\net461\Microsoft.Win32.Registry.dll</HintPath>
     </Reference>
     <Reference Include="NCode.ArrayLeases, Version=1.0.0.0, Culture=neutral, PublicKeyToken=145a7f8fbb17f9f4, processorArchitecture=MSIL">
       <HintPath>packages\NCode.ArrayLeases.1.0.0\lib\net45\NCode.ArrayLeases.dll</HintPath>
@@ -272,6 +281,9 @@
       <HintPath>packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security.AccessControl, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Security.AccessControl.4.5.0\lib\net461\System.Security.AccessControl.dll</HintPath>
+    </Reference>
     <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
       <Private>True</Private>
@@ -281,6 +293,9 @@
       <HintPath>packages\System.Security.Cryptography.X509Certificates.4.3.2\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
       <Private>True</Private>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Principal.Windows, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Security.Principal.Windows.4.5.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
     </Reference>
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Text.Encoding.CodePages, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -293,6 +308,11 @@
     </Reference>
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Threading.Tasks.Extensions.4.5.3\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Thread, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Threading.Thread.4.3.0\lib\net46\System.Threading.Thread.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
@@ -335,6 +355,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\Benchmark.cs" />
     <Compile Include="Actions\BmiActions.cs" />
     <Compile Include="Actions\ConvertActions.cs" />
     <Compile Include="Actions\CountdownActions.cs" />
@@ -345,6 +366,7 @@
     <Compile Include="Actions\StopwatchActions.cs" />
     <Compile Include="Actions\TimespanActions.cs" />
     <Compile Include="Actions\TimezoneActions.cs" />
+    <Compile Include="Actions\tryBinary.cs" />
     <Compile Include="Actions\TryRomanActions.cs" />
     <Compile Include="Bootstrap.cs" />
     <Compile Include="ClipboardMonitor.cs">
@@ -354,7 +376,6 @@
     <Compile Include="ControlContainer.RecordConstructor.cs" />
     <Compile Include="Countries.cs" />
     <Compile Include="Actions\DeviceActions.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Question.cs" />

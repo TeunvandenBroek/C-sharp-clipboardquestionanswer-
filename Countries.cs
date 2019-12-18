@@ -1,17 +1,16 @@
 ﻿namespace it
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
 
-    internal partial class Countries
+    internal static partial class Countries
     {
-        private static readonly Lazy<IReadOnlyDictionary<UtcOffset, string[]>> 
-        countriesByUtcOffset = new Lazy<IReadOnlyDictionary<UtcOffset, string[]>>(() => new Dictionary<UtcOffset, string[]>
+
+        private static readonly IReadOnlyDictionary<UtcOffset, string[]> countriesByUtcOffset = new Dictionary<UtcOffset, string[]>
         {
             [UtcOffset.UtcMinusTwelve] = new[]
             {
-                "baker", "howland"
+                "baker","howland"
             },
             [UtcOffset.UtcMinusEleven] = new[]
             {
@@ -153,13 +152,12 @@
             {
                  "samoa", "tokelau", "tonga"
             },
-        });
+        };
+
         public static IReadOnlyDictionary<string, UtcOffset> UtcOffsetByCountry { get; } = CountriesByUtcOffset
-        .SelectMany(x => x.Value.Select(c => (Offset: x.Key, Country: c)))
-        .ToDictionary(x => x.Country, x => x.Offset, System.StringComparer.Ordinal);
-
-        internal static IReadOnlyDictionary<UtcOffset, string[]> CountriesByUtcOffset => countriesByUtcOffset.Value;
-
+                .SelectMany(x => x.Value.Select(c => (Offset: x.Key, Country: c)))
+             .ToDictionary(x => x.Country, x => x.Offset, System.StringComparer.Ordinal);
+        internal static IReadOnlyDictionary<UtcOffset, string[]> CountriesByUtcOffset => countriesByUtcOffset;
 
         public static class Offset
         {

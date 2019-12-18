@@ -40,7 +40,6 @@ namespace it
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             bootstrap = new Bootstrap();
-            Bootstrap.Startup();
             Application.Run();
         }
     }

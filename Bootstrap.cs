@@ -8,6 +8,9 @@ namespace it
     using System.Drawing;
     using System.Linq;
     using System.Reflection;
+    using System.Text;
+    using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
     using System.Windows.Forms;
 
     /// <summary>
@@ -39,6 +42,7 @@ namespace it
         }
 
         private bool disposed;
+
 
         public void Dispose()
         {
@@ -93,15 +97,13 @@ namespace it
             _ = serviceDescriptors.AddSingleton<IAction, numberToHex>();
             _ = serviceDescriptors.AddSingleton<IAction, TimezoneActions>();
             _ = serviceDescriptors.AddSingleton<IAction, BmiActions>();
+            _ = serviceDescriptors.AddSingleton<IAction, tryBinary>();
             _ = serviceDescriptors.AddSingleton<IAction, MathActions>();
             (serviceProvider as IDisposable)?.Dispose();
             serviceProvider = serviceDescriptors.BuildServiceProvider();
         }
-
-
-        internal static void Startup()
+        internal void Startup(string clipboardText)
         {
-            // monitor the clipboard
         }
 
         private void ClipboardMonitor_ClipboardChanged(object sender, ClipboardChangedEventArgs e)
@@ -141,7 +143,7 @@ namespace it
                         clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
                     }
                     return;
-                } 
+                }
 
                 if (clipboardText.Length > 2)
                 {

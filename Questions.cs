@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace it
 {
-    public static class Questions
+    internal class Questions
     {
-        private static readonly Lazy<IReadOnlyDictionary<string, string>> QuestionDict = new Lazy<IReadOnlyDictionary<string, string>>(() => new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        private static IReadOnlyDictionary<string, string> questionDict = new Dictionary<string, string>
+        (System.StringComparer.Ordinal)
         {
             //Add question/answer to list
             //hoofdstuk 3 it
@@ -1033,22 +1033,14 @@ namespace it
 
             ["Kristel legt plakplinten langs de muur van haar woonkamer."] = "23,70",
 
-            ["straat"] = "b (het meest rechtsonder",
-        });
+            ["straat"] = "b (het meest rechtsonder"
+        };
 
 
-        public static IReadOnlyDictionary<string, string> GetQuestionDict()
-        {
-            return GetQuestionDict1();
-        }
-        public static IReadOnlyDictionary<string, string> GetQuestionDict1()
-        {
-            return QuestionDict.Value;
-        }
 
         internal static IReadOnlyList<Question> LoadQuestions()
         {
-            return GetQuestionDict().Select(item => new Question(item.Key, item.Value)).ToList();
+            return questionDict.Select(item => new Question(item.Key, item.Value)).ToList();
         }
     }
 }
