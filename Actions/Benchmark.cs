@@ -1,28 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using it;
 
 namespace it.Actions
 {
-    public class Benchmark : IDisposable
+    public class Benchmark
     {
-        private readonly Stopwatch timer = new Stopwatch();
-        private readonly string benchmarkName;
-
-        public Benchmark(string benchmarkName)
+        public void RunTheMethod(Action action)
         {
-            this.benchmarkName = benchmarkName;
-            timer.Start();
-        }
+            // Create new stopwatch.
+            Stopwatch stopwatch = new Stopwatch();
 
-        public void Dispose()
-        {
-            timer.Stop();
-            Console.WriteLine($"{benchmarkName} {timer.Elapsed}");
+            // Begin timing.
+            stopwatch.Start();
+
+            // Do something.
+            for (int i = 0; i < 10; i++)
+            {
+                action();
+            }
+
+            // Stop timing.
+            stopwatch.Stop();
+            // Write result.
+            Console.WriteLine("Total time: {0}", stopwatch.Elapsed.TotalMilliseconds);
+            Console.WriteLine("Avg time: {0}", stopwatch.Elapsed.TotalMilliseconds / 10.0);
         }
     }
 }

@@ -8,28 +8,28 @@ using System.Threading.Tasks;
 
 namespace it.Actions
 {
-    public sealed class numberToHex : IAction
+    internal sealed class tryBinary : IAction
     {
-        private readonly Regex hex = new Regex("(?<number>^[0-9]+([.,][0-9]{1,3})?)(\\s*)(?= to hex)");
+        private readonly Regex binary = new Regex("(?<number>^[0-9]+([.,][0-9]{1,3})?)(\\s*)(?= to binary)");
 
-        public bool Matches(string clipboardText = null)
+        public bool Matches(string clipboardText)
         {
             if (string.IsNullOrWhiteSpace(clipboardText))
             {
                 throw new ArgumentException("message", nameof(clipboardText));
             }
-            return clipboardText.EndsWith(" to hex", StringComparison.Ordinal);
+            return clipboardText.EndsWith(" to binary", StringComparison.Ordinal);
         }
         public ActionResult TryExecute(string clipboardText = null)
         {
             ActionResult actionResult = new ActionResult();
-            Match match = hex.Match(clipboardText);
+            Match match = binary.Match(clipboardText);
             if (match.Success)
             {
                 int number = int.Parse(match.Groups["number"].Value, CultureInfo.InvariantCulture);
-                string hex = number.ToString("X");
-                actionResult.Title = "Calculate hex";
-                actionResult.Description = $"{clipboardText}, {hex}";
+                string binary = Convert.ToString(number, 2);
+                actionResult.Title = "Calculate binary";
+                actionResult.Description = $"{clipboardText}, {binary}";
             }
             return actionResult;
 

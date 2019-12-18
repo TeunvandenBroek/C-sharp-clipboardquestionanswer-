@@ -10,8 +10,8 @@ namespace it.Actions
     public sealed class MathActions : IAction
     {
         private readonly IReadOnlyDictionary<string, Func<double, double, double>> binaryOperators =
-            new Dictionary<string, Func<double, double, double>>(
-                StringComparer.Ordinal)
+        new Dictionary<string, Func<double, double, double>>(
+        StringComparer.Ordinal)
                 {
                     { "+", (a, b) => a + b },
                     { "x", (a, b) => a * b },
@@ -23,7 +23,7 @@ namespace it.Actions
                 };
 
         private readonly Regex mathRegex =
-            new Regex(@"^(?<lhs>\d+(?:[,.]{1}\d)*)(([ ]*(?<operator>[+\-\:x\%\*/])[ ]*(?<rhs>\d+(?:[,.]{1}\d)*)+)+)");
+            new Regex(@"^(?<lhs>\d+(?:[,.]{1}\d+)*)(([ ]*(?<operator>[+\-\:x\%\*/])[ ]*(?<rhs>\d+(?:[,.]{1}\d+)*)+)+)");
 
         public override bool Equals(object obj)
         {
@@ -41,8 +41,7 @@ namespace it.Actions
             return match.Success;
         }
         public ActionResult TryExecute(string clipboardText)
-        {
-
+        { 
             ActionResult actionResult = new ActionResult(clipboardText);
 
             Match match = mathRegex.Match(clipboardText.Replace(',', '.'));
@@ -65,9 +64,9 @@ namespace it.Actions
                 answer = binaryOperators[operators[i++]](answer, rhss[i2]);
             }
 
+
             Clipboard.SetText(answer.ToString(CultureInfo.CurrentCulture));
             actionResult.Description = answer.ToString(CultureInfo.CurrentCulture);
-
             return actionResult;
         }
     }

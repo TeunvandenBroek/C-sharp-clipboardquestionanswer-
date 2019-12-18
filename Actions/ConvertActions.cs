@@ -18,7 +18,7 @@
             Match matches = unitRegex.Match(clipboardText);
             return matches.Success;
         }
-
+        
         public override ActionResult TryExecute(string clipboardText)
         {
             Match matches = unitRegex.Match(clipboardText);

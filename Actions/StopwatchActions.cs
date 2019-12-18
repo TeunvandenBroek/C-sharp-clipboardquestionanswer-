@@ -39,7 +39,6 @@ namespace it.Actions
             if (!string.Equals(clipboardText, lastClipboard, StringComparison.Ordinal))
             {
                 lastClipboard = clipboardText;
-                GC.Collect();
             }
 
             switch (clipboardText)
