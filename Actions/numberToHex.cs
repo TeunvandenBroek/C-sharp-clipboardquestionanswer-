@@ -11,7 +11,6 @@ namespace it.Actions
     public sealed class numberToHex : IAction
     {
         private readonly Regex hex = new Regex("(?<number>^[0-9]+([.,][0-9]{1,3})?)(\\s*)(?= to hex)");
-
         public bool Matches(string clipboardText = null)
         {
             if (string.IsNullOrWhiteSpace(clipboardText))

@@ -18,7 +18,7 @@ namespace it.Actions
             stopwatch.Start();
 
             // Do something.
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 10000000; i++)
             {
                 action();
             }
@@ -27,7 +27,7 @@ namespace it.Actions
             stopwatch.Stop();
             // Write result.
             Console.WriteLine("Total time: {0}", stopwatch.Elapsed.TotalMilliseconds);
-            Console.WriteLine("Avg time: {0}", stopwatch.Elapsed.TotalMilliseconds / 10.0);
+            Console.WriteLine("Avg time: {0}", stopwatch.Elapsed.TotalMilliseconds / 10000000.0);
         }
     }
 }

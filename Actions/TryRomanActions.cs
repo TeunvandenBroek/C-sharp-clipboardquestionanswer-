@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
 namespace it.Actions
 {
     internal sealed class TryRomanActions : IAction
-    { 
+    {
         public static readonly IReadOnlyDictionary<int, string> NumberRomanDictionary;
 
         public static readonly IReadOnlyDictionary<char, int> RomanNumberDictionary;
 
-        private readonly Regex roman = new Regex("^([1-3]?[0-9]{3}|[1-9][0-9]{0,2})(?= to roman)");
+        private readonly Regex roman = new Regex("^([1-3]?[0-9]{0,3})(?= to roman)");
+
 
         static TryRomanActions()
         {
@@ -107,7 +109,7 @@ namespace it.Actions
                 throw new ArgumentException("message", nameof(clipboardText));
             }
 
-            return clipboardText.EndsWith(" to roman", StringComparison.Ordinal);
+            return clipboardText.EndsWith(" to roman", StringComparison.Ordinal) || clipboardText.EndsWith(" naar romeins", StringComparison.Ordinal);
         }
 
         public ActionResult TryExecute(string clipboardText = null)

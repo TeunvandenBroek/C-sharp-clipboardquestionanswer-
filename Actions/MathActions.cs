@@ -1,5 +1,6 @@
 namespace it.Actions
 {
+    using BenchmarkDotNet.Attributes;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
@@ -40,6 +41,7 @@ namespace it.Actions
             Match match = mathRegex.Match(clipboardText.Replace(',', '.'));
             return match.Success;
         }
+
         public ActionResult TryExecute(string clipboardText)
         { 
             ActionResult actionResult = new ActionResult(clipboardText);
@@ -63,8 +65,6 @@ namespace it.Actions
             {
                 answer = binaryOperators[operators[i++]](answer, rhss[i2]);
             }
-
-
             Clipboard.SetText(answer.ToString(CultureInfo.CurrentCulture));
             actionResult.Description = answer.ToString(CultureInfo.CurrentCulture);
             return actionResult;

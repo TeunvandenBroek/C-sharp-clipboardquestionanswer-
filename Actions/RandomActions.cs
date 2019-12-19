@@ -22,7 +22,7 @@ namespace it.Actions
             }
             return false;
         }
-       
+
         ActionResult IAction.TryExecute(string clipboardText)
         {
             System.Globalization.CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
@@ -77,6 +77,29 @@ namespace it.Actions
             }
 
             return actionResult;
+
         }
+        private bool isDisposed = false;
+        ~RandomActions()
+        {
+            Dispose(false);
+        }
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        protected void Dispose(bool dispose)
+        {
+            if (!isDisposed)
+            {
+                if (dispose)
+                {
+                    
+                }
+                isDisposed = true;
+            }
+        }
+
     }
 }
