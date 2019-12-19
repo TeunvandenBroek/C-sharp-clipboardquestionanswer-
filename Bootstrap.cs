@@ -16,7 +16,7 @@ namespace it
     /// <summary>
     ///     The bootstrap class is provided to allow the application to run with out a form.
     ///     We can use a form however in the future by adding it to here.
-    /// </summary>
+    /// </summary> 
     internal sealed class Bootstrap : IDisposable
     {
         private readonly ClipboardMonitor clipboardMonitor = new ClipboardMonitor();
@@ -104,6 +104,7 @@ namespace it
         }
         internal void Startup(string clipboardText)
         {
+
         }
 
         private void ClipboardMonitor_ClipboardChanged(object sender, ClipboardChangedEventArgs e)
@@ -154,6 +155,7 @@ namespace it
                         {
                             ProcessResult(new ActionResult(question.Text, question.Answer), clipboardText);
                             return;
+
                         }
                     }
                 }

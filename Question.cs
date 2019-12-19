@@ -3,16 +3,12 @@ using System.Collections.Generic;
 
 namespace it
 {
-    public sealed class Question
+    public readonly struct Question
     {
-        public Question(string text, string answer)
-        {
-            Text = text;
-            Answer = answer;
-        }
+        public readonly string Text { get; }
+        public readonly string Answer { get; }
 
-        public string Text { get; private set; }
-        public string Answer { get; private set; }
-        
+        internal Question(string text, string answer)
+            => (Text, Answer) = (text, answer);
     }
 }

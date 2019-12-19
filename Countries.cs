@@ -1,6 +1,7 @@
 ﻿namespace it
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
 
     internal static partial class Countries
@@ -8,7 +9,7 @@
 
         private static readonly IReadOnlyDictionary<UtcOffset, string[]> countriesByUtcOffset = new Dictionary<UtcOffset, string[]>
         {
-            [UtcOffset.UtcMinusTwelve] = new[]
+            [UtcOffset.UtcMinusTwelve] = new []
             {
                 "baker","howland"
             },
@@ -150,7 +151,7 @@
             },
             [UtcOffset.UtcPlusThirteen] = new[]
             {
-                 "samoa", "tokelau", "tonga"
+                "tokelau", "tonga"
             },
         };
 

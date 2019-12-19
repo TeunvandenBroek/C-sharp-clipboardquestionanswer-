@@ -45,8 +45,9 @@
                 {
                     case NativeMethods.WM_DRAWCLIPBOARD:
                         _ = NativeMethods.SendMessage(NextViewerPtr, m.Msg, m.WParam, m.LParam);
-                        GC.Collect();
+                        GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
                         GC.WaitForPendingFinalizers();
+                        GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
                         OnClipboardChanged();
                         break;
 
@@ -100,6 +101,7 @@
 
             [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
             internal static extern IntPtr SendMessage(IntPtr hwnd, int wMsg, IntPtr wParam, IntPtr lParam);
+
 
         }
     }
