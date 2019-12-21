@@ -210,7 +210,6 @@ namespace it.Actions
                         timeZoneId = "Tonga Standard Time";
                         break;
                     }
-
                 case Countries.UtcOffset.UtcPlusFivepointfive:
                     {
                         timeZoneId = "India Standard Time";

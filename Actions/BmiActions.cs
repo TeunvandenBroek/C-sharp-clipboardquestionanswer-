@@ -22,7 +22,7 @@ namespace it.Actions
             {(40, 99999),"Very Severly Obese"},
         };
 
-        public bool Matches(string clipboardText = null)
+        public bool Matches(string clipboardText)
         {
             if (string.IsNullOrWhiteSpace(clipboardText))
             {
@@ -31,7 +31,7 @@ namespace it.Actions
             return clipboardText.EndsWith(" to bmi", StringComparison.Ordinal);
         }
 
-        public ActionResult TryExecute(string clipboardText = null)
+        public ActionResult TryExecute(string clipboardText)
         {
             ActionResult actionResult = new ActionResult();
             Match match = bmi.Match(clipboardText);

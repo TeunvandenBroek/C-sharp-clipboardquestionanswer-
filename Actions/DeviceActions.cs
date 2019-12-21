@@ -18,7 +18,7 @@ namespace it.Actions
         private readonly string[] commands = { "sluit", "opnieuw opstarten", "reboot", "slaapstand", "sleep", "taakbeheer",
             "task mananger", "notepad", "kladblok", "leeg prullebak", "prullebak", "empty recycle bin", "empty bin",
             "empty recycling bin", "vergrendel", "lock", nameof(afsluiten), "shut down", "ram", "windows versie", "windows version",
-            "mac-adres", "mac", "mac address", "computer naam", "computer name", "cpu", "wifi check", "heb ik internet?", "count words", "ip", };
+            "mac-adres", "mac", "mac address", "computer naam", "computer name", "cpu", "wifi check", "heb ik internet?", "count words", "ip", "runtime"};
 
         private readonly SmartPerformanceCounter cpuCounter = new SmartPerformanceCounter(
             () => new PerformanceCounter("Processor", "% Processor Time", "_Total"), TimeSpan.FromMinutes(1));
@@ -94,6 +94,38 @@ namespace it.Actions
 
             switch (clipboardText.ToLower(CultureInfo.InvariantCulture))
             {
+                case "runtime":
+                    {
+                        switch (currentCulture.LCID)
+                        {
+                            case 1033: // english-us
+                                {
+                                    using PerformanceCounter uptime = new PerformanceCounter("System", "System Up Time");
+                                    uptime.NextValue();
+                                    TimeSpan.FromSeconds(uptime.NextValue());
+                                    actionResult.Title = "Runtime";
+                                    actionResult.Description =
+                                        uptime.NextValue().ToString() + "So long on";
+                                    break;
+                                }
+                            case 1043: // dutch
+                                {
+                                    using PerformanceCounter uptime = new PerformanceCounter("System", "System Up Time");
+                                    uptime.NextValue();
+                                    TimeSpan.FromSeconds(uptime.NextValue());
+                                    actionResult.Title = "Runtime";
+                                    actionResult.Description =
+                                        uptime.NextValue().ToString() +
+                                        "Zo lang aan";
+                                    break;
+                                }
+                            default:
+                                {
+                                    return actionResult;
+                                }
+                        }
+                        return actionResult;
+                    }
                 case "sluit":
                     {
                         Environment.Exit(0);
@@ -182,7 +214,6 @@ namespace it.Actions
                                     actionResult.Title = "RAM Memory";
                                     actionResult.Description =
                                         pc.NextValue().ToString(CultureInfo.InvariantCulture) + " MB of RAM in your system";
-
                                     break;
                                 }
                             case 1043: // dutch
@@ -192,7 +223,6 @@ namespace it.Actions
                                     actionResult.Description =
                                         pc.NextValue().ToString(CultureInfo.InvariantCulture) +
                                         " MB ram-geheugen over in je systeem";
-
                                     break;
                                 }
                             default:
@@ -200,7 +230,6 @@ namespace it.Actions
                                     return actionResult;
                                 }
                         }
-
                         return actionResult;
                     }
                 case "windows versie":
@@ -276,7 +305,7 @@ namespace it.Actions
                         {
                             case 1033: // english-us
                                 {
-                                    actionResult.Title = "Your MAC Address";
+                                    actionResult.Title = "Your computer name is";
                                     actionResult.Description = dnsName;
                                     break;
                                 }
@@ -373,6 +402,7 @@ namespace it.Actions
                         }
                     }
                 case "count words":
+                case "tel woorden":
                     {
                         if (!isCountingWords)
                         {

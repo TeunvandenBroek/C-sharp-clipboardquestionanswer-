@@ -10,7 +10,7 @@ namespace it.Actions
 {
     internal sealed class tryBinary : IAction
     {
-        private readonly Regex binary = new Regex("(?<number>^[0-9]+([.,][0-9]{1,3})?)(\\s*)(?= to binary)");
+        private readonly Regex binary = new Regex("(?<number>^[0-9]+([.,][0-9]+)?)(\\s*)(?= to binary)");
 
         public bool Matches(string clipboardText)
         {

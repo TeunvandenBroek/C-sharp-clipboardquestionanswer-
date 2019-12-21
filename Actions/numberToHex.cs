@@ -10,8 +10,8 @@ namespace it.Actions
 {
     public sealed class numberToHex : IAction
     {
-        private readonly Regex hex = new Regex("(?<number>^[0-9]+([.,][0-9]{1,3})?)(\\s*)(?= to hex)");
-        public bool Matches(string clipboardText = null)
+        private readonly Regex hex = new Regex("(?<number>^[0-9]+([.,][0-9]+)?)(\\s*)(?= to hex)");
+        public bool Matches(string clipboardText)
         {
             if (string.IsNullOrWhiteSpace(clipboardText))
             {
@@ -19,7 +19,7 @@ namespace it.Actions
             }
             return clipboardText.EndsWith(" to hex", StringComparison.Ordinal);
         }
-        public ActionResult TryExecute(string clipboardText = null)
+        public ActionResult TryExecute(string clipboardText)
         {
             ActionResult actionResult = new ActionResult();
             Match match = hex.Match(clipboardText);
