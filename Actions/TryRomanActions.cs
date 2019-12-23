@@ -116,6 +116,14 @@ namespace it.Actions
         {
             ActionResult actionResult = new ActionResult();
 
+            if (DateTime.TryParse(clipboardText.Replace(" to roman", ""), out DateTime dateTime))
+            {
+                (int year, int month, int day) = (dateTime.Year, dateTime.Month, dateTime.Day);
+                actionResult.Title = "Date in roman";
+                actionResult.Description = $"{day}-{month}-{year} = {To(day)}-{To(month)}-{To(year)}";
+                return actionResult;
+            }
+
             Match match = roman.Match(clipboardText);
             if (match.Success)
             {
