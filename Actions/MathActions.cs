@@ -13,6 +13,7 @@ namespace it.Actions
 		public ActionResult TryExecute(string clipboardText)
 		{
 			ActionResult actionResult = new ActionResult();
+			clipboardText.Replace(",",".");
 			actionResult.Title = clipboardText;
 			actionResult.Description =  "" + EvalExpression(clipboardText);
 			return actionResult;
