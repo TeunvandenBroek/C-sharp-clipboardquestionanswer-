@@ -10,63 +10,77 @@ namespace it.Actions
 
     public sealed class MathActions : IAction
     {
-        private readonly IReadOnlyDictionary<string, Func<double, double, double>> binaryOperators =
-        new Dictionary<string, Func<double, double, double>>(
-        StringComparer.Ordinal)
-                {
-                    { "%", (a, b) => a / b * 100 },
-                    { "x", (a, b) => a * b },
-                    { "*", (a, b) => a * b },
-                    { "/", (a, b) => b == 0 ? double.NaN : a / b },
-                    { ":", (a, b) => b == 0 ? double.NaN : a / b },
-                    { "+", (a, b) => a + b },
-                    { "-", (a, b) => a - b },
-                };
+		public ActionResult TryExecute(string clipboardText)
+		{
+			ActionResult actionResult = new ActionResult();
+			actionResult.Title = clipboardText;
+			actionResult.Description =  "" + EvalExpression(clipboardText);
+			return actionResult;
+		}
 
-        private readonly Regex mathRegex =
-            new Regex(@"^(?<lhs>\d+(?:[,.]{1}\d+)*)(([ ]*(?<operator>[+\-\:x\%\*/])[ ]*(?<rhs>\d+(?:[,.]{1}\d+)*)+)+)");
+		public bool Matches(string clipboardText)
+		{
+			if (string.IsNullOrWhiteSpace(clipboardText))
+			{
+				throw new ArgumentException("message", nameof(clipboardText));
+			}
+			return clipboardText.EndsWith("", StringComparison.Ordinal);
+		}
+		public static double EvalExpression(String expr)
+		{
+			return parseSummands(expr.ToCharArray(), 0);
+		}
 
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as MathActions);
-        }
+		private static double parseSummands(char[] expr, int index)
+		{
+			double x = parseFactors(expr, ref index);
+			while (true)
+			{
+				char op = expr[index];
+				if (op != '+' && op != '-')
+					return x;
+				index++;
+				double y = parseFactors(expr, ref index);
+				if (op == '+')
+					x += y;
+				else
+					x -= y;
+			}
+		}
 
-        public bool Matches(string clipboardText)
-        {
-            if (clipboardText is null)
-            {
-                throw new ArgumentNullException(nameof(clipboardText));
-            }
+		private static double parseFactors(char[] expr, ref int index)
+		{
+			double x = GetDouble(expr, ref index);
+			while (true)
+			{
+				char op = expr[index];
+				if (op != '/' && op != ':' && op != '*' && op != 'x' && op != '%')
+					return x;
+				index++;
+				double y = GetDouble(expr, ref index);
+				if (op == '/' || op == ':')
+					x /= y;
+				else if (op == '%')
+					x %= y;
+				else
+					x *= y;
+			}
+		}
 
-            Match match = mathRegex.Match(clipboardText.Replace(',', '.'));
-            return match.Success;
-        }
-
-        public ActionResult TryExecute(string clipboardText)
-        { 
-            ActionResult actionResult = new ActionResult(clipboardText);
-
-            Match match = mathRegex.Match(clipboardText.Replace(',', '.'));
-            IReadOnlyList<string> operators = (from Capture capture
-                       in match.Groups["operator"].Captures
-                                               select capture.Value).ToList();
-
-            double lhs = double.Parse(match.Groups["lhs"].Value, CultureInfo.InvariantCulture);
-
-            double[] rhss = (from Capture capture
-                    in match.Groups["rhs"].Captures
-                             select double.Parse(capture.Value, CultureInfo.InvariantCulture)).ToArray();
-
-            double answer = lhs;
-
-            for (int i = 0; i < rhss.Length; i++)
-            {
-                answer = binaryOperators[operators[i]](answer, rhss[i]);
-            }
-
-            Clipboard.SetText(answer.ToString(CultureInfo.CurrentCulture));
-            actionResult.Description = answer.ToString(CultureInfo.CurrentCulture);
-            return actionResult;
-        }
-    }
+		private static double GetDouble(char[] expr, ref int index)
+		{
+			string dbl = "";
+			while (((int)expr[index] >= 48 && (int)expr[index] <= 57) || expr[index] == 46)
+			{
+				dbl = dbl + expr[index].ToString();
+				index++;
+				if (index == expr.Length)
+				{
+					index--;
+					break;
+				}
+			}
+			return double.Parse(dbl);
+		}
+	}
 }
