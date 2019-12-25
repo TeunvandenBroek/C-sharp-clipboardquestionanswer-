@@ -14,13 +14,13 @@ namespace it.Actions
         new Dictionary<string, Func<double, double, double>>(
         StringComparer.Ordinal)
                 {
-                    { "+", (a, b) => a + b },
+                    { "%", (a, b) => a / b * 100 },
                     { "x", (a, b) => a * b },
                     { "*", (a, b) => a * b },
-                    { "-", (a, b) => a - b },
                     { "/", (a, b) => b == 0 ? double.NaN : a / b },
                     { ":", (a, b) => b == 0 ? double.NaN : a / b },
-                    { "%", (a, b) => a / b * 100 },
+                    { "+", (a, b) => a + b },
+                    { "-", (a, b) => a - b },
                 };
 
         private readonly Regex mathRegex =
@@ -59,12 +59,11 @@ namespace it.Actions
 
             double answer = lhs;
 
-            int i = 0;
-
-            for (int i2 = 0; i2 < rhss.Length; i2++)
+            for (int i = 0; i < rhss.Length; i++)
             {
-                answer = binaryOperators[operators[i++]](answer, rhss[i2]);
+                answer = binaryOperators[operators[i]](answer, rhss[i]);
             }
+
             Clipboard.SetText(answer.ToString(CultureInfo.CurrentCulture));
             actionResult.Description = answer.ToString(CultureInfo.CurrentCulture);
             return actionResult;
