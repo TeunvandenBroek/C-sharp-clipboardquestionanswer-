@@ -6,8 +6,7 @@ namespace it
 {
     internal class Questions
     {
-        private static IReadOnlyDictionary<string, string> questionDict = new Dictionary<string, string>
-        (System.StringComparer.Ordinal)
+        private static IReadOnlyDictionary<string, string> questionDict = new Dictionary<string, string>(750,StringComparer.Ordinal)
         {
             //Add question/answer to list
             //hoofdstuk 3 it

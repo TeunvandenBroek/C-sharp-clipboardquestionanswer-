@@ -7,7 +7,7 @@
     internal static partial class Countries
     {
 
-        private static readonly IReadOnlyDictionary<UtcOffset, string[]> countriesByUtcOffset = new Dictionary<UtcOffset, string[]>
+        private static readonly IReadOnlyDictionary<UtcOffset, string[]> countriesByUtcOffset = new Dictionary<UtcOffset, string[]>(100)
         {
             [UtcOffset.UtcMinusTwelve] = new []
             {
