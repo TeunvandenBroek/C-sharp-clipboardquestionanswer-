@@ -27,7 +27,7 @@ namespace it.Actions
 			}
 			try
 			{
-				GetDouble();
+				EvalExpression(clipboardText);
 				return true;
 			}
 			catch
@@ -36,10 +36,7 @@ namespace it.Actions
 			}
 		}
 
-		private void GetDouble()
-		{
-			throw new NotImplementedException();
-		}
+
 
 		public static double EvalExpression(String expr)
 		{
