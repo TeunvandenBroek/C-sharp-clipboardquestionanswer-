@@ -1,21 +1,21 @@
 namespace it.Actions
 {
-    using BenchmarkDotNet.Attributes;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Text.RegularExpressions;
-    using System.Windows.Forms;
+	using BenchmarkDotNet.Attributes;
+	using System;
+	using System.Collections.Generic;
+	using System.Globalization;
+	using System.Linq;
+	using System.Text.RegularExpressions;
+	using System.Windows.Forms;
 
-    public sealed class MathActions : IAction
-    {
+	public sealed class MathActions : IAction
+	{
 		public ActionResult TryExecute(string clipboardText)
 		{
 			ActionResult actionResult = new ActionResult();
-			clipboardText = clipboardText.Replace(",",".");
+			clipboardText = clipboardText.Replace(",", ".");
 			actionResult.Title = clipboardText;
-			actionResult.Description =  "" + EvalExpression(clipboardText);
+			actionResult.Description = "" + EvalExpression(clipboardText);
 			return actionResult;
 		}
 
@@ -25,8 +25,22 @@ namespace it.Actions
 			{
 				throw new ArgumentException("message", nameof(clipboardText));
 			}
+			try
+			{
+				GetDouble();
+			}
+			catch
+			{
+				return false;
+			}
 			return clipboardText.EndsWith("", StringComparison.Ordinal);
 		}
+
+		private void GetDouble()
+		{
+			throw new NotImplementedException();
+		}
+
 		public static double EvalExpression(String expr)
 		{
 			return parseSummands(expr.ToCharArray(), 0);
@@ -71,7 +85,7 @@ namespace it.Actions
 		private static double GetDouble(char[] expr, ref int index)
 		{
 			string dbl = "";
-			while (((int)expr[index] >= 48 && (int)expr[index] <= 57) || expr[index] == 46)
+			while (((int)expr[index] >= 48 && (int)expr[index] <= 57 || expr[index] == 46 || (int)expr[index] == 32))
 			{
 				dbl = dbl + expr[index].ToString();
 				index++;
@@ -81,7 +95,7 @@ namespace it.Actions
 					break;
 				}
 			}
-			return double.Parse(dbl);
+			return double.Parse(dbl, CultureInfo.InvariantCulture);
 		}
 	}
 }

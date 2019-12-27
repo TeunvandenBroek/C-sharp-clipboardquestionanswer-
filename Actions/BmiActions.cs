@@ -10,7 +10,7 @@ namespace it.Actions
     {
         private readonly Regex bmi = new Regex("^(?<age>[0-9]+)(years|jaar) (?<weight>[0-9]+)kg (?<height>[0-9]+)cm(?= to bmi)");
 
-        private readonly IReadOnlyDictionary<(decimal From, decimal To), string> BmiToDictionary = new Dictionary<(decimal From, decimal To), string>
+        private readonly IReadOnlyDictionary<(decimal From, decimal To), string> BmiToDictionary = new Dictionary<(decimal From, decimal To), string>(8)
         {
             {(0, 15),"Very severely underweight"},
             {(15, 16),"Severely underweight"},
