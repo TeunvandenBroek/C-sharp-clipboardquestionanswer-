@@ -28,12 +28,12 @@ namespace it.Actions
 			try
 			{
 				GetDouble();
+				return true;
 			}
 			catch
 			{
 				return false;
 			}
-			return clipboardText.EndsWith("", StringComparison.Ordinal);
 		}
 
 		private void GetDouble()
