@@ -7,7 +7,7 @@
     internal static partial class Countries
     {
 
-        private static readonly IReadOnlyDictionary<UtcOffset, string[]> countriesByUtcOffset = new Dictionary<UtcOffset, string[]>(100)
+        private static readonly IReadOnlyDictionary<UtcOffset, string[]> countriesByUtcOffset = new Dictionary<UtcOffset, string[]>
         {
             [UtcOffset.UtcMinusTwelve] = new []
             {
@@ -154,13 +154,12 @@
                 "tokelau", "tonga"
             },
         };
-
         public static IReadOnlyDictionary<string, UtcOffset> UtcOffsetByCountry { get; } = CountriesByUtcOffset
-                .SelectMany(x => x.Value.Select(c => (Offset: x.Key, Country: c)))
-             .ToDictionary(x => x.Country, x => x.Offset, System.StringComparer.Ordinal);
+               .SelectMany(x => x.Value.Select(c => (Offset: x.Key, Country: c)))
+            .ToDictionary(x => x.Country, x => x.Offset, System.StringComparer.Ordinal);
         internal static IReadOnlyDictionary<UtcOffset, string[]> CountriesByUtcOffset => countriesByUtcOffset;
 
-        public static class Offset
+        public readonly struct Offset
         {
             public const byte Hours = 4;
 

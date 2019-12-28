@@ -17,7 +17,7 @@ namespace it
     ///     The bootstrap class is provided to allow the application to run with out a form.
     ///     We can use a form however in the future by adding it to here.
     /// </summary> 
-    internal sealed class Bootstrap : IDisposable
+    internal class Bootstrap : IDisposable
     {
         private readonly ClipboardMonitor clipboardMonitor = new ClipboardMonitor();
         private readonly ControlContainer container = new ControlContainer();
@@ -60,24 +60,23 @@ namespace it
 
             if (disposing)
             {
-
-            }
-            if (serviceProvider != null)
-            {
-                (serviceProvider as IDisposable)?.Dispose();
-                serviceProvider = null;
-            }
-            if (notifyIcon != null)
-            {
-                notifyIcon?.Dispose();
-            }
-            if (container != null)
-            {
-                container?.Dispose();
-            }
-            if (clipboardMonitor != null)
-            {
-                clipboardMonitor?.Dispose();
+                if (serviceProvider != null)
+                {
+                    (serviceProvider as IDisposable)?.Dispose();
+                    serviceProvider = null;
+                }
+                if (notifyIcon != null)
+                {
+                    notifyIcon?.Dispose();
+                }
+                if (container != null)
+                {
+                    container?.Dispose();
+                }
+                if (clipboardMonitor != null)
+                {
+                    clipboardMonitor?.Dispose();
+                }
             }
         }
 
@@ -86,9 +85,9 @@ namespace it
         {
             // Add configure services
             ServiceCollection serviceDescriptors = new ServiceCollection();
-
             _ = serviceDescriptors.AddSingleton<IAction, ConvertActions>();
-            _ = serviceDescriptors.AddSingleton<IAction, TryRomanActions>();
+            _ = serviceDescriptors.AddSingleton<IAction, TryRomanActions>(); 
+            _ = serviceDescriptors.AddSingleton<IAction, PythonActions>();
             _ = serviceDescriptors.AddSingleton<IAction, CountdownActions>();
             _ = serviceDescriptors.AddSingleton<IAction, DeviceActions>();
             _ = serviceDescriptors.AddSingleton<IAction, RandomActions>();

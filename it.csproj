@@ -408,6 +408,7 @@
     <Compile Include="Actions\IAction.cs" />
     <Compile Include="Actions\MathActions.cs" />
     <Compile Include="Actions\numberToHex.cs" />
+    <Compile Include="Actions\PythonActions.cs" />
     <Compile Include="Actions\RandomActions.cs" />
     <Compile Include="Actions\StopwatchActions.cs" />
     <Compile Include="Actions\TimespanActions.cs" />
@@ -478,6 +479,7 @@
     <Analyzer Include="packages\ExceptionAnalyzer.1.0.5\tools\analyzers\ExceptionAnalyzer.dll" />
     <Analyzer Include="packages\GCop.Conditional.2.6.1\analyzers\dotnet\cs\GCop.Conditional.dll" />
     <Analyzer Include="packages\GCop.String.2.6.1\analyzers\dotnet\cs\GCop.String.dll" />
+    <Analyzer Include="packages\IDisposableAnalyzers.3.2.0\analyzers\dotnet\cs\IDisposableAnalyzers.dll" />
     <Analyzer Include="packages\LazyMixinAnalyzer.2.3.0.0\tools\analyzers\LazyMixinAnalyzer.dll" />
     <Analyzer Include="packages\Meziantou.Analyzer.1.0.284\analyzers\dotnet\cs\Meziantou.Analyzer.dll" />
     <Analyzer Include="packages\Microsoft.CodeAnalysis.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
