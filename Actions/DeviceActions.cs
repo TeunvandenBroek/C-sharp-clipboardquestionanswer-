@@ -1,5 +1,7 @@
 namespace it.Actions
 {
+    using IronPython.Hosting;
+    using Microsoft.Scripting.Hosting;
     using Microsoft.Win32.SafeHandles;
     using System;
     using System.Diagnostics;
@@ -94,44 +96,11 @@ namespace it.Actions
 
             switch (clipboardText.ToLower(CultureInfo.InvariantCulture))
             {
-                case "runtime":
-                    {
-                        switch (currentCulture.LCID)
-                        {
-                            case 1033: // english-us
-                                {
-                                    using PerformanceCounter uptime = new PerformanceCounter("System", "System Up Time");
-                                    uptime.NextValue();
-                                    TimeSpan.FromSeconds(uptime.NextValue());
-                                    actionResult.Title = "Runtime";
-                                    actionResult.Description =
-                                        uptime.NextValue().ToString() + "So long on";
-                                    break;
-                                }
-                            case 1043: // dutch
-                                {
-                                    using PerformanceCounter uptime = new PerformanceCounter("System", "System Up Time");
-                                    uptime.NextValue();
-                                    TimeSpan.FromSeconds(uptime.NextValue());
-                                    actionResult.Title = "Runtime";
-                                    actionResult.Description =
-                                        uptime.NextValue().ToString() +
-                                        "Zo lang aan";
-                                    break;
-                                }
-                            default:
-                                {
-                                    return actionResult;
-                                }
-                        }
-                        return actionResult;
-                    }
                 case "sluit":
                     {
                         Environment.Exit(0);
                         return actionResult;
                     }
-
                 case "opnieuw opstarten":
                 case nameof(reboot):
                     {
@@ -146,7 +115,6 @@ namespace it.Actions
                         _ = Application.SetSuspendState(PowerState.Hibernate, true, true);
                         return actionResult;
                     }
-
                 case "taakbeheer":
                 case "task mananger":
                     {
@@ -203,6 +171,7 @@ namespace it.Actions
                         afsluiten = Process.Start("shutdown", "/s /t 0");
                         break;
                     }
+                    
                 //om je momentele ram geheugen te laten zien (To display your momentary RAM memory)
                 case "ram":
                     {

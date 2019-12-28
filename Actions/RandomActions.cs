@@ -5,7 +5,7 @@ namespace it.Actions
     using System.Text;
     using System.Threading;
 
-    internal sealed class RandomActions : IAction
+    internal sealed class RandomActions : IAction, IDisposable
     {
         private readonly string[] commands = { "kop of munt", "heads or tails", "random password" };
         private readonly Random random = new Random();

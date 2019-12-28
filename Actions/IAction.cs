@@ -1,15 +1,19 @@
 ﻿using System;
-
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace it.Actions
 {
-    public sealed partial class ActionResult : IEquatable<ActionResult>
+    public sealed partial class ActionResult : IEquatable<ActionResult>, INotifyPropertyChanged
     {
         internal ActionResult(string title = null, string description = null)
         {
             Title = title;
             Description = description;
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         internal string Description { get; set; }
 
         internal string Title { get; set; }
@@ -22,6 +26,11 @@ namespace it.Actions
         public override bool Equals(object obj)
         {
             return Equals(obj as ActionResult);
+        }
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 
