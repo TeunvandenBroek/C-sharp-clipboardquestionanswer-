@@ -32,11 +32,11 @@ namespace it.Actions
                 ActionResult actionResult = new ActionResult(clipboardText);
                 switch (clipboardText.ToLower(CultureInfo.InvariantCulture))
                 {
-                    case "python":
+                    case "delete temp files":
                         {
                             actionResult.Description = "successfully";
                             ScriptEngine engine = Python.CreateEngine();
-                            engine.ExecuteFile(@"helloworld.py");
+                            engine.ExecuteFile(@"deltempfiles.py");
                             break;
                         }
                     default:
