@@ -35,6 +35,8 @@
                 _ = NativeMethods.ChangeClipboardChain(Handle, NextViewerPtr);
                 NextViewerPtr = IntPtr.Zero;
             }
+
+            base.Dispose(disposing);
         }
 
 

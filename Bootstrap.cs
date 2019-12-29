@@ -134,13 +134,13 @@ namespace it
                 IAction service = serviceProvider.GetServices<IAction>().FirstOrDefault(s => s.Matches(clipboardText));
                 if (service is object)
                 {
+                    clipboardMonitor.ClipboardChanged -= ClipboardMonitor_ClipboardChanged;
                     ActionResult actionResult = service.TryExecute(clipboardText);
+                    clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
                     // re attach the event
                     if (!string.IsNullOrWhiteSpace(actionResult.Title) || !string.IsNullOrWhiteSpace(actionResult.Description))
                     {
-                        clipboardMonitor.ClipboardChanged -= ClipboardMonitor_ClipboardChanged;
                         ProcessResult(actionResult, clipboardText);
-                        clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
                     }
                     return;
                 }
@@ -188,30 +188,31 @@ namespace it
         internal static void EnsureWindowStartup(bool isStartingWithWindows)
         {
             const string keyName = "Clipboard Assistant";
-
-            RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
-            if (key is null)
+            using (
+                        RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true))
             {
-                return;
-            }
-
-            string value = key.GetValue(keyName, null) as string;
-
-            if (isStartingWithWindows)
-            {
-                // key doesn't exist, add it
-                if (string.IsNullOrWhiteSpace(value) && string.Equals(value, Assembly.GetExecutingAssembly().Location, StringComparison.Ordinal))
+                if (key is null)
                 {
-                    key.SetValue(keyName, Assembly.GetExecutingAssembly().Location);
+                    return;
                 }
-            }
-            else if (!string.IsNullOrWhiteSpace(value))
-            {
-                key.DeleteValue(keyName);
-            }
 
-            key.Close();
-            key.Dispose();
+                string value = key.GetValue(keyName, null) as string;
+
+                if (isStartingWithWindows)
+                {
+                    // key doesn't exist, add it
+                    if (string.IsNullOrWhiteSpace(value) && string.Equals(value, Assembly.GetExecutingAssembly().Location, StringComparison.Ordinal))
+                    {
+                        key.SetValue(keyName, Assembly.GetExecutingAssembly().Location);
+                    }
+                }
+                else if (!string.IsNullOrWhiteSpace(value))
+                {
+                    key.DeleteValue(keyName);
+                }
+
+                key.Close();
+            }
         }
     }
 }
