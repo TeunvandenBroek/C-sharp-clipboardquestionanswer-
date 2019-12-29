@@ -126,7 +126,9 @@ namespace it.Actions
                 case "notepad":
                 case "kladblok":
                     {
+                        kladblok?.Dispose();
                         kladblok = Process.Start("notepad.exe");
+                        actionResult.Description = "Kladblok geopend";
                         return actionResult;
                     }
 

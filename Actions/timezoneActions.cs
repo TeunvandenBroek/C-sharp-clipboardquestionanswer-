@@ -153,7 +153,8 @@ namespace it.Actions
 
                 case Countries.UtcOffset.UtcPlusFourpointfive:
                     {
-                        timeZoneId = "Afghanistan Standard Time";
+                        timeZoneId = "Afghanistan Standard Time"; 
+                        timeZoneId?.Dispose();
                         break;
                     }
 

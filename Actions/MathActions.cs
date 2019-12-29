@@ -13,9 +13,11 @@ namespace it.Actions
 		public ActionResult TryExecute(string clipboardText)
 		{
 			ActionResult actionResult = new ActionResult();
-			clipboardText = clipboardText.Replace(",", ".");
+			clipboardText = clipboardText.Replace(',', '.');
+			string answer = EvalExpression(clipboardText).ToString(CultureInfo.CurrentCulture);
 			actionResult.Title = clipboardText;
-			actionResult.Description = "" + EvalExpression(clipboardText);
+			actionResult.Description = answer;
+			Clipboard.SetText(answer);
 			return actionResult;
 		}
 
