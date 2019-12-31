@@ -9,7 +9,7 @@
 
         private static readonly IReadOnlyDictionary<UtcOffset, string[]> countriesByUtcOffset = new Dictionary<UtcOffset, string[]>
         {
-            [UtcOffset.UtcMinusTwelve] = new []
+            [UtcOffset.UtcMinusTwelve] = new[]
             {
                 "baker","howland"
             },

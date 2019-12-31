@@ -929,7 +929,6 @@ namespace it
             ["Which statement describes a characteristic of a network operating system?"] =
                 "It runs multiuser applications.*",
 
-            ["What technology was created to replace the BIOS program on modern personal computer motherboards?"] = "",
 
             ["On which two occasions is it most likely that a technician will have to perform a clean operating system installation if a backup has not been performed? (Choose two.)"]
                 = "The existing operating system is corrupted.*    A new replacement hard drive is installed in a computer.*",

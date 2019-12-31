@@ -505,6 +505,8 @@
     <Analyzer Include="packages\RecordConstructorGenerator.3.3.0\tools\analyzers\C#\System.Composition.Hosting.dll" />
     <Analyzer Include="packages\RecordConstructorGenerator.3.3.0\tools\analyzers\C#\System.Composition.Runtime.dll" />
     <Analyzer Include="packages\RecordConstructorGenerator.3.3.0\tools\analyzers\C#\System.Composition.TypedParts.dll" />
+    <Analyzer Include="packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
     <Analyzer Include="packages\ToStringWithoutOverrideAnalyzer.0.6.0.0\analyzers\dotnet\cs\ToStringWithoutOverrideAnalyzer.dll" />
     <Analyzer Include="packages\Tsarev.Analyzer.Hardcode.Vat.1.1.56.0\analyzers\dotnet\cs\Tsarev.Analyzer.Hardcode.Vat.dll" />
     <Analyzer Include="packages\Tsarev.Analyzer.Web.1.1.56.0\analyzers\dotnet\cs\Tsarev.Analyzer.Web.dll" />
