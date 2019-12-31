@@ -10,7 +10,6 @@ namespace it.Actions
 {
     public sealed class numberToHex : IAction
     {
-        private readonly Regex hex = new Regex("(?<number>^[0-9]+([.,][0-9]+)?)(\\s*)(?= to hex)");
         public bool Matches(string clipboardText)
         {
             if (string.IsNullOrWhiteSpace(clipboardText))
@@ -22,14 +21,11 @@ namespace it.Actions
         public ActionResult TryExecute(string clipboardText)
         {
             ActionResult actionResult = new ActionResult();
-            Match match = hex.Match(clipboardText);
-            if (match.Success)
-            {
-                int number = int.Parse(match.Groups["number"].Value, CultureInfo.InvariantCulture);
-                string hex = number.ToString("X");
-                actionResult.Title = "Calculate hex";
-                actionResult.Description = $"{clipboardText}, {hex}";
-            }
+            int toHexIndex = clipboardText.IndexOf("to hex");
+            clipboardText.Substring(0, toHexIndex);
+            string hex = toHexIndex.ToString("X");
+            actionResult.Title = "Calculate hex";
+            actionResult.Description = $"{clipboardText}, {hex}";
             return actionResult;
 
         }

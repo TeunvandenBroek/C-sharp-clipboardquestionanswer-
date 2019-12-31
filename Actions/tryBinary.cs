@@ -10,8 +10,6 @@ namespace it.Actions
 {
     internal sealed class tryBinary : IAction
     {
-        private readonly Regex binary = new Regex("(?<number>^[0-9]+([.,][0-9]+)?)(\\s*)(?= to binary)");
-
         public bool Matches(string clipboardText)
         {
             if (string.IsNullOrWhiteSpace(clipboardText))
@@ -23,11 +21,10 @@ namespace it.Actions
         public ActionResult TryExecute(string clipboardText = null)
         {
             ActionResult actionResult = new ActionResult();
-            Match match = binary.Match(clipboardText);
-            if (match.Success)
             {
-                int number = int.Parse(match.Groups["number"].Value, CultureInfo.InvariantCulture);
-                string binary = Convert.ToString(number, 2);
+                int toBinaryIndex = clipboardText.IndexOf("to binary");
+                clipboardText.Substring(0, toBinaryIndex);
+                string binary = Convert.ToString(toBinaryIndex, 2);
                 actionResult.Title = "Calculate binary";
                 actionResult.Description = $"{clipboardText}, {binary}";
             }
