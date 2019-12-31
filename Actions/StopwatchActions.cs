@@ -26,7 +26,7 @@ namespace it.Actions
                 throw new ArgumentNullException(nameof(clipboardText));
             }
 
-            return clipboardText.IndexOf(nameof(stopwatch), StringComparison.OrdinalIgnoreCase) >= 0;
+            return clipboardText.IndexOf(nameof(stopwatch), StringComparison.Ordinal) >= 0;
         }
 
         public ActionResult TryExecute(string clipboardText)
