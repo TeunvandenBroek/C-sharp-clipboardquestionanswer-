@@ -116,7 +116,7 @@ namespace it.Actions
         {
             ActionResult actionResult = new ActionResult();
 
-            if (DateTime.TryParse(clipboardText.Replace(" to roman", ""), out DateTime dateTime))
+            if (DateTime.TryParse(clipboardText.Replace(" to roman", " n"), out DateTime dateTime))
             {
                 (int year, int month, int day) = (dateTime.Year, dateTime.Month, dateTime.Day);
                 actionResult.Title = "Date in roman";

@@ -1,7 +1,6 @@
 ﻿namespace it.Actions
 {
     using System.Globalization;
-    using System.Runtime.CompilerServices;
     using System.Text.RegularExpressions;
     using System.Windows.Forms;
 
@@ -19,6 +18,7 @@
             Match matches = unitRegex.Match(clipboardText);
             return matches.Success;
         }
+        
         public override ActionResult TryExecute(string clipboardText)
         {
             Match matches = unitRegex.Match(clipboardText);

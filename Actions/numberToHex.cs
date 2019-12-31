@@ -20,8 +20,13 @@ namespace it.Actions
         }
         public ActionResult TryExecute(string clipboardText)
         {
+            if (string.IsNullOrWhiteSpace(clipboardText))
+            {
+                throw new ArgumentException("message", nameof(clipboardText));
+            }
+
             ActionResult actionResult = new ActionResult();
-            int toHexIndex = clipboardText.IndexOf("to hex");
+            int toHexIndex = clipboardText.IndexOf("to hex", StringComparison.Ordinal);
             clipboardText.Substring(0, toHexIndex);
             string hex = toHexIndex.ToString("X");
             actionResult.Title = "Calculate hex";

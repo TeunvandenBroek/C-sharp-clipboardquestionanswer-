@@ -22,7 +22,7 @@ namespace it.Actions
         {
             ActionResult actionResult = new ActionResult();
             {
-                int toBinaryIndex = clipboardText.IndexOf("to binary");
+                int toBinaryIndex = clipboardText.IndexOf("to binary", StringComparison.Ordinal);
                 clipboardText.Substring(0, toBinaryIndex);
                 string binary = Convert.ToString(toBinaryIndex, 2);
                 actionResult.Title = "Calculate binary";

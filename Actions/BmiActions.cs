@@ -41,7 +41,7 @@ namespace it.Actions
                 decimal weight = decimal.Parse(match.Groups["weight"].Value, CultureInfo.InvariantCulture);
                 double height = double.Parse(match.Groups["height"].Value, CultureInfo.InvariantCulture);
                 decimal bmi = (decimal)Math.Pow(height / 100, 2);
-                bmi = Decimal.Round(Decimal.Divide(weight, bmi), 2);
+                bmi = decimal.Round(decimal.Divide(weight, bmi), 2);
                 string bmiDescription = BmiToDictionary.First(kvp => kvp.Key.From <= bmi && bmi < kvp.Key.To).Value;
                 actionResult.Title = "Calculate bmi";
                 actionResult.Description = $"{bmi}, {bmiDescription}";
