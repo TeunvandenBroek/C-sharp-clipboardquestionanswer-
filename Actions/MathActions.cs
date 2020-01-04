@@ -23,10 +23,6 @@ namespace it.Actions
 
 		public bool Matches(string clipboardText)
 		{
-			if (string.IsNullOrWhiteSpace(clipboardText))
-			{
-				throw new ArgumentException("message", nameof(clipboardText));
-			}
 			try
             {
 				EvalExpression(clipboardText);

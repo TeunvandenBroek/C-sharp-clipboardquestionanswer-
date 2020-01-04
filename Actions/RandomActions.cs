@@ -5,7 +5,7 @@ namespace it.Actions
     using System.Text;
     using System.Threading;
 
-    internal sealed class RandomActions : IAction, IDisposable
+    internal sealed class RandomActions : IAction
     {
         private readonly string[] commands = { "kop of munt", "heads or tails", "random password" };
         private readonly Random random = new Random();
@@ -79,27 +79,5 @@ namespace it.Actions
             return actionResult;
 
         }
-        private bool isDisposed = false;
-        ~RandomActions()
-        {
-            Dispose(false);
-        }
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        protected void Dispose(bool dispose)
-        {
-            if (!isDisposed)
-            {
-                if (dispose)
-                {
-                    
-                }
-                isDisposed = true;
-            }
-        }
-
     }
 }

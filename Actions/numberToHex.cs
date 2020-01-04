@@ -12,10 +12,6 @@ namespace it.Actions
     {
         public bool Matches(string clipboardText)
         {
-            if (string.IsNullOrWhiteSpace(clipboardText))
-            {
-                throw new ArgumentException("message", nameof(clipboardText));
-            }
             return clipboardText.EndsWith(" to hex", StringComparison.Ordinal);
         }
         public ActionResult TryExecute(string clipboardText)

@@ -9,11 +9,6 @@ namespace it.Actions
     {
         public bool Matches(string clipboardText)
         {
-            if (string.IsNullOrWhiteSpace(clipboardText))
-            {
-                throw new ArgumentException("message", nameof(clipboardText));
-            }
-
             return clipboardText.StartsWith("timer", StringComparison.Ordinal) && TimeSpan.TryParse(clipboardText.Replace("timer ", string.Empty), out TimeSpan _);
         }
         

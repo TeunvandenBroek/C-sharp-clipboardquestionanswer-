@@ -19,11 +19,6 @@ namespace it.Actions
 
         public bool Matches(string clipboardText = null)
         {
-            if (string.IsNullOrWhiteSpace(clipboardText))
-            {
-                throw new ArgumentException("message", nameof(clipboardText));
-            }
-
             return clipboardText.EndsWith("python", StringComparison.Ordinal);
         }
         ActionResult IAction.TryExecute(string clipboardText)

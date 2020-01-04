@@ -21,11 +21,6 @@ namespace it.Actions
         }
         public bool Matches(string clipboardText)
         {
-            if (clipboardText is null)
-            {
-                throw new ArgumentNullException(nameof(clipboardText));
-            }
-
             return clipboardText.IndexOf(nameof(stopwatch), StringComparison.Ordinal) >= 0;
         }
 
@@ -471,11 +466,6 @@ namespace it.Actions
         public override bool Equals(object obj)
         {
             return Equals(obj as StopwatchActions);
-        }
-
-        public override int GetHashCode()
-        {
-            throw new NotImplementedException();
         }
 
         #endregion Stopwatch Fill Methods

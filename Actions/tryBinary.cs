@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BenchmarkDotNet.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -12,10 +13,6 @@ namespace it.Actions
     {
         public bool Matches(string clipboardText)
         {
-            if (string.IsNullOrWhiteSpace(clipboardText))
-            {
-                throw new ArgumentException("message", nameof(clipboardText));
-            }
             return clipboardText.EndsWith(" to binary", StringComparison.Ordinal);
         }
         public ActionResult TryExecute(string clipboardText = null)

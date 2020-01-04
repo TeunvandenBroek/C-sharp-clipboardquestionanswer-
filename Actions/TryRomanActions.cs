@@ -13,12 +13,9 @@ namespace it.Actions
 
         public static readonly IReadOnlyDictionary<char, int> RomanNumberDictionary;
 
-        private readonly Regex roman = new Regex("^([1-3]?[0-9]{0,3})(?= to roman)");
-
-
         static TryRomanActions()
         {
-            RomanNumberDictionary = new Dictionary<char, int>
+            RomanNumberDictionary = new Dictionary<char, int>(7)
         {
             { 'I', 1 },
             { 'V', 5 },
@@ -29,7 +26,7 @@ namespace it.Actions
             { 'M', 1000 },
         };
 
-            NumberRomanDictionary = new Dictionary<int, string>
+            NumberRomanDictionary = new Dictionary<int, string>(12)
         {
             { 1000, "M" },
             { 900, "CM" },
@@ -103,12 +100,7 @@ namespace it.Actions
 
 
         public bool Matches(string clipboardText = null)
-        {
-            if (string.IsNullOrWhiteSpace(clipboardText))
-            {
-                throw new ArgumentException("message", nameof(clipboardText));
-            }
-
+        { 
             return clipboardText.EndsWith(" to roman", StringComparison.Ordinal) || clipboardText.EndsWith(" naar romeins", StringComparison.Ordinal);
         }
 
@@ -116,21 +108,20 @@ namespace it.Actions
         {
             ActionResult actionResult = new ActionResult();
 
-            if (DateTime.TryParse(clipboardText.Replace(" to roman", " n"), out DateTime dateTime))
+            int index = clipboardText.IndexOf("to roman", StringComparison.Ordinal) ;
+            string numberString = clipboardText.Substring(0, index).Trim();
+            if (DateTime.TryParse(numberString, out DateTime dateTime))
             {
                 (int year, int month, int day) = (dateTime.Year, dateTime.Month, dateTime.Day);
                 actionResult.Title = "Date in roman";
                 actionResult.Description = $"{day}-{month}-{year} = {To(day)}-{To(month)}-{To(year)}";
                 return actionResult;
             }
-
-            Match match = roman.Match(clipboardText);
-            if (match.Success)
+            else
             {
-                int number = int.Parse(match.Groups[0].Value, CultureInfo.InvariantCulture);
-
+                int numberToConvert = int.Parse(clipboardText.Substring(0, index).Trim());
                 actionResult.Title = "Nummer naar romeins";
-                actionResult.Description = $"{number} = {To(number)}";
+                actionResult.Description = $"{numberToConvert} = {To(numberToConvert)}";
             }
 
             return actionResult;

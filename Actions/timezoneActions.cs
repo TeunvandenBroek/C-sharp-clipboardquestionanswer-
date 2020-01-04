@@ -18,11 +18,6 @@ namespace it.Actions
 
         public bool Matches(string clipboardText)
         {
-            if (clipboardText is null)
-            {
-                throw new ArgumentNullException(nameof(clipboardText));
-            }
-
             country = clipboardText.Trim().ToLowerInvariant();
             KeyValuePair<string, Countries.UtcOffset> keyValuePair = TryKeypair();
             return keyValuePair.Key != default;
