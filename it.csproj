@@ -405,6 +405,7 @@
     <Compile Include="Actions\ConvertActions.cs" />
     <Compile Include="Actions\convertUppercase.cs" />
     <Compile Include="Actions\CountdownActions.cs" />
+    <Compile Include="Actions\desktopCleaner.cs" />
     <Compile Include="Actions\IAction.cs" />
     <Compile Include="Actions\MathActions.cs" />
     <Compile Include="Actions\numberToHex.cs" />
@@ -481,7 +482,7 @@
     <Analyzer Include="packages\GCop.String.2.6.1\analyzers\dotnet\cs\GCop.String.dll" />
     <Analyzer Include="packages\IDisposableAnalyzers.3.2.0\analyzers\dotnet\cs\IDisposableAnalyzers.dll" />
     <Analyzer Include="packages\LazyMixinAnalyzer.2.3.0.0\tools\analyzers\LazyMixinAnalyzer.dll" />
-    <Analyzer Include="packages\Meziantou.Analyzer.1.0.284\analyzers\dotnet\cs\Meziantou.Analyzer.dll" />
+    <Analyzer Include="packages\Meziantou.Analyzer.1.0.300\analyzers\dotnet\cs\Meziantou.Analyzer.dll" />
     <Analyzer Include="packages\Microsoft.CodeAnalysis.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="packages\Microsoft.CodeAnalysis.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
     <Analyzer Include="packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\analyzers\dotnet\cs\Microsoft.CodeAnalysis.VersionCheckAnalyzer.resources.dll" />

@@ -108,7 +108,6 @@
         }
     }
 
-
     internal sealed class ClipboardChangedEventArgs : EventArgs
     {
         public ClipboardChangedEventArgs(IDataObject dataObject)

@@ -11,33 +11,31 @@
     <Rule Id="AsyncFixer04" Action="None" />
     <Rule Id="AsyncFixer05" Action="None" />
   </Rules>
+  <Rules AnalyzerId="ClrHeapAllocationAnalyzer" RuleNamespace="ClrHeapAllocationAnalyzer">
+    <Rule Id="HAA0101" Action="None" />
+    <Rule Id="HAA0102" Action="None" />
+    <Rule Id="HAA0201" Action="None" />
+    <Rule Id="HAA0202" Action="None" />
+    <Rule Id="HAA0301" Action="None" />
+    <Rule Id="HAA0302" Action="None" />
+    <Rule Id="HAA0303" Action="None" />
+    <Rule Id="HAA0401" Action="None" />
+    <Rule Id="HAA0501" Action="None" />
+    <Rule Id="HAA0502" Action="None" />
+    <Rule Id="HAA0503" Action="None" />
+    <Rule Id="HAA0504" Action="None" />
+    <Rule Id="HAA0505" Action="None" />
+    <Rule Id="HAA0506" Action="None" />
+    <Rule Id="HAA0601" Action="None" />
+    <Rule Id="HAA0602" Action="None" />
+    <Rule Id="HAA0603" Action="None" />
+    <Rule Id="HeapAnalyzerReadonlyMethodGroupAllocationRule" Action="None" />
+  </Rules>
   <Rules AnalyzerId="Codelet.TypeScripter.Analyzer" RuleNamespace="Codelet.TypeScripter.Analyzer">
     <Rule Id="TypeScripter" Action="None" />
   </Rules>
-  <Rules AnalyzerId="DisposableFixer" RuleNamespace="DisposableFixer">
-    <Rule Id="DF0000" Action="None" />
-    <Rule Id="DF0001" Action="None" />
-    <Rule Id="DF0010" Action="None" />
-    <Rule Id="DF0020" Action="None" />
-    <Rule Id="DF0021" Action="None" />
-    <Rule Id="DF0022" Action="None" />
-    <Rule Id="DF0023" Action="None" />
-    <Rule Id="DF0024" Action="None" />
-    <Rule Id="DF0025" Action="None" />
-    <Rule Id="DF0026" Action="None" />
-    <Rule Id="DF0027" Action="None" />
-    <Rule Id="DF0028" Action="None" />
-    <Rule Id="DF0029" Action="None" />
-    <Rule Id="DF0030" Action="None" />
-    <Rule Id="DF0031" Action="None" />
-    <Rule Id="DF0032" Action="None" />
-    <Rule Id="DF0033" Action="None" />
-    <Rule Id="DF0034" Action="None" />
-    <Rule Id="DF0035" Action="None" />
-    <Rule Id="DF0036" Action="None" />
-    <Rule Id="DF0037" Action="None" />
-    <Rule Id="DF0100" Action="None" />
-    <Rule Id="DF0110" Action="None" />
+  <Rules AnalyzerId="EntityFrameworkAnalyzer" RuleNamespace="EntityFrameworkAnalyzer">
+    <Rule Id="EFPERF001" Action="None" />
   </Rules>
   <Rules AnalyzerId="Enums.NET.Analyzer" RuleNamespace="Enums.NET.Analyzer">
     <Rule Id="ENUMS001" Action="None" />
@@ -62,6 +60,10 @@
     <Rule Id="EA004" Action="None" />
     <Rule Id="EA005" Action="None" />
     <Rule Id="EA006" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="ExperimentalTools.Roslyn.Features" RuleNamespace="ExperimentalTools.Roslyn.Features">
+    <Rule Id="ET001" Action="None" />
+    <Rule Id="ET002" Action="None" />
   </Rules>
   <Rules AnalyzerId="GCop.Conditional" RuleNamespace="GCop.Conditional">
     <Rule Id="GCop110" Action="None" />
@@ -114,6 +116,17 @@
   </Rules>
   <Rules AnalyzerId="JoshEndries.IDisposableUsageAnalyzer.Analyzer" RuleNamespace="JoshEndries.IDisposableUsageAnalyzer.Analyzer">
     <Rule Id="IDisposableUsageAnalyzer" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="LazyMixinAnalyzer" RuleNamespace="LazyMixinAnalyzer">
+    <Rule Id="AccessViaProperty" Action="None" />
+    <Rule Id="DoNotUseLazyForProperty" Action="None" />
+    <Rule Id="DoNotUseLazyForReadonlyField" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="Lindhart.Analyser.MissingAwaitWarning" RuleNamespace="Lindhart.Analyser.MissingAwaitWarning">
+    <Rule Id="LindhartAnalyserMissingAwaitWarning" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="MefImportExceptionAnalyzer" RuleNamespace="MefImportExceptionAnalyzer">
+    <Rule Id="MefImportExceptionAnalyzer" Action="None" />
   </Rules>
   <Rules AnalyzerId="Meziantou.Analyzer" RuleNamespace="Meziantou.Analyzer">
     <Rule Id="MA0034" Action="Warning" />
@@ -237,25 +250,25 @@
     <Rule Id="CA1724" Action="None" />
     <Rule Id="CA1725" Action="None" />
     <Rule Id="CA1726" Action="None" />
-    <Rule Id="CA1800" Action="Warning" />
+    <Rule Id="CA1800" Action="None" />
     <Rule Id="CA1801" Action="None" />
-    <Rule Id="CA1802" Action="Warning" />
-    <Rule Id="CA1804" Action="Warning" />
+    <Rule Id="CA1802" Action="None" />
+    <Rule Id="CA1804" Action="None" />
     <Rule Id="CA1806" Action="None" />
-    <Rule Id="CA1809" Action="Warning" />
-    <Rule Id="CA1810" Action="Warning" />
-    <Rule Id="CA1811" Action="Warning" />
-    <Rule Id="CA1812" Action="Warning" />
-    <Rule Id="CA1813" Action="Warning" />
-    <Rule Id="CA1814" Action="Warning" />
-    <Rule Id="CA1815" Action="Warning" />
+    <Rule Id="CA1809" Action="None" />
+    <Rule Id="CA1810" Action="None" />
+    <Rule Id="CA1811" Action="None" />
+    <Rule Id="CA1812" Action="None" />
+    <Rule Id="CA1813" Action="None" />
+    <Rule Id="CA1814" Action="None" />
+    <Rule Id="CA1815" Action="None" />
     <Rule Id="CA1816" Action="None" />
-    <Rule Id="CA1819" Action="Warning" />
-    <Rule Id="CA1820" Action="Warning" />
-    <Rule Id="CA1821" Action="Warning" />
-    <Rule Id="CA1822" Action="Warning" />
-    <Rule Id="CA1823" Action="Warning" />
-    <Rule Id="CA1824" Action="Warning" />
+    <Rule Id="CA1819" Action="None" />
+    <Rule Id="CA1820" Action="None" />
+    <Rule Id="CA1821" Action="None" />
+    <Rule Id="CA1822" Action="None" />
+    <Rule Id="CA1823" Action="None" />
+    <Rule Id="CA1824" Action="None" />
     <Rule Id="CA1900" Action="None" />
     <Rule Id="CA1901" Action="None" />
     <Rule Id="CA1903" Action="None" />
@@ -586,7 +599,10 @@
     <Rule Id="CS8655" Action="None" />
     <Rule Id="CS8656" Action="None" />
     <Rule Id="CS8667" Action="None" />
+    <Rule Id="CS8669" Action="None" />
+    <Rule Id="CS8670" Action="None" />
     <Rule Id="CS8714" Action="None" />
+    <Rule Id="CS8717" Action="None" />
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.Analyzers" RuleNamespace="Microsoft.CodeAnalysis.CSharp.Analyzers">
     <Rule Id="RS1002" Action="None" />
@@ -714,7 +730,9 @@
     <Rule Id="CA9999" Action="None" />
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeQuality.Analyzers" RuleNamespace="Microsoft.CodeQuality.Analyzers">
+    <Rule Id="CA1012" Action="None" />
     <Rule Id="CA1016" Action="None" />
+    <Rule Id="CA1027" Action="None" />
     <Rule Id="CA1031" Action="None" />
     <Rule Id="CA1034" Action="None" />
     <Rule Id="CA1036" Action="None" />
@@ -723,7 +741,12 @@
     <Rule Id="CA1063" Action="None" />
     <Rule Id="CA1068" Action="None" />
     <Rule Id="CA1712" Action="None" />
+    <Rule Id="CA1802" Action="None" />
+    <Rule Id="CA1815" Action="None" />
+    <Rule Id="CA1819" Action="None" />
+    <Rule Id="CA1822" Action="None" />
     <Rule Id="CA2214" Action="None" />
+    <Rule Id="CA2217" Action="None" />
     <Rule Id="CA2219" Action="None" />
     <Rule Id="CA2231" Action="None" />
     <Rule Id="CA2244" Action="None" />
@@ -735,10 +758,14 @@
     <Rule Id="CA1032" Action="None" />
     <Rule Id="CA1065" Action="None" />
     <Rule Id="CA1507" Action="None" />
+    <Rule Id="CA1821" Action="None" />
     <Rule Id="CA2200" Action="None" />
   </Rules>
   <Rules AnalyzerId="Microsoft.NetCore.Analyzers" RuleNamespace="Microsoft.NetCore.Analyzers">
-    <Rule Id="CA1813" Action="Warning" />
+    <Rule Id="CA1813" Action="None" />
+    <Rule Id="CA1820" Action="None" />
+    <Rule Id="CA1827" Action="None" />
+    <Rule Id="CA1828" Action="None" />
     <Rule Id="CA2002" Action="None" />
     <Rule Id="CA2101" Action="None" />
     <Rule Id="CA2216" Action="None" />
@@ -757,6 +784,9 @@
     <Rule Id="CA5397" Action="None" />
   </Rules>
   <Rules AnalyzerId="Microsoft.NetCore.CSharp.Analyzers" RuleNamespace="Microsoft.NetCore.CSharp.Analyzers">
+    <Rule Id="CA1810" Action="None" />
+    <Rule Id="CA1825" Action="None" />
+    <Rule Id="CA1829" Action="None" />
     <Rule Id="CA2207" Action="None" />
   </Rules>
   <Rules AnalyzerId="Microsoft.NetFramework.Analyzers" RuleNamespace="Microsoft.NetFramework.Analyzers">
@@ -784,11 +814,266 @@
     <Rule Id="VSTHRD111" Action="None" />
     <Rule Id="VSTHRD200" Action="None" />
   </Rules>
+  <Rules AnalyzerId="Moq.Analyzers" RuleNamespace="Moq.Analyzers">
+    <Rule Id="Moq1000" Action="None" />
+    <Rule Id="Moq1001" Action="None" />
+    <Rule Id="Moq1002" Action="None" />
+    <Rule Id="Moq1100" Action="None" />
+    <Rule Id="Moq1101" Action="None" />
+    <Rule Id="Moq1200" Action="None" />
+    <Rule Id="Moq1300" Action="None" />
+  </Rules>
   <Rules AnalyzerId="MoqAnalyzer" RuleNamespace="MoqAnalyzer">
     <Rule Id="Moq01" Action="None" />
   </Rules>
+  <Rules AnalyzerId="ObsoleteFixer" RuleNamespace="ObsoleteFixer">
+    <Rule Id="ObsoleteFixer" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="PropertyChangedAnalyzers" RuleNamespace="PropertyChangedAnalyzers">
+    <Rule Id="INPC001" Action="None" />
+    <Rule Id="INPC002" Action="None" />
+    <Rule Id="INPC003" Action="None" />
+    <Rule Id="INPC004" Action="None" />
+    <Rule Id="INPC005" Action="None" />
+    <Rule Id="INPC006_a" Action="None" />
+    <Rule Id="INPC007" Action="None" />
+    <Rule Id="INPC008" Action="None" />
+    <Rule Id="INPC009" Action="None" />
+    <Rule Id="INPC010" Action="None" />
+    <Rule Id="INPC011" Action="None" />
+    <Rule Id="INPC012" Action="None" />
+    <Rule Id="INPC013" Action="None" />
+    <Rule Id="INPC014" Action="None" />
+    <Rule Id="INPC015" Action="None" />
+    <Rule Id="INPC016" Action="None" />
+    <Rule Id="INPC017" Action="None" />
+    <Rule Id="INPC018" Action="None" />
+    <Rule Id="INPC019" Action="None" />
+    <Rule Id="INPC020" Action="None" />
+    <Rule Id="INPC021" Action="None" />
+  </Rules>
   <Rules AnalyzerId="RecordConstructorGenerator" RuleNamespace="RecordConstructorGenerator">
     <Rule Id="RCNoAssignment" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="ReflectionIT.Analyzer" RuleNamespace="ReflectionIT.Analyzer">
+    <Rule Id="RIT0002" Action="None" />
+    <Rule Id="RIT0003" Action="None" />
+    <Rule Id="RIT0004" Action="None" />
+    <Rule Id="RIT0005" Action="None" />
+    <Rule Id="RIT0007" Action="None" />
+    <Rule Id="RIT0008" Action="None" />
+    <Rule Id="RIT0009" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="SecurityCodeScan" RuleNamespace="SecurityCodeScan">
+    <Rule Id="SCS0001" Action="None" />
+    <Rule Id="SCS0002" Action="None" />
+    <Rule Id="SCS0003" Action="None" />
+    <Rule Id="SCS0004" Action="None" />
+    <Rule Id="SCS0005" Action="None" />
+    <Rule Id="SCS0006" Action="None" />
+    <Rule Id="SCS0007" Action="None" />
+    <Rule Id="SCS0008" Action="None" />
+    <Rule Id="SCS0009" Action="None" />
+    <Rule Id="SCS0010" Action="None" />
+    <Rule Id="SCS0011" Action="None" />
+    <Rule Id="SCS0012" Action="None" />
+    <Rule Id="SCS0013" Action="None" />
+    <Rule Id="SCS0014" Action="None" />
+    <Rule Id="SCS0015" Action="None" />
+    <Rule Id="SCS0016" Action="None" />
+    <Rule Id="SCS0017" Action="None" />
+    <Rule Id="SCS0018" Action="None" />
+    <Rule Id="SCS0019" Action="None" />
+    <Rule Id="SCS0020" Action="None" />
+    <Rule Id="SCS0021" Action="None" />
+    <Rule Id="SCS0022" Action="None" />
+    <Rule Id="SCS0023" Action="None" />
+    <Rule Id="SCS0024" Action="None" />
+    <Rule Id="SCS0025" Action="None" />
+    <Rule Id="SCS0026" Action="None" />
+    <Rule Id="SCS0027" Action="None" />
+    <Rule Id="SCS0028" Action="None" />
+    <Rule Id="SCS0029" Action="None" />
+    <Rule Id="SCS0030" Action="None" />
+    <Rule Id="SCS0031" Action="None" />
+    <Rule Id="SCS0032" Action="None" />
+    <Rule Id="SCS0033" Action="None" />
+    <Rule Id="SCS0034" Action="None" />
+    <Rule Id="SCS0035" Action="None" />
+    <Rule Id="SCS0036" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <Rule Id="SA0001" Action="None" />
+    <Rule Id="SA0002" Action="None" />
+    <Rule Id="SA1000" Action="None" />
+    <Rule Id="SA1001" Action="None" />
+    <Rule Id="SA1002" Action="None" />
+    <Rule Id="SA1003" Action="None" />
+    <Rule Id="SA1004" Action="None" />
+    <Rule Id="SA1005" Action="None" />
+    <Rule Id="SA1006" Action="None" />
+    <Rule Id="SA1007" Action="None" />
+    <Rule Id="SA1008" Action="None" />
+    <Rule Id="SA1009" Action="None" />
+    <Rule Id="SA1010" Action="None" />
+    <Rule Id="SA1011" Action="None" />
+    <Rule Id="SA1012" Action="None" />
+    <Rule Id="SA1013" Action="None" />
+    <Rule Id="SA1014" Action="None" />
+    <Rule Id="SA1015" Action="None" />
+    <Rule Id="SA1016" Action="None" />
+    <Rule Id="SA1017" Action="None" />
+    <Rule Id="SA1018" Action="None" />
+    <Rule Id="SA1019" Action="None" />
+    <Rule Id="SA1020" Action="None" />
+    <Rule Id="SA1021" Action="None" />
+    <Rule Id="SA1022" Action="None" />
+    <Rule Id="SA1023" Action="None" />
+    <Rule Id="SA1024" Action="None" />
+    <Rule Id="SA1025" Action="None" />
+    <Rule Id="SA1026" Action="None" />
+    <Rule Id="SA1027" Action="None" />
+    <Rule Id="SA1028" Action="None" />
+    <Rule Id="SA1100" Action="None" />
+    <Rule Id="SA1101" Action="None" />
+    <Rule Id="SA1102" Action="None" />
+    <Rule Id="SA1103" Action="None" />
+    <Rule Id="SA1104" Action="None" />
+    <Rule Id="SA1105" Action="None" />
+    <Rule Id="SA1106" Action="None" />
+    <Rule Id="SA1107" Action="None" />
+    <Rule Id="SA1108" Action="None" />
+    <Rule Id="SA1110" Action="None" />
+    <Rule Id="SA1111" Action="None" />
+    <Rule Id="SA1112" Action="None" />
+    <Rule Id="SA1113" Action="None" />
+    <Rule Id="SA1114" Action="None" />
+    <Rule Id="SA1115" Action="None" />
+    <Rule Id="SA1116" Action="None" />
+    <Rule Id="SA1117" Action="None" />
+    <Rule Id="SA1118" Action="None" />
+    <Rule Id="SA1119" Action="None" />
+    <Rule Id="SA1120" Action="None" />
+    <Rule Id="SA1121" Action="None" />
+    <Rule Id="SA1122" Action="None" />
+    <Rule Id="SA1123" Action="None" />
+    <Rule Id="SA1124" Action="None" />
+    <Rule Id="SA1125" Action="None" />
+    <Rule Id="SA1127" Action="None" />
+    <Rule Id="SA1128" Action="None" />
+    <Rule Id="SA1129" Action="None" />
+    <Rule Id="SA1130" Action="None" />
+    <Rule Id="SA1131" Action="None" />
+    <Rule Id="SA1132" Action="None" />
+    <Rule Id="SA1133" Action="None" />
+    <Rule Id="SA1134" Action="None" />
+    <Rule Id="SA1135" Action="None" />
+    <Rule Id="SA1136" Action="None" />
+    <Rule Id="SA1137" Action="None" />
+    <Rule Id="SA1139" Action="None" />
+    <Rule Id="SA1200" Action="None" />
+    <Rule Id="SA1201" Action="None" />
+    <Rule Id="SA1202" Action="None" />
+    <Rule Id="SA1203" Action="None" />
+    <Rule Id="SA1204" Action="None" />
+    <Rule Id="SA1205" Action="None" />
+    <Rule Id="SA1206" Action="None" />
+    <Rule Id="SA1207" Action="None" />
+    <Rule Id="SA1208" Action="None" />
+    <Rule Id="SA1209" Action="None" />
+    <Rule Id="SA1210" Action="None" />
+    <Rule Id="SA1211" Action="None" />
+    <Rule Id="SA1212" Action="None" />
+    <Rule Id="SA1213" Action="None" />
+    <Rule Id="SA1214" Action="None" />
+    <Rule Id="SA1216" Action="None" />
+    <Rule Id="SA1217" Action="None" />
+    <Rule Id="SA1300" Action="None" />
+    <Rule Id="SA1302" Action="None" />
+    <Rule Id="SA1303" Action="None" />
+    <Rule Id="SA1304" Action="None" />
+    <Rule Id="SA1306" Action="None" />
+    <Rule Id="SA1307" Action="None" />
+    <Rule Id="SA1308" Action="None" />
+    <Rule Id="SA1309" Action="None" />
+    <Rule Id="SA1310" Action="None" />
+    <Rule Id="SA1311" Action="None" />
+    <Rule Id="SA1312" Action="None" />
+    <Rule Id="SA1313" Action="None" />
+    <Rule Id="SA1314" Action="None" />
+    <Rule Id="SA1400" Action="None" />
+    <Rule Id="SA1401" Action="None" />
+    <Rule Id="SA1402" Action="None" />
+    <Rule Id="SA1403" Action="None" />
+    <Rule Id="SA1404" Action="None" />
+    <Rule Id="SA1405" Action="None" />
+    <Rule Id="SA1406" Action="None" />
+    <Rule Id="SA1407" Action="None" />
+    <Rule Id="SA1408" Action="None" />
+    <Rule Id="SA1410" Action="None" />
+    <Rule Id="SA1411" Action="None" />
+    <Rule Id="SA1413" Action="None" />
+    <Rule Id="SA1500" Action="None" />
+    <Rule Id="SA1501" Action="None" />
+    <Rule Id="SA1502" Action="None" />
+    <Rule Id="SA1503" Action="None" />
+    <Rule Id="SA1504" Action="None" />
+    <Rule Id="SA1505" Action="None" />
+    <Rule Id="SA1506" Action="None" />
+    <Rule Id="SA1507" Action="None" />
+    <Rule Id="SA1508" Action="None" />
+    <Rule Id="SA1509" Action="None" />
+    <Rule Id="SA1510" Action="None" />
+    <Rule Id="SA1511" Action="None" />
+    <Rule Id="SA1512" Action="None" />
+    <Rule Id="SA1513" Action="None" />
+    <Rule Id="SA1514" Action="None" />
+    <Rule Id="SA1515" Action="None" />
+    <Rule Id="SA1516" Action="None" />
+    <Rule Id="SA1517" Action="None" />
+    <Rule Id="SA1518" Action="None" />
+    <Rule Id="SA1519" Action="None" />
+    <Rule Id="SA1520" Action="None" />
+    <Rule Id="SA1600" Action="None" />
+    <Rule Id="SA1601" Action="None" />
+    <Rule Id="SA1602" Action="None" />
+    <Rule Id="SA1604" Action="None" />
+    <Rule Id="SA1605" Action="None" />
+    <Rule Id="SA1606" Action="None" />
+    <Rule Id="SA1607" Action="None" />
+    <Rule Id="SA1608" Action="None" />
+    <Rule Id="SA1610" Action="None" />
+    <Rule Id="SA1611" Action="None" />
+    <Rule Id="SA1612" Action="None" />
+    <Rule Id="SA1613" Action="None" />
+    <Rule Id="SA1614" Action="None" />
+    <Rule Id="SA1615" Action="None" />
+    <Rule Id="SA1616" Action="None" />
+    <Rule Id="SA1617" Action="None" />
+    <Rule Id="SA1618" Action="None" />
+    <Rule Id="SA1619" Action="None" />
+    <Rule Id="SA1620" Action="None" />
+    <Rule Id="SA1621" Action="None" />
+    <Rule Id="SA1622" Action="None" />
+    <Rule Id="SA1623" Action="None" />
+    <Rule Id="SA1624" Action="None" />
+    <Rule Id="SA1625" Action="None" />
+    <Rule Id="SA1626" Action="None" />
+    <Rule Id="SA1627" Action="None" />
+    <Rule Id="SA1629" Action="None" />
+    <Rule Id="SA1633" Action="None" />
+    <Rule Id="SA1634" Action="None" />
+    <Rule Id="SA1635" Action="None" />
+    <Rule Id="SA1636" Action="None" />
+    <Rule Id="SA1637" Action="None" />
+    <Rule Id="SA1638" Action="None" />
+    <Rule Id="SA1640" Action="None" />
+    <Rule Id="SA1641" Action="None" />
+    <Rule Id="SA1642" Action="None" />
+    <Rule Id="SA1643" Action="None" />
+    <Rule Id="SA1648" Action="None" />
+    <Rule Id="SA1649" Action="None" />
+    <Rule Id="SA1651" Action="None" />
   </Rules>
   <Rules AnalyzerId="ToStringWithoutOverrideAnalyzer" RuleNamespace="ToStringWithoutOverrideAnalyzer">
     <Rule Id="ConsoleWriteImplicitToStringAnalyzer" Action="None" />
@@ -814,5 +1099,8 @@
   </Rules>
   <Rules AnalyzerId="ValueObjectAnalyzer" RuleNamespace="ValueObjectAnalyzer">
     <Rule Id="ValueObjectAnalyzer" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="WarnAboutTODOs" RuleNamespace="WarnAboutTODOs">
+    <Rule Id="TODO" Action="None" />
   </Rules>
 </RuleSet>
