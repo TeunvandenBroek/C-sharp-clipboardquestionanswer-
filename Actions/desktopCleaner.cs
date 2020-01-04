@@ -30,10 +30,13 @@ namespace it.Actions
             System.IO.Directory.CreateDirectory(imagesFolder);
             string audioFolder = System.IO.Path.Combine(cleanupPath, "Audio");
             System.IO.Directory.CreateDirectory(audioFolder);
+            string compressedFolder = System.IO.Path.Combine(cleanupPath, "Compressed");
+            System.IO.Directory.CreateDirectory(compressedFolder);
             string textFolder = System.IO.Path.Combine(cleanupPath, "Text");
             System.IO.Directory.CreateDirectory(textFolder);
             string videosFolder = System.IO.Path.Combine(cleanupPath, "Video");
             System.IO.Directory.CreateDirectory(videosFolder);
+
 
             string[] array = Directory.GetFiles(desktopPath);
             for (int i = 0; i < array.Length; i++)
@@ -45,6 +48,8 @@ namespace it.Actions
                     File.Move(fileName, Path.Combine(cleanupPath, "Audio", Path.GetFileName(fileName)));
                 if (fileName.ToLower().EndsWith(".txt") || fileName.ToLower().EndsWith(".docx"))
                     File.Move(fileName, Path.Combine(cleanupPath, "Text", Path.GetFileName(fileName)));
+                if (fileName.ToLower().EndsWith(".zip") || fileName.ToLower().EndsWith(".rar"))
+                    File.Move(fileName, Path.Combine(cleanupPath, "Compressed", Path.GetFileName(fileName)));
                 if (fileName.EndsWith(".3g2"))
                     File.Move(fileName, Path.Combine(cleanupPath, "Video", Path.GetFileName(fileName)));
             }
