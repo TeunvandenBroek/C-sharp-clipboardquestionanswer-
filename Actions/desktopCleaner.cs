@@ -39,11 +39,11 @@ namespace it.Actions
             for (int i = 0; i < array.Length; i++)
             {
                 string fileName = array[i];
-                if (fileName.EndsWith(".jpg"))
+                if (fileName.ToLower().EndsWith(".png") || fileName.ToLower().EndsWith(".jpg"))
                     File.Move(fileName, Path.Combine(cleanupPath, "Afbeeldingen", Path.GetFileName(fileName)));
                 if (fileName.EndsWith(".aif"))
                     File.Move(fileName, Path.Combine(cleanupPath, "Audio", Path.GetFileName(fileName)));
-                if (fileName.EndsWith(".txt"))
+                if (fileName.ToLower().EndsWith(".txt") || fileName.ToLower().EndsWith(".docx"))
                     File.Move(fileName, Path.Combine(cleanupPath, "Text", Path.GetFileName(fileName)));
                 if (fileName.EndsWith(".3g2"))
                     File.Move(fileName, Path.Combine(cleanupPath, "Video", Path.GetFileName(fileName)));
