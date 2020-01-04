@@ -35,8 +35,10 @@ namespace it.Actions
             string videosFolder = System.IO.Path.Combine(cleanupPath, "Video");
             System.IO.Directory.CreateDirectory(videosFolder);
 
-            foreach (var fileName in Directory.GetFiles(desktopPath))
+            string[] array = Directory.GetFiles(desktopPath);
+            for (int i = 0; i < array.Length; i++)
             {
+                string fileName = array[i];
                 if (fileName.EndsWith(".jpg"))
                     File.Move(fileName, Path.Combine(cleanupPath, "Afbeeldingen", Path.GetFileName(fileName)));
                 if (fileName.EndsWith(".aif"))
