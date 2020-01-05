@@ -15,6 +15,18 @@ namespace it.Actions
             return clipboardText.EndsWith("desktop cleaner", StringComparison.Ordinal) || clipboardText.EndsWith("bureaublad schoonmaak", StringComparison.Ordinal);
         }
 
+        private static Dictionary<string, string> CategoryAssociations = new Dictionary<string, string>
+        (StringComparer.Ordinal)
+        {
+            { ".7zip",  "Compressed" },
+            { ".bmp" ,"Images" },
+            { ".jpg" , "Images" },
+            { ".png" ,"Images" },
+            { ".rar" , "Compressed" },
+            { ".zip" , "Compressed" },
+            {".txt", "Text" }
+        };
+
         public ActionResult TryExecute(string clipboardText)
         {
             if (string.IsNullOrWhiteSpace(clipboardText))
@@ -26,7 +38,7 @@ namespace it.Actions
             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             string cleanupPath = System.IO.Path.Combine(desktopPath, "Cleanup");
             System.IO.Directory.CreateDirectory(cleanupPath);
-            string imagesFolder = System.IO.Path.Combine(cleanupPath, "Afbeeldingen");
+            string imagesFolder = System.IO.Path.Combine(cleanupPath, "Images");
             System.IO.Directory.CreateDirectory(imagesFolder);
             string audioFolder = System.IO.Path.Combine(cleanupPath, "Audio");
             System.IO.Directory.CreateDirectory(audioFolder);
@@ -38,20 +50,12 @@ namespace it.Actions
             System.IO.Directory.CreateDirectory(videosFolder);
 
 
-            string[] array = Directory.GetFiles(desktopPath);
-            for (int i = 0; i < array.Length; i++)
+            foreach (string file in Directory.GetFiles(desktopPath))
             {
-                string fileName = array[i];
-                if (fileName.ToLower().EndsWith(".png") || fileName.ToLower().EndsWith(".jpg"))
-                    File.Move(fileName, Path.Combine(cleanupPath, "Afbeeldingen", Path.GetFileName(fileName)));
-                if (fileName.EndsWith(".aif"))
-                    File.Move(fileName, Path.Combine(cleanupPath, "Audio", Path.GetFileName(fileName)));
-                if (fileName.ToLower().EndsWith(".txt") || fileName.ToLower().EndsWith(".docx"))
-                    File.Move(fileName, Path.Combine(cleanupPath, "Text", Path.GetFileName(fileName)));
-                if (fileName.ToLower().EndsWith(".zip") || fileName.ToLower().EndsWith(".rar"))
-                    File.Move(fileName, Path.Combine(cleanupPath, "Compressed", Path.GetFileName(fileName)));
-                if (fileName.EndsWith(".3g2"))
-                    File.Move(fileName, Path.Combine(cleanupPath, "Video", Path.GetFileName(fileName)));
+                if (Path.HasExtension(file))
+                {
+                    File.Move(file, cleanupPath + "/" + CategoryAssociations[Path.GetExtension(file)] + "/" + file);
+                }
             }
 
             switch (currentCulture.LCID)
