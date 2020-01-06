@@ -48,13 +48,23 @@ namespace it.Actions
             System.IO.Directory.CreateDirectory(textFolder);
             string videosFolder = System.IO.Path.Combine(cleanupPath, "Video");
             System.IO.Directory.CreateDirectory(videosFolder);
+            string overig = System.IO.Path.Combine(cleanupPath, "overig");
+            System.IO.Directory.CreateDirectory(overig);
 
-
-            foreach (string file in Directory.GetFiles(desktopPath))
+            string[] array = Directory.GetFiles(desktopPath);
+            for (int i = 0; i < array.Length; i++)
             {
+                string file = array[i];
                 if (Path.HasExtension(file))
                 {
-                    File.Move(file, cleanupPath + "/" + CategoryAssociations[Path.GetExtension(file)] + "/" + file);
+                    if (!CategoryAssociations.ContainsKey(Path.GetExtension(file)))
+                    {
+                        File.Move(file, Path.Combine(cleanupPath, "overig", Path.GetFileName(file)));
+                    }
+                    else
+                    {
+                        File.Move(file, Path.Combine(cleanupPath, CategoryAssociations[Path.GetExtension(file)], Path.GetFileName(file)));
+                    }
                 }
             }
 
