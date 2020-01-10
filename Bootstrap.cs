@@ -17,7 +17,7 @@ namespace it
     ///     The bootstrap class is provided to allow the application to run with out a form.
     ///     We can use a form however in the future by adding it to here.
     /// </summary> 
-    internal sealed class Bootstrap : IDisposable
+    internal class Bootstrap : IDisposable
     {
         private readonly ClipboardMonitor clipboardMonitor = new ClipboardMonitor();
         private readonly ControlContainer container = new ControlContainer();
@@ -41,53 +41,45 @@ namespace it
             clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
         }
 
-        private bool disposed;
-
+        private IntPtr handle;
+        private bool disposed = false;
 
         public void Dispose()
         {
-            GC.SuppressFinalize(this);
             Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (disposed)
             {
                 return;
             }
-            disposed = true;
-
             if (disposing)
             {
-                if (serviceProvider != null)
-                {
-                    (serviceProvider as IDisposable)?.Dispose();
-                    serviceProvider = null;
-                }
-                if (notifyIcon != null)
-                {
-                    notifyIcon?.Dispose();
-                }
-                if (container != null)
-                {
-                    container?.Dispose();
-                }
-                if (clipboardMonitor != null)
-                {
-                    clipboardMonitor?.Dispose();
-                }
+                (serviceProvider as IDisposable)?.Dispose();
+                notifyIcon?.Dispose();
+                container?.Dispose();
+                clipboardMonitor?.Dispose();
             }
+            CloseHandle(handle);
+            handle = IntPtr.Zero;
+            disposed = true;
         }
-
-
-        private void ConfigureDependancies()
+        [System.Runtime.InteropServices.DllImport("Kernel32")]
+        private extern static Boolean CloseHandle(IntPtr handle);
+        ~Bootstrap()
+        {
+            Dispose(false);
+        }
+    
+         private void ConfigureDependancies()
         {
             // Add configure services
             ServiceCollection serviceDescriptors = new ServiceCollection();
             _ = serviceDescriptors.AddSingleton<IAction, ConvertActions>();
             _ = serviceDescriptors.AddSingleton<IAction, TryRomanActions>(); 
-            _ = serviceDescriptors.AddSingleton<IAction, PythonActions>();
             _ = serviceDescriptors.AddSingleton<IAction, CountdownActions>();
             _ = serviceDescriptors.AddSingleton<IAction, DeviceActions>();
             _ = serviceDescriptors.AddSingleton<IAction, RandomActions>();
@@ -98,6 +90,7 @@ namespace it
             _ = serviceDescriptors.AddSingleton<IAction, TimezoneActions>();
             _ = serviceDescriptors.AddSingleton<IAction, BmiActions>();
             _ = serviceDescriptors.AddSingleton<IAction, tryBinary>();
+            _ = serviceDescriptors.AddSingleton<IAction, autoClicker>();
             _ = serviceDescriptors.AddSingleton<IAction, MathActions>();
             (serviceProvider as IDisposable)?.Dispose();
             serviceProvider = serviceDescriptors.BuildServiceProvider();

@@ -73,6 +73,12 @@
     <StartupObject>it.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Amusoft.EventManagement, Version=3.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\WeakEvent.3.0.3\lib\net45\Amusoft.EventManagement.dll</HintPath>
+    </Reference>
+    <Reference Include="AppDomainToolkit, Version=1.0.4.1, Culture=neutral, PublicKeyToken=f2fc7ab5180cf5c4, processorArchitecture=MSIL">
+      <HintPath>packages\AppDomainToolkit.1.0.4.3\lib\net\AppDomainToolkit.dll</HintPath>
+    </Reference>
     <Reference Include="AutoParse, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\AutoParse.1.0.0\lib\net40\AutoParse.dll</HintPath>
     </Reference>
@@ -103,6 +109,9 @@
     <Reference Include="DependentTaskRunner, Version=1.0.6370.25830, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\DependentTaskRunner.1.0.6370.25830\lib\net452\DependentTaskRunner.dll</HintPath>
     </Reference>
+    <Reference Include="Dictionary, Version=2.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Dictionary.2.1.1\lib\Dictionary.dll</HintPath>
+    </Reference>
     <Reference Include="EcmaScript.NET, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\EcmaScript.NET.2.0.0\lib\net45\EcmaScript.NET.dll</HintPath>
     </Reference>
@@ -111,6 +120,9 @@
     </Reference>
     <Reference Include="EvalScript, Version=2.6.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\EvalScript.2.6.3\lib\net40\EvalScript.dll</HintPath>
+    </Reference>
+    <Reference Include="FastDictionaryComparer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\FastDictionaryComparer.0.0.1\lib\netstandard2.0\FastDictionaryComparer.dll</HintPath>
     </Reference>
     <Reference Include="FluentRegex, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\FluentRegex.0.1.0\lib\netstandard2.0\FluentRegex.dll</HintPath>
@@ -213,6 +225,7 @@
     <Reference Include="NCode.ArrayLeases, Version=1.0.0.0, Culture=neutral, PublicKeyToken=145a7f8fbb17f9f4, processorArchitecture=MSIL">
       <HintPath>packages\NCode.ArrayLeases.1.0.0\lib\net45\NCode.ArrayLeases.dll</HintPath>
     </Reference>
+    <Reference Include="netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" />
     <Reference Include="New.Instance, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\New.Instance.0.1.0\lib\net40-client\New.Instance.dll</HintPath>
     </Reference>
@@ -400,7 +413,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Actions\Benchmark.cs" />
+    <Compile Include="Actions\autoClicker.cs" />
     <Compile Include="Actions\BmiActions.cs" />
     <Compile Include="Actions\ConvertActions.cs" />
     <Compile Include="Actions\convertUppercase.cs" />
@@ -409,7 +422,6 @@
     <Compile Include="Actions\IAction.cs" />
     <Compile Include="Actions\MathActions.cs" />
     <Compile Include="Actions\numberToHex.cs" />
-    <Compile Include="Actions\PythonActions.cs" />
     <Compile Include="Actions\RandomActions.cs" />
     <Compile Include="Actions\StopwatchActions.cs" />
     <Compile Include="Actions\TimespanActions.cs" />
@@ -470,6 +482,7 @@
   <ItemGroup>
     <Analyzer Include="packages\AnyConstraint.Analyzer.1.1.0\analyzers\dotnet\cs\AnyConstraint.Analyzer.dll" />
     <Analyzer Include="packages\AsyncFixer.1.1.6\analyzers\dotnet\cs\AsyncFixer.dll" />
+    <Analyzer Include="packages\CodeFix.1.2.1.0\analyzers\dotnet\cs\AvNextPropertyCodeFix.dll" />
     <Analyzer Include="packages\Codelet.TypeScripter.Analyzer.1.0.17\analyzers\dotnet\cs\Codelet.TypeScripter.Analyzer.dll" />
     <Analyzer Include="packages\EntityFrameworkPerformanceAnalyzer.1.0.6319.40789\analyzers\dotnet\cs\EntityFrameworkAnalyzer.dll" />
     <Analyzer Include="packages\Enums.NET.Analyzer.3.0.1\analyzers\dotnet\cs\Enums.NET.Analyzer.dll" />
@@ -478,6 +491,8 @@
     <Analyzer Include="packages\ErrorProne.NET.Structs.0.1.2\analyzers\dotnet\cs\ErrorProne.Net.StructAnalyzers.dll" />
     <Analyzer Include="packages\ErrorProne.NET.Structs.0.1.2\analyzers\dotnet\cs\RuntimeContracts.dll" />
     <Analyzer Include="packages\ExceptionAnalyzer.1.0.5\tools\analyzers\ExceptionAnalyzer.dll" />
+    <Analyzer Include="packages\Faithlife.Analyzers.1.0.5\analyzers\dotnet\cs\Faithlife.Analyzers.dll" />
+    <Analyzer Include="packages\FakeItEasy.Analyzer.CSharp.5.3.0\analyzers\dotnet\cs\FakeItEasy.Analyzer.CSharp.dll" />
     <Analyzer Include="packages\GCop.Conditional.2.6.1\analyzers\dotnet\cs\GCop.Conditional.dll" />
     <Analyzer Include="packages\GCop.String.2.6.1\analyzers\dotnet\cs\GCop.String.dll" />
     <Analyzer Include="packages\IDisposableAnalyzers.3.2.0\analyzers\dotnet\cs\IDisposableAnalyzers.dll" />
@@ -506,6 +521,7 @@
     <Analyzer Include="packages\RecordConstructorGenerator.3.3.0\tools\analyzers\C#\System.Composition.Hosting.dll" />
     <Analyzer Include="packages\RecordConstructorGenerator.3.3.0\tools\analyzers\C#\System.Composition.Runtime.dll" />
     <Analyzer Include="packages\RecordConstructorGenerator.3.3.0\tools\analyzers\C#\System.Composition.TypedParts.dll" />
+    <Analyzer Include="packages\RG.CodeAnalyzer.1.0.13\analyzers\dotnet\cs\RG.CodeAnalyzer.dll" />
     <Analyzer Include="packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
     <Analyzer Include="packages\ToStringWithoutOverrideAnalyzer.0.6.0.0\analyzers\dotnet\cs\ToStringWithoutOverrideAnalyzer.dll" />

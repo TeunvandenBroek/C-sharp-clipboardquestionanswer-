@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace it
 {
-    internal class Questions
+    internal static class Questions
     {
-        private static IReadOnlyDictionary<string, string> questionDict = new Dictionary<string, string>(750,StringComparer.Ordinal)
+        private static IReadOnlyDictionary<string, string> questionDict = new Dictionary<string, string>(495,StringComparer.Ordinal)
         {
             //Add question/answer to list
             //hoofdstuk 3 it
@@ -1032,14 +1032,14 @@ namespace it
 
             ["Kristel legt plakplinten langs de muur van haar woonkamer."] = "23,70",
 
-            ["straat"] = "b (het meest rechtsonder"
+            ["straat"] = "b (het meest rechtsonder",
         };
-
 
 
         internal static IReadOnlyList<Question> LoadQuestions()
         {
             return questionDict.Select(item => new Question(item.Key, item.Value)).ToList();
+
         }
     }
 }
