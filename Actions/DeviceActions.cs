@@ -75,7 +75,7 @@ namespace it.Actions
             for (int i = 0; i < commands.Length; i++)
             {
                 string command = commands[i];
-                if (command.Equals(clipboardText, StringComparison.OrdinalIgnoreCase))
+                if (command.Equals(clipboardText, StringComparison.Ordinal))
                 {
                     return true;
                 } 
@@ -372,18 +372,6 @@ namespace it.Actions
                             return actionResult;
                         }
                     }
-                case "count words":
-                case "tel woorden":
-                    {
-                        if (!isCountingWords)
-                        {
-                            actionResult.Title = null;
-                            actionResult.Description = null;
-                            isCountingWords = true;
-                        }
-
-                        return actionResult;
-                    }
                 case "ip":
                     {
                         string externalIpAddress = null;
@@ -423,6 +411,18 @@ namespace it.Actions
                                     return actionResult;
                                 }
                         }
+                    }
+                case "count words":
+                case "tel woorden":
+                    {
+                        if (!isCountingWords)
+                        {
+                            actionResult.Title = null;
+                            actionResult.Description = null;
+                            isCountingWords = true;
+                        }
+
+                        return actionResult;
                     }
                 default:
                     {

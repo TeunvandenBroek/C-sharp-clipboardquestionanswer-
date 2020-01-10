@@ -1,13 +1,17 @@
 ﻿namespace it.Actions
 {
+    using System;
+    using System.Diagnostics;
     using System.Globalization;
+    using System.Text;
     using System.Text.RegularExpressions;
     using System.Windows.Forms;
 
     internal sealed class ConvertActions : ActionBase
     {
         private readonly Regex unitRegex =
-        new Regex("(?<number>^[0-9]+([.,][0-9]+)?)(\\s*)(?<from>[a-z]+[2-3]?) (to|naar) (?<to>[a-z]+[2-3]?)");
+        new Regex("(?<number>^[0-9]+([.,][0-9]+)?)(\\s*)(?<from>[a-z]+[2-3]?) (to|naar) (?<to>[a-z]+[2-3]?)", RegexOptions.Compiled);
+
         public override bool Matches(string clipboardText = null)
         {
             if (clipboardText is null)
@@ -48,7 +52,7 @@
                         break;
                     }
                 case "m":
-                case nameof(meter):
+                case "meter":
                     {
                         meter = number;
                         break;
@@ -113,7 +117,7 @@
                         break;
                     }
                 case "gr":
-                case nameof(gram):
+                case "gram":
                     {
                         gram = number;
                         break;
@@ -155,7 +159,7 @@
                         break;
                     }
                 case "l":
-                case nameof(liter):
+                case "liter":
                     {
                         liter = number;
                         break;
@@ -252,7 +256,7 @@
                         break;
                     }
                 case "m":
-                case nameof(meter):
+                case "meter":
                     {
                         result = meter;
                         break;
@@ -317,7 +321,7 @@
                         break;
                     }
                 case "gr":
-                case nameof(gram):
+                case "gram":
                     {
                         result = gram;
                         break;
@@ -359,7 +363,7 @@
                         break;
                     }
                 case "l":
-                case nameof(liter):
+                case "liter":
                     {
                         result = liter;
                         break;
@@ -427,7 +431,6 @@
                         result = snelheid / 3.6;
                         break;
                     }
-
                 default:
                     break;
             }

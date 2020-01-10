@@ -11,7 +11,7 @@ namespace it.Actions
         {
             return clipboardText.StartsWith("timer", StringComparison.Ordinal) && TimeSpan.TryParse(clipboardText.Replace("timer ", string.Empty), out TimeSpan _);
         }
-        
+
 
         ActionResult IAction.TryExecute(string clipboardText)
         {

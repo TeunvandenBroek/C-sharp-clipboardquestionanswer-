@@ -6,9 +6,9 @@ using System.Text.RegularExpressions;
 
 namespace it.Actions
 {
-    public sealed class BmiActions : IAction 
+    public sealed class BmiActions : IAction
     {
-        private readonly Regex bmi = new Regex("^(?<age>[0-9]+)(years|jaar) (?<weight>[0-9]+)kg (?<height>[0-9]+)cm(?= to bmi)");
+        private readonly Regex bmi = new Regex("^(?<age>[0-9]+)(years|jaar) (?<weight>[0-9]+)kg (?<height>[0-9]+)cm(?= to bmi)", RegexOptions.Compiled);
 
         private readonly IReadOnlyDictionary<(decimal From, decimal To), string> BmiToDictionary = new Dictionary<(decimal From, decimal To), string>(8)
         {
@@ -21,6 +21,11 @@ namespace it.Actions
             {(35, 40),"Severly Obese"},
             {(40, 99999),"Very Severly Obese"},
         };
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as BmiActions);
+        }
 
         public bool Matches(string clipboardText)
         {
