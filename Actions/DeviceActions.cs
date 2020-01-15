@@ -20,7 +20,7 @@ namespace it.Actions
         private readonly string[] commands = { "sluit", "opnieuw opstarten", "reboot", "slaapstand", "sleep", "taakbeheer",
             "task mananger", "notepad", "kladblok", "leeg prullebak", "prullebak", "empty recycle bin", "empty bin",
             "empty recycling bin", "vergrendel", "lock", nameof(afsluiten), "shut down", "ram", "windows versie", "windows version",
-            "mac-adres", "mac", "mac address", "computer naam", "computer name", "cpu", "wifi check", "heb ik internet?", "count words", "ip", "runtime"};
+            "mac-adres", "mac", "mac address", "computer naam", "computer name", "cpu", "wifi check", "heb ik internet?", "count words", "tel woorden", "ip", "runtime"};
 
         private readonly SmartPerformanceCounter cpuCounter = new SmartPerformanceCounter(
             () => new PerformanceCounter("Processor", "% Processor Time", "_Total"), TimeSpan.FromMinutes(1));
@@ -417,8 +417,8 @@ namespace it.Actions
                     {
                         if (!isCountingWords)
                         {
-                            actionResult.Title = null;
-                            actionResult.Description = null;
+                            actionResult.Title = "tel woorden";
+                            actionResult.Description = "tel woorden";
                             isCountingWords = true;
                         }
 

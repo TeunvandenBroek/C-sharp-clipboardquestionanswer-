@@ -7,6 +7,11 @@ using System.Text.RegularExpressions;
 
 namespace it.Actions
 {
+    struct CustomPair
+    {
+        public int Key;
+        public string Value;
+    }
     internal sealed class TryRomanActions : IAction
     {
         public static readonly IReadOnlyDictionary<int, string> NumberRomanDictionary;
@@ -80,8 +85,8 @@ namespace it.Actions
        
         public static string To(int number)
         {
-            StringBuilder roman = new StringBuilder(1);
-            foreach (KeyValuePair<int, string> item in NumberRomanDictionary)
+            StringBuilder roman = new StringBuilder();
+                foreach (KeyValuePair<int, string> item in NumberRomanDictionary)
             {
                 while (number >= item.Key)
                 {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BenchmarkDotNet.Running;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -40,13 +41,18 @@ namespace it.Actions
             int weight = (int)decimal.Parse(clipboardText.Substring(ageIndex + 3, weigthIndex - (ageIndex + 3)).Trim());
             int heightIndex = clipboardText.IndexOf("height", StringComparison.Ordinal);
             double height = (int)decimal.Parse(clipboardText.Substring(weigthIndex + 6, heightIndex - (weigthIndex + 6)).Trim());
-            double bmi = weight / (Math.Pow(height / 100.0, 2));
+            double bmi = CalculateBMI(weight, height);
             bmi = Math.Round(bmi, 2);
             string bmiDescription = BmiToDictionary.First(kvp => kvp.Key.From <= bmi && bmi < kvp.Key.To).Value;
             actionResult.Title = "Calculate bmi";
             actionResult.Description = $"{bmi}, {bmiDescription}";
             return actionResult;
 
+        }
+
+        private static double CalculateBMI(int weight, double height)
+        {
+            return weight / (Math.Pow(height / 100.0, 2));
         }
     }
 }
