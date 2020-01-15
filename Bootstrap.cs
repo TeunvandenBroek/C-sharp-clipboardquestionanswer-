@@ -1,23 +1,21 @@
+using it.Actions;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Win32;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.Linq;
+using System.Reflection;
+using System.Windows.Forms;
+
 namespace it
 {
-    using it.Actions;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Win32;
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
-    using System.Windows.Forms;
-
     /// <summary>
     ///     The bootstrap class is provided to allow the application to run with out a form.
     ///     We can use a form however in the future by adding it to here.
     /// </summary> 
-    internal class Bootstrap : IDisposable
+    internal sealed class Bootstrap : IDisposable
     {
         private readonly ClipboardMonitor clipboardMonitor = new ClipboardMonitor();
         private readonly ControlContainer container = new ControlContainer();
@@ -50,7 +48,7 @@ namespace it
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposed)
             {
@@ -73,13 +71,13 @@ namespace it
         {
             Dispose(false);
         }
-    
-         private void ConfigureDependancies()
+
+        private void ConfigureDependancies()
         {
             // Add configure services
             ServiceCollection serviceDescriptors = new ServiceCollection();
             _ = serviceDescriptors.AddSingleton<IAction, ConvertActions>();
-            _ = serviceDescriptors.AddSingleton<IAction, TryRomanActions>(); 
+            _ = serviceDescriptors.AddSingleton<IAction, TryRomanActions>();
             _ = serviceDescriptors.AddSingleton<IAction, CountdownActions>();
             _ = serviceDescriptors.AddSingleton<IAction, DeviceActions>();
             _ = serviceDescriptors.AddSingleton<IAction, RandomActions>();
@@ -99,9 +97,9 @@ namespace it
         {
 
         }
-
+        bool clipboardPaused = false;
         private void ClipboardMonitor_ClipboardChanged(object sender, ClipboardChangedEventArgs e)
-        { 
+        {
             // retrieve the text from the clipboard
             if (e.DataObject.GetData(DataFormats.Text) is string clipboardText)
             {
@@ -110,12 +108,23 @@ namespace it
                 {
                     return;
                 }
-
+                if (clipboardPaused)
+                {
+                    if (clipboardText.Equals("resume"))
+                    {
+                        clipboardPaused = false;
+                    }
+                    return;
+                }
+                if (clipboardText.Equals("pause"))
+                {
+                    clipboardPaused = true;
+                    return;
+                }
                 // if we get to here, we have text
                 ProcessClipboardText(clipboardText);
             }
         }
-
         private void ProcessClipboardText(string clipboardText)
         {
             if (clipboardText is null)
@@ -125,7 +134,7 @@ namespace it
 
             try
             {
-                IAction service = serviceProvider.GetServices<IAction>().FirstOrDefault(s => s.Matches(clipboardText));
+                IAction service = GetService(clipboardText);
                 if (service is object)
                 {
                     clipboardMonitor.ClipboardChanged -= ClipboardMonitor_ClipboardChanged;
@@ -148,7 +157,6 @@ namespace it
                         {
                             ProcessResult(new ActionResult(question.Text, question.Answer), clipboardText);
                             return;
-
                         }
                     }
                 }
@@ -159,8 +167,19 @@ namespace it
             }
         }
 
+        private IAction GetService(string clipboardText)
+        {
+            return serviceProvider.GetServices<IAction>().FirstOrDefault(s => s.Matches(GetClipboardText(clipboardText)));
+        }
+
+        private static string GetClipboardText(string clipboardText)
+        {
+            return clipboardText;
+        }
+
         private void ProcessResult(ActionResult actionResult, string clipboardText)
         {
+            _ = Stopwatch.StartNew();
             if (clipboardText is null)
             {
                 throw new ArgumentNullException(nameof(clipboardText));
@@ -176,7 +195,6 @@ namespace it
             notifyIcon.BalloonTipText = actionResult.Description;
             notifyIcon.BalloonTipIcon = ToolTipIcon.Error;
             notifyIcon.ShowBalloonTip(1000);
-
         }
 
         internal static void EnsureWindowStartup(bool isStartingWithWindows)
