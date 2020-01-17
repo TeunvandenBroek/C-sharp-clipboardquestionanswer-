@@ -81,17 +81,15 @@ namespace it.Actions
        
         public static string To(int number)
         {
-            StringBuilder roman = new StringBuilder();
+            StringBuilder roman = new StringBuilder(1000);
             foreach (KeyValuePair<int, string> item in NumberRomanDictionary)
             {
-                roman.Clear();
                 while (number >= item.Key)
                 {
                     _ = roman.Append(item.Value);
                     number -= item.Key;
                 }
             }
-
             return roman.ToString();
         }
 
