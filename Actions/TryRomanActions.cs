@@ -7,11 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace it.Actions
 {
-    struct CustomPair
-    {
-        public int Key;
-        public string Value;
-    }
+
     internal sealed class TryRomanActions : IAction
     {
         public static readonly IReadOnlyDictionary<int, string> NumberRomanDictionary;
