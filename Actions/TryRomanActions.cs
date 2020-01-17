@@ -82,8 +82,9 @@ namespace it.Actions
         public static string To(int number)
         {
             StringBuilder roman = new StringBuilder();
-                foreach (KeyValuePair<int, string> item in NumberRomanDictionary)
+            foreach (KeyValuePair<int, string> item in NumberRomanDictionary)
             {
+                roman.Clear();
                 while (number >= item.Key)
                 {
                     _ = roman.Append(item.Value);
