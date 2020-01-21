@@ -10,9 +10,9 @@ namespace it.Actions
 
     internal sealed class TryRomanActions : IAction
     {
-        public static readonly IReadOnlyDictionary<int, string> NumberRomanDictionary;
+        public static readonly Dictionary<int, string> NumberRomanDictionary;
 
-        public static readonly IReadOnlyDictionary<char, int> RomanNumberDictionary;
+        public static readonly Dictionary<char, int> RomanNumberDictionary;
 
         static TryRomanActions()
         {
@@ -82,6 +82,7 @@ namespace it.Actions
         public static string To(int number)
         {
             StringBuilder roman = new StringBuilder(1000);
+            roman.Clear();
             foreach (KeyValuePair<int, string> item in NumberRomanDictionary)
             {
                 while (number >= item.Key)
@@ -108,7 +109,7 @@ namespace it.Actions
         {
             ActionResult actionResult = new ActionResult();
 
-            int index = clipboardText.IndexOf("to roman", StringComparison.Ordinal) ;
+            int index = clipboardText.IndexOf("to roman", StringComparison.Ordinal);
             string numberString = clipboardText.Substring(0, index).Trim();
             if (DateTime.TryParse(numberString, out DateTime dateTime))
             {

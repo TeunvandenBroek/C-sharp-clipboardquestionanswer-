@@ -12,7 +12,7 @@ namespace it.Actions
     {
         public bool Matches(string clipboardText)
         {
-            return clipboardText.StartsWith("auto clicker", StringComparison.Ordinal) && TimeSpan.TryParse(clipboardText.Replace("auto clicker", string.Empty), out TimeSpan _);
+            return clipboardText.StartsWith("auto clicker", StringComparison.Ordinal) && TimeSpan.TryParse(clipboardText.Replace("auto clicker", string.Empty), CultureInfo.InvariantCulture, out TimeSpan _);
         }
 
         public ActionResult TryExecute(string clipboardText)

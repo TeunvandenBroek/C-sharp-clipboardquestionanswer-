@@ -61,7 +61,7 @@ namespace it.Actions
                         const int minLength = 8;
                         const int maxLength = 12;
                         const string charAvailable = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789-";
-                        StringBuilder password = new StringBuilder();
+                        StringBuilder password = new StringBuilder(1000);
                         password.Clear();
                         int passwordLength = random.Next(minLength, maxLength + 1);
                         while (passwordLength-- > 0)

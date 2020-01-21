@@ -10,7 +10,7 @@ namespace it.Actions
 {
     public sealed class BmiActions : IAction
     {
-        private readonly IReadOnlyDictionary<(double From, double To), string> BmiToDictionary = new Dictionary<(double From, double To), string>(8)
+        private readonly Dictionary<(double From, double To), string> BmiToDictionary = new Dictionary<(double From, double To), string>(8)
         {
             {(0, 15),"Very severely underweight"},
             {(15, 16),"Severely underweight"},
