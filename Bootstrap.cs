@@ -20,7 +20,7 @@ namespace it
         private readonly ClipboardMonitor clipboardMonitor = new ClipboardMonitor();
         private readonly ControlContainer container = new ControlContainer();
         private readonly NotifyIcon notifyIcon;
-        private readonly IReadOnlyList<Question> questionList = Questions.LoadQuestions();
+        private readonly List<Question> questionList = Questions.LoadQuestions();
 
         // Container to hold the actions
         private ServiceProvider serviceProvider;
@@ -201,7 +201,7 @@ namespace it
         {
             const string keyName = "Clipboard Assistant";
             using (
-                        RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true))
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true))
             {
                 if (key is null)
                 {

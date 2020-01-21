@@ -6,7 +6,7 @@ namespace it
 {
     internal static class Questions
     {
-        private static IReadOnlyDictionary<string, string> questionDict = new Dictionary<string, string>(495,StringComparer.Ordinal)
+        private static Dictionary<string, string> questionDict = new Dictionary<string, string>(495,StringComparer.Ordinal)
         {
             //Add question/answer to list
             //hoofdstuk 3 it
@@ -1036,7 +1036,7 @@ namespace it
         };
 
 
-        internal static IReadOnlyList<Question> LoadQuestions()
+        internal static List<Question> LoadQuestions()
         {
             return questionDict.Select(item => new Question(item.Key, item.Value)).ToList();
 
