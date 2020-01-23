@@ -7,8 +7,16 @@ A Clipboard Assistant in C#
 https://github.com/teun25/C-sharp-clipboardquestionanswer-.git
 
 ## Features
-
-
+* Calculate sums that you copy.
+* Possibility to put in custom question and answers.
+* Number to roman when, for example, you copy 1 to roman.
+* Desktop files organizer.
+* When you copy a country you get the local time zone.
+* Number to hexdecimal 
+* Bmi calculator when you copy for example (20age 80kg 180cm to bmi)
+* Number to binary 
+* Stopwatch with only using clipboard and windows notifications.
+* Possibility to calculate days between 2 dates.
 ## Usage
 
 
