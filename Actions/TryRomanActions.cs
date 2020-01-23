@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -42,6 +43,7 @@ namespace it.Actions
             { 5, "V" },
             { 4, "IV" },
             { 1, "I" },
+
         };
         }
 
@@ -78,7 +80,7 @@ namespace it.Actions
 
             return total;
         }
-       
+
         public static string To(int number)
         {
             StringBuilder roman = new StringBuilder(1000);
@@ -101,7 +103,7 @@ namespace it.Actions
 
 
         public bool Matches(string clipboardText = null)
-        { 
+        {
             return clipboardText.EndsWith(" to roman", StringComparison.Ordinal) || clipboardText.EndsWith(" naar romeins", StringComparison.Ordinal);
         }
 
