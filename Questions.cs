@@ -1039,7 +1039,6 @@ namespace it
         internal static List<Question> LoadQuestions()
         {
             return questionDict.Select(item => new Question(item.Key, item.Value)).ToList();
-
         }
     }
 }

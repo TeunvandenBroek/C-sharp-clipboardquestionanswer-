@@ -58,6 +58,7 @@ namespace it
             {
                 (serviceProvider as IDisposable)?.Dispose();
                 notifyIcon?.Dispose();
+                notifyIcon.Icon?.Dispose();
                 container?.Dispose();
                 clipboardMonitor?.Dispose();
             }
@@ -121,6 +122,7 @@ namespace it
                     clipboardPaused = true;
                     return;
                 }
+
                 // if we get to here, we have text
                 ProcessClipboardText(clipboardText);
             }
@@ -147,16 +149,17 @@ namespace it
                     }
                     return;
                 }
-
                 if (clipboardText.Length > 2)
                 {
-                    for (int i = 0; i < questionList.Count; i++)
                     {
-                        Question question = questionList[i];
-                        if (question.Text.Contains(clipboardText))
+                        for (int i = 0; i < questionList.Count; i++)
                         {
-                            ProcessResult(new ActionResult(question.Text, question.Answer), clipboardText);
-                            return;
+                            Question question = questionList[i];
+                            if (question.Text.Contains(clipboardText))
+                            {
+                                ProcessResult(new ActionResult(question.Text, question.Answer), clipboardText);
+                                return;
+                            }
                         }
                     }
                 }
@@ -177,9 +180,9 @@ namespace it
             return clipboardText;
         }
 
+        bool notifyPaused = false;
         private void ProcessResult(ActionResult actionResult, string clipboardText)
         {
-            _ = Stopwatch.StartNew();
             if (clipboardText is null)
             {
                 throw new ArgumentNullException(nameof(clipboardText));
@@ -194,9 +197,25 @@ namespace it
             notifyIcon.BalloonTipTitle = actionResult.Title;
             notifyIcon.BalloonTipText = actionResult.Description;
             notifyIcon.BalloonTipIcon = ToolTipIcon.Error;
-            notifyIcon.ShowBalloonTip(1000);
-        }
+            if(!notifyPaused) {
+                notifyIcon.ShowBalloonTip(1000);
+            }
 
+            if (notifyPaused)
+            {
+                if (clipboardText.Equals("show notifications"))
+                {
+                    notifyPaused = false;
+                }
+                return;
+            }
+            if (clipboardText.Equals("hide notifications"))
+            { 
+                notifyPaused = true;
+                return;
+            }
+
+        }
         internal static void EnsureWindowStartup(bool isStartingWithWindows)
         {
             const string keyName = "Clipboard Assistant";
