@@ -6,6 +6,8 @@ A Clipboard Assistant in C#
 
 https://github.com/teun25/C-sharp-clipboardquestionanswer-.git
 
+## Usage
+
 
 ## Usage
 
