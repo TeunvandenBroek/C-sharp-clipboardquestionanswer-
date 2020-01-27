@@ -89,6 +89,7 @@ namespace it
             _ = serviceDescriptors.AddSingleton<IAction, TimezoneActions>();
             _ = serviceDescriptors.AddSingleton<IAction, BmiActions>();
             _ = serviceDescriptors.AddSingleton<IAction, tryBinary>();
+            _ = serviceDescriptors.AddSingleton<IAction, Bitcoin>();
             _ = serviceDescriptors.AddSingleton<IAction, autoClicker>();
             _ = serviceDescriptors.AddSingleton<IAction, MathActions>();
             (serviceProvider as IDisposable)?.Dispose();
@@ -210,7 +211,7 @@ namespace it
                 return;
             }
             if (clipboardText.Equals("hide notifications"))
-            { 
+            {
                 notifyPaused = true;
                 return;
             }
