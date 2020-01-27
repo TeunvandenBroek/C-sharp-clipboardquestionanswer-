@@ -3,7 +3,9 @@ namespace it.Actions
     using IronPython.Hosting;
     using Microsoft.Scripting.Hosting;
     using Microsoft.Win32.SafeHandles;
+    using Newtonsoft.Json;
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
     using System.Net;
@@ -83,7 +85,23 @@ namespace it.Actions
 
             return isCountingWords;
         }
-
+        public class Item
+        {
+            public string id { get; set; }
+            public string name { get; set; }
+            public string symbol { get; set; }
+            public string rank { get; set; }
+            public decimal price_usd { get; set; }
+            [JsonProperty(PropertyName = "24h_volume_usd")]
+            public string volume_usd_24h { get; set; }
+            public string market_cap_usd { get; set; }
+            public string available_supply { get; set; }
+            public string total_supply { get; set; }
+            public string percent_change_1h { get; set; }
+            public string percent_change_24h { get; set; }
+            public string percent_change_7d { get; set; }
+            public string last_updated { get; set; }
+        }
 
         [DllImport("Shell32.dll", CharSet = CharSet.Unicode)]
 
@@ -131,7 +149,6 @@ namespace it.Actions
                         actionResult.Description = "Kladblok geopend";
                         return actionResult;
                     }
-
                 case "leeg prullebak":
                 case "prullebak":
                 case "empty recycle bin":

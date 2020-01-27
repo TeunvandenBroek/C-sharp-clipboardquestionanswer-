@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Management;
 using System.Runtime.InteropServices;
+using System.Security;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -164,7 +167,6 @@ namespace it.Actions
             { ".sys" , "System" },
             { ".tmp" , "System" },
         };
-
         public ActionResult TryExecute(string clipboardText)
         {
             if (string.IsNullOrWhiteSpace(clipboardText))
@@ -220,6 +222,60 @@ namespace it.Actions
                     {
                         File.Move(file, Path.Combine(cleanupPath, "Overig", Path.GetFileName(file)));
                     }
+                }
+            }
+
+            {
+                string path;
+                ConsoleKeyInfo cki;
+                double totalSize = 0;
+                path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                DirectoryInfo directoryInfo = new DirectoryInfo(path);
+                var fileList = directoryInfo.EnumerateFiles("*");
+                int totalFiles = fileList.Count();
+
+                List<FileDetails> finalDetails = new List<FileDetails>();
+                List<string> ToDelete = new List<string>();
+                finalDetails.Clear();
+
+                for (int i = 0; i < fileList.Count(); i++)
+                {
+                    try
+                    {
+                        string item = fileList.ToString();
+                        using (var fs = new FileStream(item, FileMode.Open, FileAccess.Read))
+                        {
+                            finalDetails.Add(new FileDetails()
+                            {
+                                FileName = item,
+                                FileHash = BitConverter.ToString(SHA1.Create().ComputeHash(fs)),
+                            });
+                        }
+                    }
+                    catch (SecurityException)
+                    {
+                    }
+                }
+                var similarList = finalDetails.GroupBy(f => f.FileHash)
+                    .Select(g => new { FileHash = g.Key, Files = g.Select(z => z.FileName).ToList() });
+
+
+                ToDelete.AddRange(similarList.SelectMany(f => f.Files.Skip(1)).ToList());
+                if (ToDelete.Count > 0)
+                {
+                    Console.WriteLine("Files die verwijdert worden- ");
+                    for (int i = 0; i < ToDelete.Count; i++)
+                    { 
+                        string item = ToDelete[i];
+                        Console.WriteLine(item);
+                        FileInfo fi = new FileInfo(item);
+                        totalSize += fi.Length;
+                    }
+                }
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Totale ruimte vrij gemaakt-  {0}mb", Math.Round((totalSize / 1000000), 6).ToString());
+                { 
+                    ToDelete.ForEach(File.Delete);
                 }
             }
 
