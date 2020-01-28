@@ -1,22 +1,22 @@
-### What kind of change does this PR introduce? (Bug fix, feature, docs update...)
+## What kind of change does this PR introduce? (Bug fix, feature, docs update...)
 
 
-### What is the current behavior?
+## What is the current behavior?
 
 
-### What is the new behavior (if this is a feature change)?
+## What is the new behavior (if this is a feature change)?
 
 
-### Does this PR introduce a breaking change?
+## Does this PR introduce a breaking change?
 
 
-### Recommendations for testing
+## Recommendations for testing
 
 
-### Links to relevant issues/docs
+## Links to relevant issues/docs
 
 
-### Checklist before submitting
+## Checklist before submitting
 
 -All projects build
 -Follows style guide lines ([code style guide](https://github.com/teun25/C-sharp-clipboardquestionanswer-/CONTRIBUTING.md))
