@@ -1,9 +1,6 @@
 Contributing to the Clipboard answer program
 ============================================
 
-What you will need
-------------------
-
 Setting up your development environment
 ---------------------------------------
 
