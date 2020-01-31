@@ -2,9 +2,8 @@
 
 A Clipboard Assistant in C#
 
-The Clipboard Assisent is designed to give a reponse in a Windows Notification from the selected input. 
-Since the first version of the project, the project is expanded with mulitple functions to 
-supply the user as best as possible. You can find a list of functions down below. 
+The Clipboard Assistant is designed to give a response in a Windows Notification from the selected input. 
+Since the first version of the project, the project is expanded with multiple functions to supply the user as best as possible. You can find a list of functions down below. 
 
 ## Installation
 
