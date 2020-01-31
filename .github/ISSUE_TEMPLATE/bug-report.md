@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: bug issue
+about: File an issue about a bug
 title: ''
 labels: ''
 assignees: ''
@@ -24,7 +24,3 @@ about: Create a report to help us fix bugs and make improvements
 ### Configuration
 
 **Version:** 1.x
-
-**Platform:** 
-- [ ] :iphone: iOS
-- [ ] :robot: Android

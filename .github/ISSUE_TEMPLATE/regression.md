@@ -1,6 +1,6 @@
 ---
 name: Regression
-about: Regression issue
+about: File an regression issue
 title: ''
 labels: ''
 assignees: ''
@@ -26,7 +26,3 @@ about: Report unexpected behavior that worked previously
 ### Configuration
 
 **Version:** 1.x
-
-**Platform:** 
-- [ ] :iphone: iOS
-- [ ] :robot: Android
