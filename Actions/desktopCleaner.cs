@@ -6,6 +6,7 @@ using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
 using System.Security;
+using System.Security.AccessControl;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
@@ -225,60 +226,82 @@ namespace it.Actions
                 }
             }
 
+    
             {
-                string path;
-                ConsoleKeyInfo cki;
-                double totalSize = 0;
-                path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-                DirectoryInfo directoryInfo = new DirectoryInfo(path);
-                var fileList = directoryInfo.EnumerateFiles("*");
-                int totalFiles = fileList.Count();
-
-                List<FileDetails> finalDetails = new List<FileDetails>();
-                List<string> ToDelete = new List<string>();
-                finalDetails.Clear();
-
-                for (int i = 0; i < fileList.Count(); i++)
+                try
                 {
-                    try
+                    ConsoleKeyInfo cki;
+                    double totalSize = 0;
+                    string path = (KnownFolders.GetPath(KnownFolder.Pictures));
+                    DirectoryInfo directoryInfo = new DirectoryInfo(path);
+
+                    string path1 = (KnownFolders.GetPath(KnownFolder.Videos));
+                    DirectoryInfo directoryInfo1 = new DirectoryInfo(path1);
+
+                    string path2 = (KnownFolders.GetPath(KnownFolder.Music));
+                    DirectoryInfo directoryInfo2 = new DirectoryInfo(path2);
+
+                    string path3 = (KnownFolders.GetPath(KnownFolder.Downloads));
+                    DirectoryInfo directoryInfo3 = new DirectoryInfo(path3);
+
+                    var fileList = directoryInfo.EnumerateFiles("*.*", SearchOption.AllDirectories).ToList();
+                    fileList.AddRange(directoryInfo1.EnumerateFiles("*.*",SearchOption.AllDirectories).ToList());
+                    fileList.AddRange(directoryInfo2.EnumerateFiles("*.*", SearchOption.AllDirectories).ToList());
+                    fileList.AddRange(directoryInfo3.EnumerateFiles("*.*", SearchOption.AllDirectories).ToList());
+                    int totalFiles = fileList.Count;
+
+                    List<FileDetails> finalDetails = new List<FileDetails>();
+                    List<string> ToDelete = new List<string>();
+                    finalDetails.Clear();
                     {
-                        string item = fileList.ToString();
-                        using (var fs = new FileStream(item, FileMode.Open, FileAccess.Read))
                         {
-                            finalDetails.Add(new FileDetails()
+                            for (int i = 0; i < fileList.Count; i++)
+                            { 
+                                {
+                                    string item = fileList[i].FullName;
+                                    using (var fs = new FileStream(item, FileMode.Open, FileAccess.Read))
+                                    {
+                                        finalDetails.Add(new FileDetails()
+                                        {
+                                            FileName = item,
+                                            FileHash = BitConverter.ToString(SHA1.Create().ComputeHash(fs)),
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                        var similarList = finalDetails.GroupBy(f => f.FileHash)
+                       .Select(g => new { FileHash = g.Key, Files = g.Select(z => z.FileName).ToList() });
+
+
+                        ToDelete.AddRange(similarList.SelectMany(f => f.Files.Skip(1)).ToList());
+                        if (ToDelete.Count > 0)
+                        {
+                            Console.WriteLine("Files being deleted- ");
+                            for (int i = 0; i < ToDelete.Count; i++)
                             {
-                                FileName = item,
-                                FileHash = BitConverter.ToString(SHA1.Create().ComputeHash(fs)),
-                            });
+                                string item = ToDelete[i];
+                                Console.WriteLine(item);
+                                FileInfo fi = new FileInfo(item);
+                                totalSize += fi.Length;
+                            }
+                        }
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Total space made free-  {0}mb", Math.Round((totalSize / 1000000), 6).ToString());
+                        {
+                            ToDelete.ForEach(File.Delete);
                         }
                     }
-                    catch (SecurityException)
-                    {
-                    }
                 }
-                var similarList = finalDetails.GroupBy(f => f.FileHash)
-                    .Select(g => new { FileHash = g.Key, Files = g.Select(z => z.FileName).ToList() });
-
-
-                ToDelete.AddRange(similarList.SelectMany(f => f.Files.Skip(1)).ToList());
-                if (ToDelete.Count > 0)
+                catch (System.UnauthorizedAccessException)
                 {
-                    Console.WriteLine("Files die verwijdert worden- ");
-                    for (int i = 0; i < ToDelete.Count; i++)
-                    { 
-                        string item = ToDelete[i];
-                        Console.WriteLine(item);
-                        FileInfo fi = new FileInfo(item);
-                        totalSize += fi.Length;
-                    }
+
                 }
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Totale ruimte vrij gemaakt-  {0}mb", Math.Round((totalSize / 1000000), 6).ToString());
-                { 
-                    ToDelete.ForEach(File.Delete);
+                catch (System.NotSupportedException)
+                {
+                    
                 }
             }
-
             switch (currentCulture.LCID)
             {
                 case 1033: // english-us

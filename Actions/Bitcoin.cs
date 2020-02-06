@@ -14,7 +14,7 @@ namespace it.Actions
     public class Bitcoin : IAction
     {
         private readonly string[] commands = { "bitcoin", "bitcoin prijs", "bitcoin price", "ethereum", "ethereum prijs", "ethereum price" ,
-            "litecoin", "litecoin price", "litecoin prijs", "euro"};
+            "litecoin", "litecoin price", "litecoin prijs"};
 
         public bool Matches(string clipboardText)
         {
@@ -27,8 +27,10 @@ namespace it.Actions
                 }
             }
             return false;
+            return clipboardText.StartsWith("dollar to euro", StringComparison.Ordinal);
         }
         public class Item{
+            //Coinmarketcap
             public string id { get; set; }
             public string name { get; set; }
             public string symbol { get; set; }
@@ -97,6 +99,28 @@ namespace it.Actions
             return actionResult;
         }
 
+        public static void EUR_TO_usd(string clipboardText)
+        {
+            ActionResult actionResult = new ActionResult(clipboardText);
+            if (clipboardText.EndsWith(" dollar to euro"))
+            {
+                var parts = clipboardText.Split(' ');
+                if (parts.Length == 4)
+                {
+                    if (double.TryParse(parts[0], out double amount))
+                    {
+                        if (parts[1] == "dollar" && parts[2] == "to" && parts[3] == "euro")
+                        {
+                            string url = "http://api.openrates.io/latest?base=USD";
+                            string json = new WebClient().DownloadString(url);
+                            var currency = JsonConvert.DeserializeObject<dynamic>(json);
+                            double curAmount = amount * Convert.ToSingle(currency.rates.EUR);
+                            actionResult.Description = string.Format("{0:N2} {1} = {2:N2} {3}", amount, currency["base"], curAmount, "EUR");
+                        }
+                    }
+                }
+            }
+        }
         public override bool Equals(object obj)
         {
             return Equals(obj as DeviceActions);
