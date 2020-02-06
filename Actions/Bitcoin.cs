@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace it.Actions
 {
-    public class Bitcoin : IAction
+    public class Currency : IAction
     {
         private readonly string[] commands = { "bitcoin", "bitcoin prijs", "bitcoin price", "ethereum", "ethereum prijs", "ethereum price" ,
             "litecoin", "litecoin price", "litecoin prijs"};
