@@ -3,10 +3,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace it
@@ -89,7 +91,8 @@ namespace it
             _ = serviceDescriptors.AddSingleton<IAction, TimezoneActions>();
             _ = serviceDescriptors.AddSingleton<IAction, BmiActions>();
             _ = serviceDescriptors.AddSingleton<IAction, tryBinary>();
-            _ = serviceDescriptors.AddSingleton<IAction, Bitcoin>();
+            _ = serviceDescriptors.AddSingleton<IAction, Currency>();
+            _ = serviceDescriptors.AddSingleton<IAction, Wallpaper>();
             _ = serviceDescriptors.AddSingleton<IAction, autoClicker>();
             _ = serviceDescriptors.AddSingleton<IAction, MathActions>();
             (serviceProvider as IDisposable)?.Dispose();
@@ -198,7 +201,8 @@ namespace it
             notifyIcon.BalloonTipTitle = actionResult.Title;
             notifyIcon.BalloonTipText = actionResult.Description;
             notifyIcon.BalloonTipIcon = ToolTipIcon.Error;
-            if(!notifyPaused) {
+            if (!notifyPaused)
+            {
                 notifyIcon.ShowBalloonTip(1000);
             }
 
@@ -215,8 +219,8 @@ namespace it
                 notifyPaused = true;
                 return;
             }
-
         }
+
         internal static void EnsureWindowStartup(bool isStartingWithWindows)
         {
             const string keyName = "Clipboard Assistant";
