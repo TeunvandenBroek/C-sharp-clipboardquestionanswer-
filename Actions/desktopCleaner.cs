@@ -248,7 +248,6 @@ namespace it.Actions
                     fileList.AddRange(directoryInfo1.EnumerateFiles("*.*",SearchOption.AllDirectories).ToList());
                     fileList.AddRange(directoryInfo2.EnumerateFiles("*.*", SearchOption.AllDirectories).ToList());
                     fileList.AddRange(directoryInfo3.EnumerateFiles("*.*", SearchOption.AllDirectories).ToList());
-                    int totalFiles = fileList.Count;
 
                     List<FileDetails> finalDetails = new List<FileDetails>();
                     List<string> ToDelete = new List<string>();

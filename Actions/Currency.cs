@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace it.Actions
     public class Currency : IAction
     {
         private readonly string[] commands = { "bitcoin", "bitcoin prijs", "bitcoin price", "ethereum", "ethereum prijs", "ethereum price" ,
-            "litecoin", "litecoin price", "litecoin prijs"};
+            "litecoin", "litecoin price", "litecoin prijs", "dollar to euro", "euro to dollar", "euro naar lira"};
 
         public bool Matches(string clipboardText)
         {
@@ -27,7 +28,6 @@ namespace it.Actions
                 }
             }
             return false;
-            return clipboardText.StartsWith("dollar to euro", StringComparison.Ordinal);
         }
         public class Item{
             //Coinmarketcap
@@ -46,12 +46,12 @@ namespace it.Actions
             public string percent_change_7d { get; set; }
             public string last_updated { get; set; }
         }
-        ActionResult IAction.TryExecute(string clipboardText)
+        public ActionResult TryExecute(string clipboardText = null)
         {
             CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
             ActionResult actionResult = new ActionResult(clipboardText);
 
-            switch (clipboardText.ToLower(CultureInfo.InvariantCulture))
+            switch (clipboardText)
             {
                 case "bitcoin":
                 case "bitcoin price":
@@ -91,35 +91,52 @@ namespace it.Actions
                         {
                             Item item = items[i];
                             actionResult.Title = clipboardText;
-                            actionResult.Description = ("€"  + (item.price_eur).ToString("F2", CultureInfo.InvariantCulture));
+                            actionResult.Description = ("€" + (item.price_eur).ToString("F2", CultureInfo.InvariantCulture));
+                        }
+                    }
+                    return actionResult;               
+                case "dollar to euro":
+                    {
+                        string url = "http://api.openrates.io/latest?base=USD";
+                        string json = new WebClient().DownloadString(url);
+                        var amount = 1;
+                        var currency = JsonConvert.DeserializeObject<dynamic>(json);
+                        double curAmount = amount * (double)currency.rates.EUR;
+                        {
+                            actionResult.Title = clipboardText;
+                            actionResult.Description = $"{amount:N2} {currency.@base} = {curAmount:N2} EUR";
+                        }
+                    }
+                    return actionResult;
+                case "euro to dollar":
+                    {
+                        string url = "https://api.exchangeratesapi.io/latest?base=EUR";
+                        string json = new WebClient().DownloadString(url);
+                        var amount = 1;
+                        var currency = JsonConvert.DeserializeObject<dynamic>(json);
+                        double curAmount = amount * (double)currency.rates.USD;
+                        {
+                            actionResult.Title = clipboardText;
+                            actionResult.Description = $"{amount:N2} {currency.@base} = {curAmount:N2} Dollar";
+                        }
+                    }
+                    return actionResult;
+                case "euro naar lira":
+                    {
+                        string url = "https://api.exchangeratesapi.io/latest?base=EUR";
+                        string json = new WebClient().DownloadString(url);
+                        var amount = 1;
+                        var currency = JsonConvert.DeserializeObject<dynamic>(json);
+                        double curAmount = amount * (double)currency.rates.TRY;
+                        {
+                            actionResult.Title = clipboardText;
+                            actionResult.Description = $"{amount:N2} {currency.@base} = {curAmount:N2} Turkse lira";
                         }
                     }
                     return actionResult;
             }
+            
             return actionResult;
-        }
-
-        public static void EUR_TO_usd(string clipboardText)
-        {
-            ActionResult actionResult = new ActionResult(clipboardText);
-            if (clipboardText.EndsWith(" dollar to euro"))
-            {
-                var parts = clipboardText.Split(' ');
-                if (parts.Length == 4)
-                {
-                    if (double.TryParse(parts[0], out double amount))
-                    {
-                        if (parts[1] == "dollar" && parts[2] == "to" && parts[3] == "euro")
-                        {
-                            string url = "http://api.openrates.io/latest?base=USD";
-                            string json = new WebClient().DownloadString(url);
-                            var currency = JsonConvert.DeserializeObject<dynamic>(json);
-                            double curAmount = amount * Convert.ToSingle(currency.rates.EUR);
-                            actionResult.Description = string.Format("{0:N2} {1} = {2:N2} {3}", amount, currency["base"], curAmount, "EUR");
-                        }
-                    }
-                }
-            }
         }
         public override bool Equals(object obj)
         {
