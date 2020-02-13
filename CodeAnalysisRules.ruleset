@@ -21,6 +21,15 @@
     <Rule Id="DictionaryVariableFix" Action="None" />
     <Rule Id="UniversalTimeStamp" Action="None" />
   </Rules>
+  <Rules AnalyzerId="ClrHeapAllocationAnalyzer" RuleNamespace="ClrHeapAllocationAnalyzer">
+    <Rule Id="HAA0501" Action="Warning" />
+    <Rule Id="HAA0502" Action="Warning" />
+    <Rule Id="HAA0503" Action="Warning" />
+    <Rule Id="HAA0504" Action="Warning" />
+    <Rule Id="HAA0505" Action="Warning" />
+    <Rule Id="HAA0506" Action="Warning" />
+    <Rule Id="HeapAnalyzerReadonlyMethodGroupAllocationRule" Action="Warning" />
+  </Rules>
   <Rules AnalyzerId="Codelet.TypeScripter.Analyzer" RuleNamespace="Codelet.TypeScripter.Analyzer">
     <Rule Id="TypeScripter" Action="None" />
   </Rules>
@@ -200,6 +209,7 @@
     <Rule Id="MA0017" Action="None" />
     <Rule Id="MA0018" Action="None" />
     <Rule Id="MA0019" Action="None" />
+    <Rule Id="MA0020" Action="Warning" />
     <Rule Id="MA0021" Action="None" />
     <Rule Id="MA0022" Action="None" />
     <Rule Id="MA0023" Action="None" />
@@ -207,6 +217,10 @@
     <Rule Id="MA0025" Action="None" />
     <Rule Id="MA0026" Action="None" />
     <Rule Id="MA0027" Action="None" />
+    <Rule Id="MA0028" Action="Warning" />
+    <Rule Id="MA0029" Action="Warning" />
+    <Rule Id="MA0030" Action="Warning" />
+    <Rule Id="MA0031" Action="Warning" />
     <Rule Id="MA0032" Action="None" />
     <Rule Id="MA0033" Action="None" />
     <Rule Id="MA0035" Action="None" />
@@ -218,6 +232,7 @@
     <Rule Id="MA0041" Action="None" />
     <Rule Id="MA0042" Action="None" />
     <Rule Id="MA0043" Action="None" />
+    <Rule Id="MA0044" Action="Warning" />
     <Rule Id="MA0045" Action="None" />
     <Rule Id="MA0046" Action="None" />
     <Rule Id="MA0047" Action="None" />
@@ -225,6 +240,7 @@
     <Rule Id="MA0049" Action="None" />
     <Rule Id="MA0050" Action="None" />
     <Rule Id="MA0051" Action="None" />
+    <Rule Id="MA0052" Action="Warning" />
     <Rule Id="MA0053" Action="None" />
     <Rule Id="MA0054" Action="None" />
     <Rule Id="MA0055" Action="None" />
@@ -235,6 +251,7 @@
     <Rule Id="MA0060" Action="None" />
     <Rule Id="MA0061" Action="None" />
     <Rule Id="MA0062" Action="None" />
+    <Rule Id="MA0063" Action="Warning" />
     <Rule Id="MA0064" Action="None" />
     <Rule Id="MA0067" Action="None" />
     <Rule Id="MA0068" Action="None" />
@@ -1272,6 +1289,20 @@
     <Rule Id="FailedRule" Action="None" />
   </Rules>
   <Rules AnalyzerId="U2UConsult.CodeAnalyzers" RuleNamespace="U2UConsult.CodeAnalyzers">
+    <Rule Id="U2U1001" Action="Warning" />
+    <Rule Id="U2U1005" Action="Warning" />
+    <Rule Id="U2U1008" Action="Warning" />
+    <Rule Id="U2U1010" Action="Warning" />
+    <Rule Id="U2U1011" Action="Warning" />
+    <Rule Id="U2U1012" Action="Warning" />
+    <Rule Id="U2U1016" Action="Warning" />
+    <Rule Id="U2U1017" Action="Warning" />
+    <Rule Id="U2U1018" Action="Warning" />
+    <Rule Id="U2U1020" Action="Warning" />
+    <Rule Id="U2U1200" Action="Warning" />
+    <Rule Id="U2U1201" Action="Warning" />
+    <Rule Id="U2U1211" Action="Warning" />
+    <Rule Id="U2U1212" Action="Warning" />
     <Rule Id="U2U3000" Action="None" />
     <Rule Id="U2U3001" Action="None" />
   </Rules>

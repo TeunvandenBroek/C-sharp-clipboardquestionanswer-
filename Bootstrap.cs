@@ -87,6 +87,7 @@ namespace it
             _ = serviceDescriptors.AddSingleton<IAction, StopwatchActions>();
             _ = serviceDescriptors.AddSingleton<IAction, TimespanActions>();
             _ = serviceDescriptors.AddSingleton<IAction, numberToHex>();
+            _ = serviceDescriptors.AddSingleton<IAction, CurrencyConversion>();
             _ = serviceDescriptors.AddSingleton<IAction, desktopCleaner>();
             _ = serviceDescriptors.AddSingleton<IAction, TimezoneActions>();
             _ = serviceDescriptors.AddSingleton<IAction, BmiActions>();
@@ -94,6 +95,7 @@ namespace it
             _ = serviceDescriptors.AddSingleton<IAction, Currency>();
             _ = serviceDescriptors.AddSingleton<IAction, Wallpaper>();
             _ = serviceDescriptors.AddSingleton<IAction, autoClicker>();
+            _ = serviceDescriptors.AddSingleton<IAction, Weatherforecast>();
             _ = serviceDescriptors.AddSingleton<IAction, MathActions>();
             (serviceProvider as IDisposable)?.Dispose();
             serviceProvider = serviceDescriptors.BuildServiceProvider();
@@ -184,7 +186,7 @@ namespace it
             return clipboardText;
         }
 
-        bool notifyPaused = false;
+        private bool notifyPaused = false;
         private void ProcessResult(ActionResult actionResult, string clipboardText)
         {
             if (clipboardText is null)
@@ -217,7 +219,6 @@ namespace it
             if (clipboardText.Equals("hide notifications"))
             {
                 notifyPaused = true;
-                return;
             }
         }
 
@@ -246,8 +247,6 @@ namespace it
                 {
                     key.DeleteValue(keyName);
                 }
-
-                key.Close();
             }
         }
     }

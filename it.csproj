@@ -419,7 +419,6 @@
     <Reference Include="System.ValueTuple, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
       <Private>True</Private>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Services" />
@@ -477,11 +476,11 @@
   <ItemGroup>
     <Compile Include="Actions\autoClicker.cs" />
     <Compile Include="Actions\Benchmark.cs" />
-    <Compile Include="Actions\Bitcoin.cs" />
     <Compile Include="Actions\BmiActions.cs" />
     <Compile Include="Actions\ConvertActions.cs" />
     <Compile Include="Actions\convertUppercase.cs" />
     <Compile Include="Actions\CountdownActions.cs" />
+    <Compile Include="Actions\CurrencyConversion.cs" />
     <Compile Include="Actions\desktopCleaner.cs" />
     <Compile Include="Actions\FileDetails.cs" />
     <Compile Include="Actions\IAction.cs" />
@@ -494,6 +493,7 @@
     <Compile Include="Actions\tryBinary.cs" />
     <Compile Include="Actions\TryRomanActions.cs" />
     <Compile Include="Actions\Wallpaper.cs" />
+    <Compile Include="Actions\Weatherforecast.cs" />
     <Compile Include="Bootstrap.cs" />
     <Compile Include="ClipboardMonitor.cs">
       <SubType>Component</SubType>
@@ -502,6 +502,7 @@
     <Compile Include="ControlContainer.RecordConstructor.cs" />
     <Compile Include="Actions\DeviceActions.cs" />
     <Compile Include="Countries.cs" />
+    <Compile Include="Actions\Currency.cs" />
     <Compile Include="GlobalSuppressions2.cs" />
     <Compile Include="KnownFolders.cs" />
     <Compile Include="Program.cs" />
@@ -563,9 +564,10 @@
     <Analyzer Include="packages\FakeItEasy.Analyzer.CSharp.5.3.0\analyzers\dotnet\cs\FakeItEasy.Analyzer.CSharp.dll" />
     <Analyzer Include="packages\GCop.Conditional.2.6.1\analyzers\dotnet\cs\GCop.Conditional.dll" />
     <Analyzer Include="packages\GCop.String.2.6.1\analyzers\dotnet\cs\GCop.String.dll" />
+    <Analyzer Include="packages\IDisposableAnalyzers.3.2.0\analyzers\dotnet\cs\Gu.Roslyn.Extensions.dll" />
     <Analyzer Include="packages\IDisposableAnalyzers.3.2.0\analyzers\dotnet\cs\IDisposableAnalyzers.dll" />
     <Analyzer Include="packages\LazyMixinAnalyzer.2.3.0.0\tools\analyzers\LazyMixinAnalyzer.dll" />
-    <Analyzer Include="packages\Meziantou.Analyzer.1.0.303\analyzers\dotnet\cs\Meziantou.Analyzer.dll" />
+    <Analyzer Include="packages\Meziantou.Analyzer.1.0.306\analyzers\dotnet\cs\Meziantou.Analyzer.dll" />
     <Analyzer Include="packages\Microsoft.CodeAnalysis.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="packages\Microsoft.CodeAnalysis.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
     <Analyzer Include="packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\analyzers\dotnet\cs\Microsoft.CodeAnalysis.VersionCheckAnalyzer.resources.dll" />
@@ -581,7 +583,6 @@
     <Analyzer Include="packages\Microsoft.VisualStudio.Threading.Analyzers.16.0.102\analyzers\cs\Microsoft.VisualStudio.Threading.Analyzers.dll" />
     <Analyzer Include="packages\MoqAnalyzer.1.0.5922.38414\analyzers\dotnet\cs\MoqAnalyzer.dll" />
     <Analyzer Include="packages\OzCode.Analyzers.AddTryCatchAnalyzer.1.4.6337.20200\analyzers\dotnet\cs\MefImportExceptionAnalyzer.dll" />
-    <Analyzer Include="packages\PropertyChangedAnalyzers.2.7.6\analyzers\dotnet\cs\Gu.Roslyn.Extensions.dll" />
     <Analyzer Include="packages\PropertyChangedAnalyzers.2.7.6\analyzers\dotnet\cs\PropertyChangedAnalyzers.dll" />
     <Analyzer Include="packages\RecordConstructorGenerator.3.3.0\tools\analyzers\C#\RecordConstructorGenerator.dll" />
     <Analyzer Include="packages\RecordConstructorGenerator.3.3.0\tools\analyzers\C#\System.Composition.AttributedModel.dll" />
@@ -590,8 +591,16 @@
     <Analyzer Include="packages\RecordConstructorGenerator.3.3.0\tools\analyzers\C#\System.Composition.Runtime.dll" />
     <Analyzer Include="packages\RecordConstructorGenerator.3.3.0\tools\analyzers\C#\System.Composition.TypedParts.dll" />
     <Analyzer Include="packages\RG.CodeAnalyzer.1.0.13\analyzers\dotnet\cs\RG.CodeAnalyzer.dll" />
-    <Analyzer Include="packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
-    <Analyzer Include="packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+    <Analyzer Include="packages\Roslynator.Analyzers.2.3.0\analyzers\dotnet\cs\Roslynator.Common.dll" />
+    <Analyzer Include="packages\Roslynator.Analyzers.2.3.0\analyzers\dotnet\cs\Roslynator.Core.dll" />
+    <Analyzer Include="packages\Roslynator.Analyzers.2.3.0\analyzers\dotnet\cs\Roslynator.CSharp.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="packages\Roslynator.Analyzers.2.3.0\analyzers\dotnet\cs\Roslynator.CSharp.Analyzers.dll" />
+    <Analyzer Include="packages\Roslynator.Analyzers.2.3.0\analyzers\dotnet\cs\Roslynator.CSharp.dll" />
+    <Analyzer Include="packages\Roslynator.Analyzers.2.3.0\analyzers\dotnet\cs\Roslynator.CSharp.Workspaces.dll" />
+    <Analyzer Include="packages\Roslynator.Analyzers.2.3.0\analyzers\dotnet\cs\Roslynator.Workspaces.Common.dll" />
+    <Analyzer Include="packages\Roslynator.Analyzers.2.3.0\analyzers\dotnet\cs\Roslynator.Workspaces.Core.dll" />
+    <Analyzer Include="packages\StyleCop.Analyzers.Unstable.1.2.0.113\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="packages\StyleCop.Analyzers.Unstable.1.2.0.113\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
     <Analyzer Include="packages\ToStringWithoutOverrideAnalyzer.0.6.0.0\analyzers\dotnet\cs\ToStringWithoutOverrideAnalyzer.dll" />
     <Analyzer Include="packages\Tsarev.Analyzer.Hardcode.Vat.1.1.56.0\analyzers\dotnet\cs\Tsarev.Analyzer.Hardcode.Vat.dll" />
     <Analyzer Include="packages\Tsarev.Analyzer.Web.1.1.56.0\analyzers\dotnet\cs\Tsarev.Analyzer.Web.dll" />
