@@ -21,7 +21,7 @@ namespace it.Actions
             return clipboardText.EndsWith("desktop cleaner", StringComparison.Ordinal) || clipboardText.EndsWith("bureaublad schoonmaak", StringComparison.Ordinal);
         }
 
-        private static Dictionary<string, string> CategoryAssociations = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> CategoryAssociations = new Dictionary<string, string>
         (StringComparer.Ordinal)
         {
             //audio
@@ -249,8 +249,8 @@ namespace it.Actions
                     fileList.AddRange(directoryInfo2.EnumerateFiles("*.*", SearchOption.AllDirectories).ToList());
                     fileList.AddRange(directoryInfo3.EnumerateFiles("*.*", SearchOption.AllDirectories).ToList());
 
-                    List<FileDetails> finalDetails = new List<FileDetails>();
-                    List<string> ToDelete = new List<string>();
+                    List<FileDetails> finalDetails = new List<FileDetails>(1000);
+                    List<string> ToDelete = new List<string>(1000);
                     finalDetails.Clear();
                     {
                         {
