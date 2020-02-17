@@ -15,7 +15,7 @@ namespace it.Actions
     public class Currency : IAction
     {
         private readonly string[] commands = { "bitcoin", "bitcoin prijs", "bitcoin price", "ethereum", "ethereum prijs", "ethereum price" ,
-            "litecoin", "litecoin price", "litecoin prijs", "euro to dollar", "euro naar lira"};
+            "litecoin", "litecoin price", "litecoin prijs", "euro naar lira"};
 
         public bool Matches(string clipboardText)
         {
@@ -95,19 +95,6 @@ namespace it.Actions
                         }
                     }
                     return actionResult;               
-                case "euro to dollar":
-                    {
-                        string url = "https://api.exchangeratesapi.io/latest?base=EUR";
-                        string json = new WebClient().DownloadString(url);
-                        var amount = 1;
-                        var currency = JsonConvert.DeserializeObject<dynamic>(json);
-                        double curAmount = amount * (double)currency.rates.USD;
-                        {
-                            actionResult.Title = clipboardText;
-                            actionResult.Description = $"{amount:N2} {currency.@base} = {curAmount:N2} Dollar";
-                        }
-                    }
-                    return actionResult;
                 case "euro naar lira":
                     {
                         string url = "https://api.exchangeratesapi.io/latest?base=EUR";

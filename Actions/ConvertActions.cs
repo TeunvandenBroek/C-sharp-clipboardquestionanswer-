@@ -431,8 +431,6 @@
                         result = snelheid / 3.6;
                         break;
                     }
-                default:
-                    break;
             }
 
             Clipboard.SetText(result.ToString(CultureInfo.CurrentCulture));

@@ -11,45 +11,62 @@
     {
         public bool Matches(string clipboardText)
         {
-            //dollar to euro
-            return clipboardText.EndsWith("USD to EUR", StringComparison.Ordinal) ||
-            clipboardText.EndsWith("dollar to EUR", StringComparison.Ordinal) ||
-             clipboardText.EndsWith("dollar to euro", StringComparison.Ordinal) ||
+            //dollar to euro - euro to dollar
+            return clipboardText.EndsWith("dollar to euro", StringComparison.Ordinal) ||
+             clipboardText.EndsWith("dollar naar euro", StringComparison.Ordinal) ||
               clipboardText.EndsWith("euro to dollar", StringComparison.Ordinal) ||
-            //euro to dollar
-            clipboardText.EndsWith("euro to USD", StringComparison.Ordinal);
-
+              clipboardText.EndsWith("euro naar dollar", StringComparison.Ordinal) ||
+              //lira to euro - euro to lira
+              clipboardText.EndsWith("lira to euro", StringComparison.Ordinal) ||
+             clipboardText.EndsWith("lira naar euro", StringComparison.Ordinal) ||
+              clipboardText.EndsWith("euro to lira", StringComparison.Ordinal) ||
+              clipboardText.EndsWith("euro naar lira", StringComparison.Ordinal) ||
+            //engelse pond to euro - pond to euro
+             clipboardText.EndsWith("pond to euro", StringComparison.Ordinal) ||
+             clipboardText.EndsWith("pond naar euro", StringComparison.Ordinal) ||
+             clipboardText.EndsWith("euro to pond", StringComparison.Ordinal) ||
+             clipboardText.EndsWith("euro naar pond", StringComparison.Ordinal);
         }
 
         internal class ExchangeRateModel
         {
             public Dictionary<string, decimal> rates { get; set; }
         }
+        private readonly Dictionary<string, string> Currency = new Dictionary<string, string>()
+        {
+                    //dollar 
+                    {"dollar" , "USD" },
+                     {"USD" , "USD" },
+                    //euro
+                    {"euro", "EUR" },
+                    {"EUR", "EUR" },
+                    //turkse lira
+                    {"lira" , "TRY" },
+                    {"TRY" , "TRY" },
+                    //engelse pond
+                    {"pond" , "GBP" },
+                    {"GBP" , "GBP" },
 
+        };
         public ActionResult TryExecute(string clipboardText)
         {
             ActionResult actionResult = new ActionResult();
             clipboardText = clipboardText.Replace('.', ',');
             string[] splits = clipboardText.Split(' ');
-
             string from = splits[1];
             string to = splits[3];
 
-            // conversion
-            if (from == "dollar") from = "USD";
-            if (to == "dollar") to = "USD";
-            // ... more converisons
-            if (from == "euro") from = "EUR";
-            if (to == "euro") to = "EUR";
-
-
-
-            string json = new WebClient().DownloadString($"https://api.exchangeratesapi.io/latest?base={from}&symbols={to}");
-            ExchangeRateModel deserializedJson = Newtonsoft.Json.JsonConvert.DeserializeObject<ExchangeRateModel>(json);
-            decimal.TryParse(splits[0], out decimal amount);
-            var rate = deserializedJson.rates[to];
-
-            actionResult.Description = $"{clipboardText} = {amount * rate:N2} {to}";
+            if (Currency.TryGetValue(from, out var fromCurrency) && Currency.TryGetValue(to, out var toCurrency))
+            {
+                var url = $"https://api.exchangeratesapi.io/latest?base={fromCurrency}&symbols={toCurrency}";
+                string json = new WebClient().DownloadString(url);
+                ExchangeRateModel deserializedJson = Newtonsoft.Json.JsonConvert.DeserializeObject<ExchangeRateModel>(json);
+                if(decimal.TryParse(splits[0], out decimal amount));
+                {
+                    var rate = deserializedJson.rates[toCurrency];
+                    actionResult.Description = $"{clipboardText} = {amount * rate:N2} {toCurrency}";
+                }
+            }
             return actionResult;
         }
     }
