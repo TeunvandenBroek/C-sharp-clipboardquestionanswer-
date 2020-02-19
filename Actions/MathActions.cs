@@ -64,11 +64,11 @@ namespace it.Actions
 			while (true)
 			{
 				char op = expr[index];
-				if (op != '/' && op != ':' && op != '*' && op != 'x' && op != '%')
+				if (op != ':' && op != '*' && op != 'x' && op != '%')
 					return x;
 				index++;
 				double y = GetDouble(expr, ref index);
-				if (op == '/' || op == ':')
+				if (op == ':')
 					x /= y;
 				else if (op == '%')
 					x %= y;
