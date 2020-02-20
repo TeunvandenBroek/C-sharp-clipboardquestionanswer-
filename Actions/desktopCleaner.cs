@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.AccessControl;
 using System.Security.Cryptography;
+using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -167,9 +168,25 @@ namespace it.Actions
             { ".msi" , "System" },
             { ".sys" , "System" },
             { ".tmp" , "System" },
-        };
-        public ActionResult TryExecute(string clipboardText)
+        }; 
+
+        private static void deleteEmptyFiles(string startLocation)
         {
+            string[] array = Directory.GetDirectories(startLocation);
+            for (int i = 0; i < array.Length; i++)
+            {
+                string directory = array[i];
+                deleteEmptyFiles(directory);
+                if (Directory.GetFiles(directory).Length == 0 && 
+                    Directory.GetDirectories(directory).Length == 0)
+                {
+                    Directory.Delete(directory, false);
+                }
+            }
+        } 
+
+            public ActionResult TryExecute(string clipboardText)
+            {
             if (string.IsNullOrWhiteSpace(clipboardText))
             {
                 throw new ArgumentException("message", nameof(clipboardText));
@@ -177,7 +194,7 @@ namespace it.Actions
             ActionResult actionResult = new ActionResult();
             System.Globalization.CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-
+            deleteEmptyFiles(desktopPath);
             //create cleanup map on desktop
             string cleanupPath = Path.Combine(desktopPath, "Cleanup");
             Directory.CreateDirectory(cleanupPath);
@@ -208,6 +225,7 @@ namespace it.Actions
                 defaultBufferSize,
                 FileOptions.DeleteOnClose);
 
+
             // move files from desktop
             string[] array = Directory.GetFiles(desktopPath);
             for (int i = 0; i < array.Length; i++)
@@ -234,16 +252,15 @@ namespace it.Actions
                     double totalSize = 0;
                     string path = (KnownFolders.GetPath(KnownFolder.Pictures));
                     DirectoryInfo directoryInfo = new DirectoryInfo(path);
-
                     string path1 = (KnownFolders.GetPath(KnownFolder.Videos));
                     DirectoryInfo directoryInfo1 = new DirectoryInfo(path1);
-
                     string path2 = (KnownFolders.GetPath(KnownFolder.Music));
+                    deleteEmptyFiles(path2);
                     DirectoryInfo directoryInfo2 = new DirectoryInfo(path2);
-
+                    deleteEmptyFiles(path2);
                     string path3 = (KnownFolders.GetPath(KnownFolder.Downloads));
                     DirectoryInfo directoryInfo3 = new DirectoryInfo(path3);
-
+                    deleteEmptyFiles(path3);
                     var fileList = directoryInfo.EnumerateFiles("*.*", SearchOption.AllDirectories).ToList();
                     fileList.AddRange(directoryInfo1.EnumerateFiles("*.*",SearchOption.AllDirectories).ToList());
                     fileList.AddRange(directoryInfo2.EnumerateFiles("*.*", SearchOption.AllDirectories).ToList());
@@ -315,9 +332,6 @@ namespace it.Actions
                         actionResult.Description = "Bestanden opgeruimt en gesorteerd in de Cleanup map";
                         break;
                     }
-
-                default:
-                    break;
             }
             return actionResult;
         }

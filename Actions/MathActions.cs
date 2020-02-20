@@ -80,7 +80,7 @@ namespace it.Actions
 		private static double GetDouble(char[] expr, ref int index)
 		{
 			string dbl = string.Empty;
-			while (((int)expr[index] >= 48 && (int)expr[index] <= 57 || expr[index] == 46 || (int)expr[index] == 32))
+			while ((int)expr[index] >= 48 && (int)expr[index] <= 57 || expr[index] == 46 || (int)expr[index] == 32)
 			{
 				dbl = dbl + expr[index].ToString();
 				index++;
