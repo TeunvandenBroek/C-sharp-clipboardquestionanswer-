@@ -140,13 +140,13 @@ namespace it.Actions
             { ".ppt" , "Presentations" },
             { ".pptx" , "Presentations" },
             //programming
-            { ".c" , "Programming" },
-            { ".class" , "Programming" },
-            { ".dart" , "Programming" },
-            { ".py" , "Programming" },
-            { ".sh" , "Programming" },
-            { ".swift" , "Programming" },
-            { ".html" , "Programming" },
+            { ".c" , "Programming/C" },
+            { ".class" , "Programming/Classes" },
+            { ".dart" , "Programming/Dart" },
+            { ".py" , "Programming/Python"},
+            { ".sh" , "Programming/Shell" },
+            { ".swift" , "Programming/Swift" },
+            { ".html" , "Programming/HTML" },
             { ".h" , "Programming" },
             //spreadsheets
             { ".ods" , "Spreadsheets" },
@@ -168,24 +168,78 @@ namespace it.Actions
             { ".msi" , "System" },
             { ".sys" , "System" },
             { ".tmp" , "System" },
-        }; 
-
-        private static void deleteEmptyFiles(string startLocation)
+        };
+        private static void CreateSubMaps(string dir)
         {
-            string[] array = Directory.GetDirectories(startLocation);
-            for (int i = 0; i < array.Length; i++)
+            string cleanupPath = Path.Combine(dir, "Cleanup");
+            //sub maps desktop cleaner
+            Directory.CreateDirectory(Path.Combine(dir, "Audio")); ;
+            Directory.CreateDirectory(Path.Combine(dir, "Text"));
+            Directory.CreateDirectory(Path.Combine(dir, "Video"));
+            Directory.CreateDirectory(Path.Combine(dir, "Images"));
+            Directory.CreateDirectory(Path.Combine(dir, "Internet"));
+            Directory.CreateDirectory(Path.Combine(dir, "Compressed"));
+            Directory.CreateDirectory(Path.Combine(dir, "Disc"));
+            Directory.CreateDirectory(Path.Combine(dir, "Data"));
+            Directory.CreateDirectory(Path.Combine(dir, "Executables"));
+            Directory.CreateDirectory(Path.Combine(dir, "Fonts"));
+            var presentationFolder = Directory.CreateDirectory(Path.Combine(dir, "Presentations"));
             {
-                string directory = array[i];
-                deleteEmptyFiles(directory);
-                if (Directory.GetFiles(directory).Length == 0 && 
-                    Directory.GetDirectories(directory).Length == 0)
+                //Subfolders in Presentations folder
+
+            }
+            var programmingFolder = Directory.CreateDirectory(Path.Combine(dir, "Programming"));
+            {
+                //Subfolders in Programming folder
+                programmingFolder.CreateSubdirectory("Python");
+                programmingFolder.CreateSubdirectory("HTML");
+                programmingFolder.CreateSubdirectory("Swift");
+                programmingFolder.CreateSubdirectory("Dart");
+                programmingFolder.CreateSubdirectory("C");
+                programmingFolder.CreateSubdirectory("Classes");
+                programmingFolder.CreateSubdirectory("Shell");
+            }
+            Directory.CreateDirectory(Path.Combine(dir, "Spreadsheets"));
+            Directory.CreateDirectory(Path.Combine(dir, "System"));
+            string overig = Path.Combine(dir, "Overig");
+            Directory.CreateDirectory(overig);
+        }
+        private static void DeleteEmptyDirs(string dir)
+        {
+            if (string.IsNullOrEmpty(dir))
+                throw new ArgumentException(
+                    "Starting directory is a null reference or an empty string",
+                    "dir");
+
+            try
+            {
+                foreach (var d in Directory.EnumerateDirectories(dir))
                 {
-                    Directory.Delete(directory, false);
+                    DeleteEmptyDirs(d);
+                }
+
+                var entries = Directory.EnumerateFileSystemEntries(dir);
+
+                if (!entries.Any())
+                {
+                    try
+                    {
+                        try
+                        {
+                            Directory.Delete(dir);
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                    }
+                    catch (Exception) { }
                 }
             }
-        } 
+            catch (UnauthorizedAccessException) { }
+        }
 
-            public ActionResult TryExecute(string clipboardText)
+        public ActionResult TryExecute(string clipboardText)
             {
             if (string.IsNullOrWhiteSpace(clipboardText))
             {
@@ -194,13 +248,45 @@ namespace it.Actions
             ActionResult actionResult = new ActionResult();
             System.Globalization.CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            deleteEmptyFiles(desktopPath);
+
+
+            //DOWNLOADS 
+            string downloadPath = (KnownFolders.GetPath(KnownFolder.Downloads));
+            DeleteEmptyDirs(downloadPath);
+            CreateSubMaps(downloadPath);
+
+            string picturesPath = (KnownFolders.GetPath(KnownFolder.Pictures));
+            DeleteEmptyDirs(picturesPath);
+            CreateSubMaps(picturesPath);
+
+            string videoPath = (KnownFolders.GetPath(KnownFolder.Videos));
+            DeleteEmptyDirs(videoPath);
+            CreateSubMaps(videoPath);
+
+            string musicPath = (KnownFolders.GetPath(KnownFolder.Music));
+            DeleteEmptyDirs(musicPath);
+            CreateSubMaps(musicPath);
+
+            string documentsPath = (KnownFolders.GetPath(KnownFolder.Documents));
+            DeleteEmptyDirs(documentsPath);
+
+
+            //delete empty dirs
+            DirectoryInfo directoryInfo = new DirectoryInfo(picturesPath);
+            DirectoryInfo directoryInfo1 = new DirectoryInfo(videoPath);
+            DirectoryInfo directoryInfo2 = new DirectoryInfo(musicPath);
+            DirectoryInfo directoryInfo3 = new DirectoryInfo(downloadPath);
+           
+            if (Directory.Exists(picturesPath + videoPath + musicPath + downloadPath))
+            {
+                File.SetAttributes(picturesPath + videoPath + musicPath + downloadPath, FileAttributes.Normal);
+                DeleteEmptyDirs(picturesPath + videoPath + musicPath + downloadPath);
+            }
             //create cleanup map on desktop
             string cleanupPath = Path.Combine(desktopPath, "Cleanup");
-            Directory.CreateDirectory(cleanupPath);
 
             //sub maps desktop cleaner
-            Directory.CreateDirectory(Path.Combine(cleanupPath, "Audio"));
+            Directory.CreateDirectory(Path.Combine(cleanupPath,"Audio"));;
             Directory.CreateDirectory(Path.Combine(cleanupPath, "Text"));
             Directory.CreateDirectory(Path.Combine(cleanupPath, "Video"));
             Directory.CreateDirectory(Path.Combine(cleanupPath, "Images"));
@@ -209,11 +295,25 @@ namespace it.Actions
             Directory.CreateDirectory(Path.Combine(cleanupPath, "Disc"));
             Directory.CreateDirectory(Path.Combine(cleanupPath, "Data"));
             Directory.CreateDirectory(Path.Combine(cleanupPath, "Executables"));
-            Directory.CreateDirectory(Path.Combine(cleanupPath, "Fonts"));
-            Directory.CreateDirectory(Path.Combine(cleanupPath, "Presentations"));
-            Directory.CreateDirectory(Path.Combine(cleanupPath, "Programming"));
+            Directory.CreateDirectory(Path.Combine(cleanupPath,  "Fonts"));
+            var presentationFolder = Directory.CreateDirectory(Path.Combine(cleanupPath, "Presentations"));
+            {
+                //Subfolders in Presentations folder
+
+            }
+            var programmingFolder = Directory.CreateDirectory(Path.Combine(cleanupPath,"Programming"));
+            {
+                //Subfolders in Programming folder
+                programmingFolder.CreateSubdirectory("Python");
+                programmingFolder.CreateSubdirectory("HTML");
+                programmingFolder.CreateSubdirectory("Swift");
+                programmingFolder.CreateSubdirectory("Dart");
+                programmingFolder.CreateSubdirectory("C");
+                programmingFolder.CreateSubdirectory("Classes");
+                programmingFolder.CreateSubdirectory("Shell");
+            }
             Directory.CreateDirectory(Path.Combine(cleanupPath, "Spreadsheets"));
-            Directory.CreateDirectory(Path.Combine(cleanupPath, "System"));
+            Directory.CreateDirectory(Path.Combine(cleanupPath,  "System"));
             string overig = Path.Combine(cleanupPath, "Overig");
             Directory.CreateDirectory(overig);
 
@@ -225,22 +325,26 @@ namespace it.Actions
                 defaultBufferSize,
                 FileOptions.DeleteOnClose);
 
-
+            
             // move files from desktop
-            string[] array = Directory.GetFiles(desktopPath);
-            for (int i = 0; i < array.Length; i++)
+            string[] array1 = Directory.GetFiles(desktopPath);
+            for (int i = 0; i < array1.Length; i++)
             {
-                string file = array[i];
+                string file = array1[i];
                 if (Path.HasExtension(file))
                 {
-                    if (CategoryAssociations.TryGetValue(Path.GetExtension(file), out desktopPath))
+                    try
                     {
-                        File.Move(file, Path.Combine(cleanupPath, desktopPath, Path.GetFileName(file)));
+                        if (CategoryAssociations.TryGetValue(Path.GetExtension(file), out desktopPath))
+                        {
+                            File.Move(file, Path.Combine(cleanupPath, desktopPath, Path.GetFileName(file)));
+                        }
+                        else
+                        {
+                            File.Move(file, Path.Combine(cleanupPath, "Overig", Path.GetFileName(file)));
+                        }
                     }
-                    else
-                    {
-                        File.Move(file, Path.Combine(cleanupPath, "Overig", Path.GetFileName(file)));
-                    }
+                    catch (Exception) { }
                 }
             }
 
@@ -248,65 +352,64 @@ namespace it.Actions
             {
                 try
                 {
-                    ConsoleKeyInfo cki;
-                    double totalSize = 0;
-                    string path = (KnownFolders.GetPath(KnownFolder.Pictures));
-                    DirectoryInfo directoryInfo = new DirectoryInfo(path);
-                    string path1 = (KnownFolders.GetPath(KnownFolder.Videos));
-                    DirectoryInfo directoryInfo1 = new DirectoryInfo(path1);
-                    string path2 = (KnownFolders.GetPath(KnownFolder.Music));
-                    deleteEmptyFiles(path2);
-                    DirectoryInfo directoryInfo2 = new DirectoryInfo(path2);
-                    deleteEmptyFiles(path2);
-                    string path3 = (KnownFolders.GetPath(KnownFolder.Downloads));
-                    DirectoryInfo directoryInfo3 = new DirectoryInfo(path3);
-                    deleteEmptyFiles(path3);
-                    var fileList = directoryInfo.EnumerateFiles("*.*", SearchOption.AllDirectories).ToList();
-                    fileList.AddRange(directoryInfo1.EnumerateFiles("*.*",SearchOption.AllDirectories).ToList());
-                    fileList.AddRange(directoryInfo2.EnumerateFiles("*.*", SearchOption.AllDirectories).ToList());
-                    fileList.AddRange(directoryInfo3.EnumerateFiles("*.*", SearchOption.AllDirectories).ToList());
-
-                    List<FileDetails> finalDetails = new List<FileDetails>(1000);
-                    List<string> ToDelete = new List<string>(1000);
-                    finalDetails.Clear();
+                    try
                     {
+                        ConsoleKeyInfo cki;
+                        double totalSize = 0;
+                        var fileList = directoryInfo.EnumerateFiles("*.*", SearchOption.AllDirectories).ToList();
+                        fileList.AddRange(directoryInfo1.EnumerateFiles("*.*", SearchOption.AllDirectories).ToList());
+                        fileList.AddRange(directoryInfo2.EnumerateFiles("*.*", SearchOption.AllDirectories).ToList());
+                        fileList.AddRange(directoryInfo3.EnumerateFiles("*.*", SearchOption.AllDirectories).ToList());
+                        List<FileDetails> finalDetails = new List<FileDetails>(1000);
+                        List<string> ToDelete = new List<string>(1000);
+                        finalDetails.Clear();
                         {
-                            for (int i = 0; i < fileList.Count; i++)
-                            { 
+                            {
+                                for (int i = 0; i < fileList.Count; i++)
                                 {
-                                    string item = fileList[i].FullName;
-                                    using (var fs = new FileStream(item, FileMode.Open, FileAccess.Read))
                                     {
-                                        finalDetails.Add(new FileDetails()
+                                        string item = fileList[i].FullName;
+                                        using (var fs = new BufferedStream(File.OpenRead(item), 1200000))
                                         {
-                                            FileName = item,
-                                            FileHash = BitConverter.ToString(SHA1.Create().ComputeHash(fs)),
-                                        });
+                                            finalDetails.Add(new FileDetails()
+                                            {
+                                                FileName = item,
+                                                FileHash = BitConverter.ToString(MD5.Create().ComputeHash(fs)),
+                                            });
+                                        }
                                     }
                                 }
                             }
-                        }
-                        var similarList = finalDetails.GroupBy(f => f.FileHash)
-                       .Select(g => new { FileHash = g.Key, Files = g.Select(z => z.FileName).ToList() });
+                            var similarList = finalDetails.GroupBy(f => f.FileHash)
+                            .Select(g => new { FileHash = g.Key, Files = g.Select(z => z.FileName).ToList() });
 
 
-                        ToDelete.AddRange(similarList.SelectMany(f => f.Files.Skip(1)).ToList());
-                        if (ToDelete.Count > 0)
-                        {
-                            Console.WriteLine("Files being deleted- ");
-                            for (int i = 0; i < ToDelete.Count; i++)
+                            ToDelete.AddRange(similarList.SelectMany(f => f.Files.Skip(1)).ToList());
+                            if (ToDelete.Count > 0)
                             {
-                                string item = ToDelete[i];
-                                Console.WriteLine(item);
-                                FileInfo fi = new FileInfo(item);
-                                totalSize += fi.Length;
+                                Console.WriteLine("Files being deleted- ");
+                                for (int i = 0; i < ToDelete.Count; i++)
+                                {
+                                    string item = ToDelete[i];
+                                    Console.WriteLine(item);
+                                    FileInfo fi = new FileInfo(item);
+                                    totalSize += fi.Length;
+                                }
+                            }
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Total space made free-  {0}mb", Math.Round((totalSize / 1000000), 6).ToString());
+                            {
+                                ToDelete.ForEach(File.Delete);
                             }
                         }
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Total space made free-  {0}mb", Math.Round((totalSize / 1000000), 6).ToString());
-                        {
-                            ToDelete.ForEach(File.Delete);
-                        }
+                    }
+                    catch (System.UnauthorizedAccessException)
+                    {
+
+                    }
+                    catch (System.NotSupportedException)
+                    {
+
                     }
                 }
                 catch (System.UnauthorizedAccessException)
