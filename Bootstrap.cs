@@ -86,7 +86,7 @@ namespace it
             _ = serviceDescriptors.AddSingleton<IAction, RandomActions>();
             _ = serviceDescriptors.AddSingleton<IAction, StopwatchActions>();
             _ = serviceDescriptors.AddSingleton<IAction, TimespanActions>();
-            _ = serviceDescriptors.AddSingleton<IAction, numberToHex>();
+            _ = serviceDescriptors.AddSingleton<IAction, numberToHex>(); 
             _ = serviceDescriptors.AddSingleton<IAction, CurrencyConversion>();
             _ = serviceDescriptors.AddSingleton<IAction, desktopCleaner>();
             _ = serviceDescriptors.AddSingleton<IAction, TimezoneActions>();
