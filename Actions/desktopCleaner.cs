@@ -171,37 +171,69 @@ namespace it.Actions
         };
         private static void CreateSubMaps(string dir)
         {
-            string cleanupPath = Path.Combine(dir, "Cleanup");
+            string cleanupPath = Path.Combine(dir);
             //sub maps desktop cleaner
-            Directory.CreateDirectory(Path.Combine(dir, "Audio")); ;
-            Directory.CreateDirectory(Path.Combine(dir, "Text"));
-            Directory.CreateDirectory(Path.Combine(dir, "Video"));
-            Directory.CreateDirectory(Path.Combine(dir, "Images"));
-            Directory.CreateDirectory(Path.Combine(dir, "Internet"));
-            Directory.CreateDirectory(Path.Combine(dir, "Compressed"));
-            Directory.CreateDirectory(Path.Combine(dir, "Disc"));
-            Directory.CreateDirectory(Path.Combine(dir, "Data"));
-            Directory.CreateDirectory(Path.Combine(dir, "Executables"));
-            Directory.CreateDirectory(Path.Combine(dir, "Fonts"));
-            var presentationFolder = Directory.CreateDirectory(Path.Combine(dir, "Presentations"));
+            var subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Audio")); ;
+            {
+                //Subfolders in Audio folder
+            }
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Text"));
+            {
+                //Subfolders in Text folder
+            }
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Video"));
+            {
+                //Subfolders in Video folder
+            }
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Images"));
+            {
+                //Subfolders in Image folder
+            }
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Internet"));
+            {
+                //Subfolders in Internet folder
+            }
+
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Compressed"));
+            {
+                //Subfolders in Compressed folder
+            }
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Disc"));
+            {
+                //Subfolders in Disc folder
+            }
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Data"));
+            {
+                //Subfolders in Data folder
+            }
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Executables"));
+            {
+                //Subfolders in Executeables folder
+            }
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Fonts"));
+            {
+                //Subfolders in Fonts folder
+            }
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Presentations"));
             {
                 //Subfolders in Presentations folder
+                subFolders.CreateSubdirectory("Powepoints");
 
             }
-            var programmingFolder = Directory.CreateDirectory(Path.Combine(dir, "Programming"));
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Programming"));
             {
                 //Subfolders in Programming folder
-                programmingFolder.CreateSubdirectory("Python");
-                programmingFolder.CreateSubdirectory("HTML");
-                programmingFolder.CreateSubdirectory("Swift");
-                programmingFolder.CreateSubdirectory("Dart");
-                programmingFolder.CreateSubdirectory("C");
-                programmingFolder.CreateSubdirectory("Classes");
-                programmingFolder.CreateSubdirectory("Shell");
+                subFolders.CreateSubdirectory("Python");
+                subFolders.CreateSubdirectory("HTML");
+                subFolders.CreateSubdirectory("Swift");
+                subFolders.CreateSubdirectory("Dart");
+                subFolders.CreateSubdirectory("C");
+                subFolders.CreateSubdirectory("Classes");
+                subFolders.CreateSubdirectory("Shell");
             }
-            Directory.CreateDirectory(Path.Combine(dir, "Spreadsheets"));
-            Directory.CreateDirectory(Path.Combine(dir, "System"));
-            string overig = Path.Combine(dir, "Overig");
+            Directory.CreateDirectory(Path.Combine(cleanupPath, "Spreadsheets"));
+            Directory.CreateDirectory(Path.Combine(cleanupPath, "System"));
+            string overig = Path.Combine(cleanupPath, "Overig");
             Directory.CreateDirectory(overig);
         }
         private static void DeleteEmptyDirs(string dir)
@@ -286,31 +318,63 @@ namespace it.Actions
             string cleanupPath = Path.Combine(desktopPath, "Cleanup");
 
             //sub maps desktop cleaner
-            Directory.CreateDirectory(Path.Combine(cleanupPath,"Audio"));;
-            Directory.CreateDirectory(Path.Combine(cleanupPath, "Text"));
-            Directory.CreateDirectory(Path.Combine(cleanupPath, "Video"));
-            Directory.CreateDirectory(Path.Combine(cleanupPath, "Images"));
-            Directory.CreateDirectory(Path.Combine(cleanupPath, "Internet"));
-            Directory.CreateDirectory(Path.Combine(cleanupPath, "Compressed"));
-            Directory.CreateDirectory(Path.Combine(cleanupPath, "Disc"));
-            Directory.CreateDirectory(Path.Combine(cleanupPath, "Data"));
-            Directory.CreateDirectory(Path.Combine(cleanupPath, "Executables"));
-            Directory.CreateDirectory(Path.Combine(cleanupPath,  "Fonts"));
-            var presentationFolder = Directory.CreateDirectory(Path.Combine(cleanupPath, "Presentations"));
+            var subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath,"Audio"));;
+            {
+                //Subfolders in Audio folder
+            }
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Text"));
+            {
+                //Subfolders in Text folder
+            }
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Video"));
+            {
+                //Subfolders in Video folder
+            }
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Images"));
+            {
+                //Subfolders in Image folder
+            }
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Internet"));
+            {
+                //Subfolders in Internet folder
+            }
+
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Compressed"));
+            {
+                //Subfolders in Compressed folder
+            }
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Disc"));
+            {
+                //Subfolders in Disc folder
+            }
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Data"));
+            {
+                //Subfolders in Data folder
+            }
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Executables"));
+            {
+                //Subfolders in Executeables folder
+            }
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath,  "Fonts"));
+            {
+                //Subfolders in Fonts folder
+            }
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Presentations"));
             {
                 //Subfolders in Presentations folder
+                subFolders.CreateSubdirectory("Powepoints");
 
             }
-            var programmingFolder = Directory.CreateDirectory(Path.Combine(cleanupPath,"Programming"));
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath,"Programming"));
             {
                 //Subfolders in Programming folder
-                programmingFolder.CreateSubdirectory("Python");
-                programmingFolder.CreateSubdirectory("HTML");
-                programmingFolder.CreateSubdirectory("Swift");
-                programmingFolder.CreateSubdirectory("Dart");
-                programmingFolder.CreateSubdirectory("C");
-                programmingFolder.CreateSubdirectory("Classes");
-                programmingFolder.CreateSubdirectory("Shell");
+                subFolders.CreateSubdirectory("Python");
+                subFolders.CreateSubdirectory("HTML");
+                subFolders.CreateSubdirectory("Swift");
+                subFolders.CreateSubdirectory("Dart");
+                subFolders.CreateSubdirectory("C");
+                subFolders.CreateSubdirectory("Classes");
+                subFolders.CreateSubdirectory("Shell");
             }
             Directory.CreateDirectory(Path.Combine(cleanupPath, "Spreadsheets"));
             Directory.CreateDirectory(Path.Combine(cleanupPath,  "System"));
