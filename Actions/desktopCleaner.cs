@@ -105,7 +105,7 @@ namespace it.Actions
             //disc
             { ".bin" , "Disc" },
             { ".dmg" , "Disc" },
-            { ".iso" , "Disc" },
+            { ".iso" , "Disc/Iso" },
             { ".toast" , "Disc" },
             { ".vcd" , "Disc" },
             //data
@@ -201,6 +201,7 @@ namespace it.Actions
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Disc"));
             {
                 //Subfolders in Disc folder
+                subFolders.CreateSubdirectory("Iso");
             }
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Data"));
             {
@@ -236,7 +237,7 @@ namespace it.Actions
             string overig = Path.Combine(cleanupPath, "Overig");
             Directory.CreateDirectory(overig);
 
-            string[] array1 = Directory.GetFiles(dir);
+            string[] array1 = Directory.GetFiles(dir,"*", SearchOption.AllDirectories);
             for (int i = 0; i < array1.Length; i++)
             {
                 string file = array1[i];
@@ -255,6 +256,35 @@ namespace it.Actions
                     }
                     catch (Exception) { }
                 }
+            }
+        }
+        private static void MoveFolders(string dir)
+        {
+            try
+            {
+                string directoryName = dir;
+                DirectoryInfo dirInfo = new DirectoryInfo(directoryName);
+                if (dirInfo.Exists == false)
+                    Directory.CreateDirectory(directoryName);
+
+                List<string> MyFiles = Directory
+                                   .GetFiles(dir, "*.*", SearchOption.AllDirectories).ToList();
+
+                foreach (string file in MyFiles)
+                {
+                    FileInfo mFile = new FileInfo(file);
+                    // to remove name collisions
+                    if (new FileInfo(dirInfo + "\\" + mFile.Name).Exists == false)
+                    {
+                        mFile.MoveTo(dirInfo + "\\" + mFile.Name);
+                    }
+
+                }
+
+            }
+            catch (Exception)
+            {
+
             }
         }
         private static void DeleteEmptyDirs(string dir)
@@ -280,6 +310,13 @@ namespace it.Actions
                         try
                         {
                             Directory.Delete(dir);
+
+                            if (Directory.GetFiles(dir).Length == 0 &&
+                             Directory.GetDirectories(dir).Length == 0)
+                            {
+                                Directory.Delete(dir, false);
+                            }
+
                         }
                         catch (Exception)
                         {
@@ -305,24 +342,29 @@ namespace it.Actions
 
             //DOWNLOADS 
             string downloadPath = (KnownFolders.GetPath(KnownFolder.Downloads));
-            DeleteEmptyDirs(downloadPath);
+            MoveFolders(downloadPath);
             CreateSubMaps(downloadPath);
+            DeleteEmptyDirs(downloadPath);
 
             string picturesPath = (KnownFolders.GetPath(KnownFolder.Pictures));
-            DeleteEmptyDirs(picturesPath);
+            MoveFolders(picturesPath);
             CreateSubMaps(picturesPath);
+            DeleteEmptyDirs(picturesPath);
 
             string videoPath = (KnownFolders.GetPath(KnownFolder.Videos));
-            DeleteEmptyDirs(videoPath);
+            MoveFolders(videoPath);
             CreateSubMaps(videoPath);
+            DeleteEmptyDirs(videoPath);
 
             string musicPath = (KnownFolders.GetPath(KnownFolder.Music));
-            DeleteEmptyDirs(musicPath);
+            MoveFolders(musicPath);
             CreateSubMaps(musicPath);
+            DeleteEmptyDirs(musicPath);
 
             string documentsPath = (KnownFolders.GetPath(KnownFolder.Documents));
             DeleteEmptyDirs(documentsPath);
-
+            //MoveFolders(documentsPath);
+            //CreateSubMaps(documentsPath);
 
             //delete empty dirs
             DirectoryInfo directoryInfo = new DirectoryInfo(picturesPath);
@@ -412,7 +454,7 @@ namespace it.Actions
 
             
             // move files from desktop
-            string[] array1 = Directory.GetFiles(desktopPath);
+            string[] array1 = Directory.GetFiles(desktopPath, "*", SearchOption.AllDirectories);
             for (int i = 0; i < array1.Length; i++)
             {
                 string file = array1[i];
