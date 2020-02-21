@@ -235,6 +235,27 @@ namespace it.Actions
             Directory.CreateDirectory(Path.Combine(cleanupPath, "System"));
             string overig = Path.Combine(cleanupPath, "Overig");
             Directory.CreateDirectory(overig);
+
+            string[] array1 = Directory.GetFiles(dir);
+            for (int i = 0; i < array1.Length; i++)
+            {
+                string file = array1[i];
+                if (Path.HasExtension(file))
+                {
+                    try
+                    {
+                        if (CategoryAssociations.TryGetValue(Path.GetExtension(file), out dir))
+                        {
+                            File.Move(file, Path.Combine(cleanupPath, dir, Path.GetFileName(file)));
+                        }
+                        else
+                        {
+                            File.Move(file, Path.Combine(cleanupPath, "Overig", Path.GetFileName(file)));
+                        }
+                    }
+                    catch (Exception) { }
+                }
+            }
         }
         private static void DeleteEmptyDirs(string dir)
         {
