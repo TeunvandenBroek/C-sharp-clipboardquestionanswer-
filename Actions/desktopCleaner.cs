@@ -1,20 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Management;
-using System.Runtime.InteropServices;
-using System.Security;
-using System.Security.AccessControl;
-using System.Security.Cryptography;
-using System.Security.Principal;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace it.Actions
+﻿namespace it.Actions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Drawing;
+    using System.Drawing.Imaging;
+    using System.IO;
+    using System.Linq;
+    using System.Management;
+    using System.Runtime.InteropServices;
+    using System.Security;
+    using System.Security.AccessControl;
+    using System.Security.Cryptography;
+    using System.Security.Principal;
+    using System.Text;
+    using System.Text.RegularExpressions;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     internal sealed class desktopCleaner : IAction
     {
         public bool Matches(string clipboardText)
@@ -169,13 +172,15 @@ namespace it.Actions
             { ".sys" , "System" },
             { ".tmp" , "System" },
         };
+
         private static void CreateSubMaps(string dir)
         {
             string cleanupPath = Path.Combine(dir);
             //sub maps desktop cleaner
-            var subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Audio")); ;
+            var subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Audio"));
             {
                 //Subfolders in Audio folder
+
             }
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Text"));
             {
@@ -187,7 +192,8 @@ namespace it.Actions
             }
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Images"));
             {
-                //Subfolders in Image folder
+
+                
             }
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Internet"));
             {
@@ -237,7 +243,7 @@ namespace it.Actions
             string overig = Path.Combine(cleanupPath, "Overig");
             Directory.CreateDirectory(overig);
 
-            string[] array1 = Directory.GetFiles(dir,"*", SearchOption.AllDirectories);
+            string[] array1 = Directory.GetFiles(dir, "*", SearchOption.AllDirectories);
             for (int i = 0; i < array1.Length; i++)
             {
                 string file = array1[i];
@@ -258,13 +264,14 @@ namespace it.Actions
                 }
             }
         }
+
         private static void MoveFolders(string dir)
         {
             try
             {
                 string directoryName = dir;
                 DirectoryInfo dirInfo = new DirectoryInfo(directoryName);
-                if (dirInfo.Exists == false)
+                if (!dirInfo.Exists)
                     Directory.CreateDirectory(directoryName);
 
                 List<string> MyFiles = Directory
@@ -274,7 +281,7 @@ namespace it.Actions
                 {
                     FileInfo mFile = new FileInfo(file);
                     // to remove name collisions
-                    if (new FileInfo(dirInfo + "\\" + mFile.Name).Exists == false)
+                    if (!new FileInfo(dirInfo + "\\" + mFile.Name).Exists)
                     {
                         mFile.MoveTo(dirInfo + "\\" + mFile.Name);
                     }
@@ -287,6 +294,7 @@ namespace it.Actions
 
             }
         }
+
         private static void DeleteEmptyDirs(string dir)
         {
             if (string.IsNullOrEmpty(dir))
@@ -326,11 +334,11 @@ namespace it.Actions
                     catch (Exception) { }
                 }
             }
-            catch (UnauthorizedAccessException) { }
+            catch (Exception) { }
         }
 
         public ActionResult TryExecute(string clipboardText)
-            {
+        {
             if (string.IsNullOrWhiteSpace(clipboardText))
             {
                 throw new ArgumentException("message", nameof(clipboardText));
@@ -371,7 +379,7 @@ namespace it.Actions
             DirectoryInfo directoryInfo1 = new DirectoryInfo(videoPath);
             DirectoryInfo directoryInfo2 = new DirectoryInfo(musicPath);
             DirectoryInfo directoryInfo3 = new DirectoryInfo(downloadPath);
-           
+
             if (Directory.Exists(picturesPath + videoPath + musicPath + downloadPath))
             {
                 File.SetAttributes(picturesPath + videoPath + musicPath + downloadPath, FileAttributes.Normal);
@@ -381,7 +389,7 @@ namespace it.Actions
             string cleanupPath = Path.Combine(desktopPath, "Cleanup");
 
             //sub maps desktop cleaner
-            var subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath,"Audio"));;
+            var subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Audio")); ;
             {
                 //Subfolders in Audio folder
             }
@@ -395,7 +403,7 @@ namespace it.Actions
             }
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Images"));
             {
-                //Subfolders in Image folder
+                //Subfolders in Image folder 
             }
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Internet"));
             {
@@ -418,7 +426,7 @@ namespace it.Actions
             {
                 //Subfolders in Executeables folder
             }
-            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath,  "Fonts"));
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Fonts"));
             {
                 //Subfolders in Fonts folder
             }
@@ -428,7 +436,7 @@ namespace it.Actions
                 subFolders.CreateSubdirectory("Powepoints");
 
             }
-            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath,"Programming"));
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Programming"));
             {
                 //Subfolders in Programming folder
                 subFolders.CreateSubdirectory("Python");
@@ -440,7 +448,7 @@ namespace it.Actions
                 subFolders.CreateSubdirectory("Shell");
             }
             Directory.CreateDirectory(Path.Combine(cleanupPath, "Spreadsheets"));
-            Directory.CreateDirectory(Path.Combine(cleanupPath,  "System"));
+            Directory.CreateDirectory(Path.Combine(cleanupPath, "System"));
             string overig = Path.Combine(cleanupPath, "Overig");
             Directory.CreateDirectory(overig);
 
@@ -452,7 +460,7 @@ namespace it.Actions
                 defaultBufferSize,
                 FileOptions.DeleteOnClose);
 
-            
+
             // move files from desktop
             string[] array1 = Directory.GetFiles(desktopPath, "*", SearchOption.AllDirectories);
             for (int i = 0; i < array1.Length; i++)
@@ -475,7 +483,7 @@ namespace it.Actions
                 }
             }
 
-    
+
             {
                 try
                 {
@@ -523,29 +531,20 @@ namespace it.Actions
                                     totalSize += fi.Length;
                                 }
                             }
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("Total space made free-  {0}mb", Math.Round((totalSize / 1000000), 6).ToString());
+                            actionResult.Description = "Total space made free-  {0}mb"+ Math.Round((totalSize / 1000000), 6);
                             {
                                 ToDelete.ForEach(File.Delete);
                             }
                         }
                     }
-                    catch (System.UnauthorizedAccessException)
-                    {
-
-                    }
-                    catch (System.NotSupportedException)
+                    catch (System.Exception)
                     {
 
                     }
                 }
-                catch (System.UnauthorizedAccessException)
+                catch (System.Exception)
                 {
 
-                }
-                catch (System.NotSupportedException)
-                {
-                    
                 }
             }
             switch (currentCulture.LCID)
