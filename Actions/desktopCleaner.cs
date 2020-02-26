@@ -97,14 +97,14 @@
             { ".rss" ,"Internet" },
             { ".xhtml" ,"Internet" },
             //compressed
-            { ".7z",  "Compressed" },
-            { ".arj" , "Compressed" },
-            { ".deb" , "Compressed" },
-            { ".pkg",  "Compressed" },
-            { ".rar" , "Compressed" },
-            { ".tar.gz" , "Compressed" },
-            { ".z" , "Compressed" },
-            { ".zip" , "Compressed" },
+            { ".7z",  "Compressed/7z" },
+            { ".arj" , "Compressed/Arj" },
+            { ".deb" , "Compressed/Deb" },
+            { ".pkg",  "Compressed/Pkg" },
+            { ".rar" , "Compressed/RAR" },
+            { ".tar.gz" , "Compressed/Tar.gz" },
+            { ".z" , "Compressed/Z" },
+            { ".zip" , "Compressed/Zip" },
             //disc
             { ".bin" , "Disc" },
             { ".dmg" , "Disc" },
@@ -132,7 +132,7 @@
             { ".jar" , "Executables" },
             { ".wsf" , "Executables" },
             //fonts
-            { ".fnt" , "Fonts" },
+            { ".fnt" , "Fonts/fnt" },
             { ".fon" , "Fonts" },
             { ".otf" , "Fonts" },
             { ".ttf" , "Fonts" },
@@ -192,8 +192,19 @@
             }
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Images"));
             {
+                //Subfolders in image folder
+                //TO DO 
+                //STOP COMPLETE RAR FILES OOK IN DE SUBMAPS
+                //
+                subFolders.CreateSubdirectory("7z");
+                subFolders.CreateSubdirectory("Arj");
+                subFolders.CreateSubdirectory("Deb");
+                subFolders.CreateSubdirectory("Pkg");
+                subFolders.CreateSubdirectory("RAR");
+                subFolders.CreateSubdirectory("Tar.gz");
+                subFolders.CreateSubdirectory("Z");
+                subFolders.CreateSubdirectory("Zip");
 
-                
             }
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Internet"));
             {
@@ -337,6 +348,7 @@
             catch (Exception) { }
         }
 
+
         public ActionResult TryExecute(string clipboardText)
         {
             if (string.IsNullOrWhiteSpace(clipboardText))
@@ -348,7 +360,6 @@
             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
 
-            //DOWNLOADS 
             string downloadPath = (KnownFolders.GetPath(KnownFolder.Downloads));
             MoveFolders(downloadPath);
             CreateSubMaps(downloadPath);
@@ -404,6 +415,7 @@
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Images"));
             {
                 //Subfolders in Image folder 
+
             }
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Internet"));
             {
@@ -413,6 +425,8 @@
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Compressed"));
             {
                 //Subfolders in Compressed folder
+                subFolders.CreateSubdirectory("Rar");
+
             }
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Disc"));
             {
@@ -482,8 +496,6 @@
                     catch (Exception) { }
                 }
             }
-
-
             {
                 try
                 {
