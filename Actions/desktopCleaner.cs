@@ -1,23 +1,23 @@
-﻿namespace it.Actions
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Drawing;
-    using System.Drawing.Imaging;
-    using System.IO;
-    using System.Linq;
-    using System.Management;
-    using System.Runtime.InteropServices;
-    using System.Security;
-    using System.Security.AccessControl;
-    using System.Security.Cryptography;
-    using System.Security.Principal;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using System.Threading;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Linq;
+using System.Management;
+using System.Runtime.InteropServices;
+using System.Security;
+using System.Security.AccessControl;
+using System.Security.Cryptography;
+using System.Security.Principal;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 
+namespace it.Actions
+{
     internal sealed class desktopCleaner : IAction
     {
         public bool Matches(string clipboardText)
@@ -26,7 +26,7 @@
         }
 
         private static readonly Dictionary<string, string> CategoryAssociations = new Dictionary<string, string>
-        (StringComparer.Ordinal)
+        (129,StringComparer.Ordinal)
         {
             //audio
             {".aif", "Audio" },
@@ -97,14 +97,14 @@
             { ".rss" ,"Internet" },
             { ".xhtml" ,"Internet" },
             //compressed
-            { ".7z",  "Compressed/7z" },
-            { ".arj" , "Compressed/Arj" },
-            { ".deb" , "Compressed/Deb" },
-            { ".pkg",  "Compressed/Pkg" },
-            { ".rar" , "Compressed/RAR" },
-            { ".tar.gz" , "Compressed/Tar.gz" },
-            { ".z" , "Compressed/Z" },
-            { ".zip" , "Compressed/Zip" },
+            { ".7z",  "Compressed" },
+            { ".arj" , "Compressed" },
+            { ".deb" , "Compressed" },
+            { ".pkg",  "Compressed" },
+            { ".rar" , "Compressed" },
+            { ".tar.gz" , "Compressed" },
+            { ".z" , "Compressed" },
+            { ".zip" , "Compressed" },
             //disc
             { ".bin" , "Disc" },
             { ".dmg" , "Disc" },
@@ -132,7 +132,7 @@
             { ".jar" , "Executables" },
             { ".wsf" , "Executables" },
             //fonts
-            { ".fnt" , "Fonts/fnt" },
+            { ".fnt" , "Fonts" },
             { ".fon" , "Fonts" },
             { ".otf" , "Fonts" },
             { ".ttf" , "Fonts" },
@@ -173,14 +173,27 @@
             { ".tmp" , "System" },
         };
 
+        public static void MaakSubMapJaar(string dir)
+        {
+            foreach (var fullFileName in Directory.EnumerateFiles(dir))
+            {
+                DateTime lastWriteTime = File.GetLastWriteTime(Path.Combine(dir, fullFileName));
+                string fullNewDir = Path.Combine(dir, lastWriteTime.ToString("yyyy"));
+                if (!Directory.Exists(fullNewDir))
+                {
+                    Directory.CreateDirectory(fullNewDir);
+                }
+                string fileName = Path.GetFileName(fullFileName);
+                System.IO.File.Move(fullFileName, Path.Combine(fullNewDir, fileName));
+            }
+        }
         private static void CreateSubMaps(string dir)
         {
             string cleanupPath = Path.Combine(dir);
             //sub maps desktop cleaner
-            var subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Audio"));
+            var subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Audio")); ;
             {
                 //Subfolders in Audio folder
-
             }
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Text"));
             {
@@ -192,20 +205,8 @@
             }
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Images"));
             {
-                //Subfolders in image folder
-                //TO DO 
-                //STOP COMPLETE RAR FILES OOK IN DE SUBMAPS
-                //
-                subFolders.CreateSubdirectory("7z");
-                subFolders.CreateSubdirectory("Arj");
-                subFolders.CreateSubdirectory("Deb");
-                subFolders.CreateSubdirectory("Pkg");
-                subFolders.CreateSubdirectory("RAR");
-                subFolders.CreateSubdirectory("Tar.gz");
-                subFolders.CreateSubdirectory("Z");
-                subFolders.CreateSubdirectory("Zip");
-
-            }
+                
+            } 
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Internet"));
             {
                 //Subfolders in Internet folder
@@ -273,16 +274,17 @@
                     }
                     catch (Exception) { }
                 }
+
             }
         }
 
-        private static void MoveFolders(string dir)
-        {
+         private static void MoveFolders(string dir)
+         {
             try
             {
                 string directoryName = dir;
                 DirectoryInfo dirInfo = new DirectoryInfo(directoryName);
-                if (!dirInfo.Exists)
+                if (dirInfo.Exists == false)
                     Directory.CreateDirectory(directoryName);
 
                 List<string> MyFiles = Directory
@@ -292,7 +294,7 @@
                 {
                     FileInfo mFile = new FileInfo(file);
                     // to remove name collisions
-                    if (!new FileInfo(dirInfo + "\\" + mFile.Name).Exists)
+                    if (new FileInfo(dirInfo + "\\" + mFile.Name).Exists == false)
                     {
                         mFile.MoveTo(dirInfo + "\\" + mFile.Name);
                     }
@@ -345,9 +347,8 @@
                     catch (Exception) { }
                 }
             }
-            catch (Exception) { }
+            catch (UnauthorizedAccessException) { }
         }
-
 
         public ActionResult TryExecute(string clipboardText)
         {
@@ -360,6 +361,7 @@
             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
 
+            //DOWNLOADS 
             string downloadPath = (KnownFolders.GetPath(KnownFolder.Downloads));
             MoveFolders(downloadPath);
             CreateSubMaps(downloadPath);
@@ -367,7 +369,7 @@
 
             string picturesPath = (KnownFolders.GetPath(KnownFolder.Pictures));
             MoveFolders(picturesPath);
-            CreateSubMaps(picturesPath);
+            MaakSubMapJaar(picturesPath);
             DeleteEmptyDirs(picturesPath);
 
             string videoPath = (KnownFolders.GetPath(KnownFolder.Videos));
@@ -382,7 +384,7 @@
 
             string documentsPath = (KnownFolders.GetPath(KnownFolder.Documents));
             DeleteEmptyDirs(documentsPath);
-            //MoveFolders(documentsPath);
+            MoveFolders(documentsPath);
             //CreateSubMaps(documentsPath);
 
             //delete empty dirs
@@ -414,8 +416,7 @@
             }
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Images"));
             {
-                //Subfolders in Image folder 
-
+                //Subfolders in Image folder
             }
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Internet"));
             {
@@ -425,8 +426,6 @@
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Compressed"));
             {
                 //Subfolders in Compressed folder
-                subFolders.CreateSubdirectory("Rar");
-
             }
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Disc"));
             {
@@ -496,6 +495,8 @@
                     catch (Exception) { }
                 }
             }
+
+
             {
                 try
                 {
@@ -543,18 +544,19 @@
                                     totalSize += fi.Length;
                                 }
                             }
-                            actionResult.Description = "Total space made free-  {0}mb"+ Math.Round((totalSize / 1000000), 6);
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Total space made free-  {0}mb", Math.Round((totalSize / 1000000), 6).ToString());
                             {
                                 ToDelete.ForEach(File.Delete);
                             }
                         }
                     }
-                    catch (System.Exception)
+                    catch (Exception)
                     {
 
                     }
                 }
-                catch (System.Exception)
+                catch (Exception)
                 {
 
                 }
