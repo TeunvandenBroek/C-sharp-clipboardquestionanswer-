@@ -210,8 +210,6 @@ namespace it.Actions
                         timeZoneId = "India Standard Time";
                         break;
                     }
-                default:
-                    break;
             }
 
             TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);

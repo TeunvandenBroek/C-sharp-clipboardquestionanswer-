@@ -49,9 +49,6 @@ namespace it.Actions
                                     actionResult.Description = isHeads ? "Kop" : "Munt";
                                     break;
                                 }
-
-                            default:
-                                break;
                         }
 
                         break;
@@ -72,8 +69,6 @@ namespace it.Actions
                         actionResult.Title = "Random password";
                         actionResult.Description = password.ToString();
                     }
-                    break;
-                default:
                     break;
             }
 

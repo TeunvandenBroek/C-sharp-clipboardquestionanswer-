@@ -227,9 +227,6 @@
                         snelheid = number * 3.6;
                         break;
                     }
-
-                default:
-                    break;
             }
 
             // oppervlakte eenheden (area units)

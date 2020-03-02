@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace it.Actions
 {
@@ -23,6 +24,7 @@ namespace it.Actions
                 string binary = Convert.ToString(toBinaryIndex, 2);
                 actionResult.Title = "Calculate binary";
                 actionResult.Description = $"{clipboardText}, {binary}";
+                Clipboard.SetText($"{binary}");
             }
             return actionResult;
 

@@ -6,6 +6,7 @@
     using System.Net;
     using System.Text;
     using System.Threading.Tasks;
+    using System.Windows;
 
     public class CurrencyConversion : IAction
     {
@@ -65,6 +66,7 @@
                 {
                     var rate = deserializedJson.rates[toCurrency];
                     actionResult.Description = $"{clipboardText} = {amount * rate:N2} {toCurrency}";
+                    Clipboard.SetText($"{clipboardText} = {amount * rate:N2} {toCurrency}"); 
                 }
             }
             return actionResult;

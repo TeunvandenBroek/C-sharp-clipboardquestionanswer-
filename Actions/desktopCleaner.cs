@@ -172,8 +172,7 @@ namespace it.Actions
             { ".sys" , "System" },
             { ".tmp" , "System" },
         };
-
-        public static void MaakSubMapJaar(string dir)
+        public static void imageSubMaps(string dir)
         {
             foreach (var fullFileName in Directory.EnumerateFiles(dir))
             {
@@ -205,7 +204,7 @@ namespace it.Actions
             }
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Images"));
             {
-                
+           
             } 
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Internet"));
             {
@@ -290,8 +289,9 @@ namespace it.Actions
                 List<string> MyFiles = Directory
                                    .GetFiles(dir, "*.*", SearchOption.AllDirectories).ToList();
 
-                foreach (string file in MyFiles)
+                for (int i = 0; i < MyFiles.Count; i++)
                 {
+                    string file = MyFiles[i];
                     FileInfo mFile = new FileInfo(file);
                     // to remove name collisions
                     if (new FileInfo(dirInfo + "\\" + mFile.Name).Exists == false)
@@ -369,7 +369,7 @@ namespace it.Actions
 
             string picturesPath = (KnownFolders.GetPath(KnownFolder.Pictures));
             MoveFolders(picturesPath);
-            MaakSubMapJaar(picturesPath);
+            imageSubMaps(picturesPath);
             DeleteEmptyDirs(picturesPath);
 
             string videoPath = (KnownFolders.GetPath(KnownFolder.Videos));
@@ -400,7 +400,6 @@ namespace it.Actions
             }
             //create cleanup map on desktop
             string cleanupPath = Path.Combine(desktopPath, "Cleanup");
-
             //sub maps desktop cleaner
             var subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Audio")); ;
             {
@@ -417,6 +416,8 @@ namespace it.Actions
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Images"));
             {
                 //Subfolders in Image folder
+                var imagesubmap = KnownFolders.GetPath(KnownFolder.Pictures);
+                imageSubMaps(imagesubmap);
             }
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Internet"));
             {
