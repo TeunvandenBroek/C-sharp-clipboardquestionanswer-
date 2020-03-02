@@ -79,6 +79,7 @@ namespace it
         {
             // Add configure services
             ServiceCollection serviceDescriptors = new ServiceCollection();
+            _ = serviceDescriptors.AddSingleton<IAction, CurrencyConversion>();
             _ = serviceDescriptors.AddSingleton<IAction, ConvertActions>();
             _ = serviceDescriptors.AddSingleton<IAction, TryRomanActions>();
             _ = serviceDescriptors.AddSingleton<IAction, CountdownActions>();
@@ -87,7 +88,6 @@ namespace it
             _ = serviceDescriptors.AddSingleton<IAction, StopwatchActions>();
             _ = serviceDescriptors.AddSingleton<IAction, TimespanActions>();
             _ = serviceDescriptors.AddSingleton<IAction, numberToHex>(); 
-            _ = serviceDescriptors.AddSingleton<IAction, CurrencyConversion>();
             _ = serviceDescriptors.AddSingleton<IAction, desktopCleaner>();
             _ = serviceDescriptors.AddSingleton<IAction, TimezoneActions>();
             _ = serviceDescriptors.AddSingleton<IAction, BmiActions>();
@@ -117,18 +117,17 @@ namespace it
                 }
                 if (clipboardPaused)
                 {
-                    if (clipboardText.Equals("resume"))
+                    if (clipboardText.Equals("hervat") || clipboardText.Equals("resume"))
                     {
                         clipboardPaused = false;
                     }
                     return;
                 }
-                if (clipboardText.Equals("pause"))
+                if (clipboardText.Equals("pauze") || clipboardText.Equals("pause"))
                 {
                     clipboardPaused = true;
                     return;
                 }
-
                 // if we get to here, we have text
                 ProcessClipboardText(clipboardText);
             }
