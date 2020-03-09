@@ -20,6 +20,7 @@
               //lira to euro - euro to lira
               clipboardText.EndsWith("lira to euro", StringComparison.Ordinal) ||
              clipboardText.EndsWith("lira naar euro", StringComparison.Ordinal) ||
+             clipboardText.EndsWith("lira naar euro", StringComparison.Ordinal) ||
               clipboardText.EndsWith("euro to lira", StringComparison.Ordinal) ||
               clipboardText.EndsWith("euro naar lira", StringComparison.Ordinal) ||
             //engelse pond to euro - pond to euro
@@ -28,7 +29,6 @@
              clipboardText.EndsWith("euro to pond", StringComparison.Ordinal) ||
              clipboardText.EndsWith("euro naar pond", StringComparison.Ordinal);
         }
-
         internal class ExchangeRateModel
         {
             public Dictionary<string, decimal> rates { get; set; }
@@ -42,21 +42,19 @@
                     {"euro", "EUR" },
                     {"EUR", "EUR" },
                     //turkse lira
-                    {"lira" , "TRY" },
+                    {"lira", "TRY" },
                     {"TRY" , "TRY" },
                     //engelse pond
                     {"pond" , "GBP" },
                     {"GBP" , "GBP" },
-
         };
         public ActionResult TryExecute(string clipboardText)
         {
             ActionResult actionResult = new ActionResult();
             clipboardText = clipboardText.Replace('.', ',');
-            string[] splits = clipboardText.Split(' ');
+            string[] splits = clipboardText.Split(' ');;
             string from = splits[1];
             string to = splits[3];
-
             if (Currency.TryGetValue(from, out var fromCurrency) && Currency.TryGetValue(to, out var toCurrency))
             {
                 var url = $"https://api.exchangeratesapi.io/latest?base={fromCurrency}&symbols={toCurrency}";

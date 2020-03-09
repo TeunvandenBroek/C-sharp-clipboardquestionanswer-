@@ -1,32 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
-using System.Management;
-using System.Runtime.InteropServices;
-using System.Security;
-using System.Security.AccessControl;
-using System.Security.Cryptography;
-using System.Security.Principal;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace it.Actions
+﻿namespace it.Actions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Drawing;
+    using System.Drawing.Imaging;
+    using System.IO;
+    using System.Linq;
+    using System.Management;
+    using System.Runtime.InteropServices;
+    using System.Security;
+    using System.Security.AccessControl;
+    using System.Security.Cryptography;
+    using System.Security.Principal;
+    using System.Text;
+    using System.Text.RegularExpressions;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     internal sealed class desktopCleaner : IAction
     {
         public bool Matches(string clipboardText)
         {
-            return clipboardText.EndsWith("desktop cleaner", StringComparison.Ordinal) || clipboardText.EndsWith("bureaublad schoonmaak", StringComparison.Ordinal);
+            return clipboardText.EndsWith("file organizer", StringComparison.Ordinal) || clipboardText.EndsWith("bestanden opruimen", StringComparison.Ordinal);
         }
 
         private static readonly Dictionary<string, string> CategoryAssociations = new Dictionary<string, string>
-        (129,StringComparer.Ordinal)
+        (129, StringComparer.Ordinal)
         {
             //audio
             {".aif", "Audio" },
@@ -172,20 +172,23 @@ namespace it.Actions
             { ".sys" , "System" },
             { ".tmp" , "System" },
         };
-        public static void imageSubMaps(string dir)
+
+        public static void yearSubMaps(string dir)
         {
-            foreach (var fullFileName in Directory.EnumerateFiles(dir))
+            foreach (var fullFileName in FastDirectoryEnumerator.EnumerateFiles(dir))
             {
+
                 DateTime lastWriteTime = File.GetLastWriteTime(Path.Combine(dir, fullFileName));
-                string fullNewDir = Path.Combine(dir, lastWriteTime.ToString("yyyy"));
-                if (!Directory.Exists(fullNewDir))
+                dir = Path.Combine(dir, lastWriteTime.ToString("yyyy"));
+                if (!Directory.Exists(dir))
                 {
-                    Directory.CreateDirectory(fullNewDir);
+                    Directory.CreateDirectory(dir);
                 }
                 string fileName = Path.GetFileName(fullFileName);
-                System.IO.File.Move(fullFileName, Path.Combine(fullNewDir, fileName));
+                System.IO.File.Move(fullFileName, Path.Combine(dir, fileName));
             }
         }
+
         private static void CreateSubMaps(string dir)
         {
             string cleanupPath = Path.Combine(dir);
@@ -198,14 +201,16 @@ namespace it.Actions
             {
                 //Subfolders in Text folder
             }
-            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Video"));
+            foreach (var fullFileName in FastDirectoryEnumerator.EnumerateFiles(cleanupPath, "Video"))
             {
-                //Subfolders in Video folder
+                var videosubmap = KnownFolders.GetPath(KnownFolder.Videos);
+                yearSubMaps(videosubmap);
             }
-            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Images"));
+            foreach (var fullFileName in FastDirectoryEnumerator.EnumerateFiles(cleanupPath, "Images"))
             {
-           
-            } 
+                var imagesubmap = KnownFolders.GetPath(KnownFolder.Pictures);
+                yearSubMaps(imagesubmap);
+            }
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Internet"));
             {
                 //Subfolders in Internet folder
@@ -277,8 +282,8 @@ namespace it.Actions
             }
         }
 
-         private static void MoveFolders(string dir)
-         {
+        private static void MoveFolders(string dir)
+        {
             try
             {
                 string directoryName = dir;
@@ -286,8 +291,8 @@ namespace it.Actions
                 if (dirInfo.Exists == false)
                     Directory.CreateDirectory(directoryName);
 
-                List<string> MyFiles = Directory
-                                   .GetFiles(dir, "*.*", SearchOption.AllDirectories).ToList();
+                List<FileData> MyFiles = FastDirectoryEnumerator
+                                   .EnumerateFiles(dir, "*.*", SearchOption.AllDirectories).ToList();
 
                 for (int i = 0; i < MyFiles.Count; i++)
                 {
@@ -302,10 +307,7 @@ namespace it.Actions
                 }
 
             }
-            catch (Exception)
-            {
-
-            }
+            catch (Exception){}
         }
 
         private static void DeleteEmptyDirs(string dir)
@@ -331,8 +333,7 @@ namespace it.Actions
                         try
                         {
                             Directory.Delete(dir);
-
-                            if (Directory.GetFiles(dir).Length == 0 &&
+                            if (FastDirectoryEnumerator.GetFiles(dir,"*.*", SearchOption.AllDirectories).Length == 0 &&
                              Directory.GetDirectories(dir).Length == 0)
                             {
                                 Directory.Delete(dir, false);
@@ -350,6 +351,7 @@ namespace it.Actions
             catch (UnauthorizedAccessException) { }
         }
 
+
         public ActionResult TryExecute(string clipboardText)
         {
             if (string.IsNullOrWhiteSpace(clipboardText))
@@ -360,7 +362,6 @@ namespace it.Actions
             System.Globalization.CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
-
             //DOWNLOADS 
             string downloadPath = (KnownFolders.GetPath(KnownFolder.Downloads));
             MoveFolders(downloadPath);
@@ -369,7 +370,7 @@ namespace it.Actions
 
             string picturesPath = (KnownFolders.GetPath(KnownFolder.Pictures));
             MoveFolders(picturesPath);
-            imageSubMaps(picturesPath);
+            CreateSubMaps(picturesPath);
             DeleteEmptyDirs(picturesPath);
 
             string videoPath = (KnownFolders.GetPath(KnownFolder.Videos));
@@ -383,9 +384,10 @@ namespace it.Actions
             DeleteEmptyDirs(musicPath);
 
             string documentsPath = (KnownFolders.GetPath(KnownFolder.Documents));
-            DeleteEmptyDirs(documentsPath);
             MoveFolders(documentsPath);
-            //CreateSubMaps(documentsPath);
+            CreateSubMaps(documentsPath);
+            DeleteEmptyDirs(documentsPath);
+
 
             //delete empty dirs
             DirectoryInfo directoryInfo = new DirectoryInfo(picturesPath);
@@ -412,12 +414,14 @@ namespace it.Actions
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Video"));
             {
                 //Subfolders in Video folder
+                var videosubmap = KnownFolders.GetPath(KnownFolder.Videos);
+                yearSubMaps(videosubmap);
             }
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Images"));
             {
                 //Subfolders in Image folder
                 var imagesubmap = KnownFolders.GetPath(KnownFolder.Pictures);
-                imageSubMaps(imagesubmap);
+                yearSubMaps(imagesubmap);
             }
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Internet"));
             {
@@ -476,7 +480,7 @@ namespace it.Actions
 
 
             // move files from desktop
-            string[] array1 = Directory.GetFiles(desktopPath, "*", SearchOption.AllDirectories);
+            string[] array1 = Directory.GetFiles(desktopPath, "*.*", SearchOption.AllDirectories);
             for (int i = 0; i < array1.Length; i++)
             {
                 string file = array1[i];
@@ -552,15 +556,9 @@ namespace it.Actions
                             }
                         }
                     }
-                    catch (Exception)
-                    {
-
-                    }
+                    catch (Exception){}
                 }
-                catch (Exception)
-                {
-
-                }
+                catch (Exception){ }
             }
             switch (currentCulture.LCID)
             {
