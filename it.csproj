@@ -503,6 +503,7 @@
     <Compile Include="Actions\DeviceActions.cs" />
     <Compile Include="Countries.cs" />
     <Compile Include="Actions\Currency.cs" />
+    <Compile Include="FastDirectoryEnumerator.cs" />
     <Compile Include="GlobalSuppressions2.cs" />
     <Compile Include="KnownFolders.cs" />
     <Compile Include="Program.cs" />
@@ -567,7 +568,7 @@
     <Analyzer Include="packages\IDisposableAnalyzers.3.2.0\analyzers\dotnet\cs\Gu.Roslyn.Extensions.dll" />
     <Analyzer Include="packages\IDisposableAnalyzers.3.2.0\analyzers\dotnet\cs\IDisposableAnalyzers.dll" />
     <Analyzer Include="packages\LazyMixinAnalyzer.2.3.0.0\tools\analyzers\LazyMixinAnalyzer.dll" />
-    <Analyzer Include="packages\Meziantou.Analyzer.1.0.306\analyzers\dotnet\cs\Meziantou.Analyzer.dll" />
+    <Analyzer Include="packages\Meziantou.Analyzer.1.0.324\analyzers\dotnet\cs\Meziantou.Analyzer.dll" />
     <Analyzer Include="packages\Microsoft.CodeAnalysis.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="packages\Microsoft.CodeAnalysis.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
     <Analyzer Include="packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\analyzers\dotnet\cs\Microsoft.CodeAnalysis.VersionCheckAnalyzer.resources.dll" />
