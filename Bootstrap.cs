@@ -1,18 +1,20 @@
-using it.Actions;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
 namespace it
 {
+    using it.Actions;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Win32;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Drawing;
+    using System.Linq;
+    using System.Reflection;
+    using System.Threading.Tasks;
+    using System.Windows.Forms;
+
+
+
     /// <summary>
     ///     The bootstrap class is provided to allow the application to run with out a form.
     ///     We can use a form however in the future by adding it to here.
@@ -87,7 +89,7 @@ namespace it
             _ = serviceDescriptors.AddSingleton<IAction, RandomActions>();
             _ = serviceDescriptors.AddSingleton<IAction, StopwatchActions>();
             _ = serviceDescriptors.AddSingleton<IAction, TimespanActions>();
-            _ = serviceDescriptors.AddSingleton<IAction, numberToHex>(); 
+            _ = serviceDescriptors.AddSingleton<IAction, numberToHex>();
             _ = serviceDescriptors.AddSingleton<IAction, desktopCleaner>();
             _ = serviceDescriptors.AddSingleton<IAction, TimezoneActions>();
             _ = serviceDescriptors.AddSingleton<IAction, BmiActions>();
@@ -104,7 +106,7 @@ namespace it
         {
 
         }
-        bool clipboardPaused = false;
+        private bool clipboardPaused = false;
         private void ClipboardMonitor_ClipboardChanged(object sender, ClipboardChangedEventArgs e)
         {
             // retrieve the text from the clipboard
@@ -132,6 +134,14 @@ namespace it
                 ProcessClipboardText(clipboardText);
             }
         }
+
+
+
+    static void onProcessExit(object sender, EventArgs e)
+    {
+        MessageBox.Show("bye");
+    }
+    private bool notifyPaused = false;
         private void ProcessClipboardText(string clipboardText)
         {
             if (clipboardText is null)
@@ -139,6 +149,18 @@ namespace it
                 throw new ArgumentNullException(nameof(clipboardText));
             }
 
+            if (notifyPaused)
+            {
+                if (clipboardText.Equals("show notifications") || clipboardText.Equals("toon notificaties"))
+                {
+                    notifyPaused = false;
+                }
+                return;
+            }
+            if (clipboardText.Equals("hide notifications") || clipboardText.Equals("verberg notificaties"))
+            {
+                notifyPaused = true;
+            }
             try
             {
                 IAction service = GetService(clipboardText);
@@ -153,6 +175,7 @@ namespace it
                         ProcessResult(actionResult, clipboardText);
                     }
                     return;
+
                 }
                 if (clipboardText.Length > 2)
                 {
@@ -185,19 +208,9 @@ namespace it
             return clipboardText;
         }
 
-        private bool notifyPaused = false;
+
         private void ProcessResult(ActionResult actionResult, string clipboardText)
         {
-            if (clipboardText is null)
-            {
-                throw new ArgumentNullException(nameof(clipboardText));
-            }
-
-            if (string.Equals(Clipboard.GetText(), clipboardText, StringComparison.Ordinal))
-            {
-                Clipboard.Clear();
-            }
-
             notifyIcon.Icon = SystemIcons.Exclamation;
             notifyIcon.BalloonTipTitle = actionResult.Title;
             notifyIcon.BalloonTipText = actionResult.Description;
@@ -206,20 +219,8 @@ namespace it
             {
                 notifyIcon.ShowBalloonTip(1000);
             }
-
-            if (notifyPaused)
-            {
-                if (clipboardText.Equals("show notifications"))
-                {
-                    notifyPaused = false;
-                }
-                return;
-            }
-            if (clipboardText.Equals("hide notifications"))
-            {
-                notifyPaused = true;
-            }
         }
+
 
         internal static void EnsureWindowStartup(bool isStartingWithWindows)
         {
