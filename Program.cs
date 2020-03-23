@@ -5,8 +5,7 @@ namespace it
     using System.IO;
     using System.Windows.Forms;
 
-
-    internal static class Program 
+    internal static class Program
     {
         private static Bootstrap bootstrap;
 
@@ -17,4 +16,4 @@ namespace it
             Application.Run();
         }
     }
-} 
+}

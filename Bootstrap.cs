@@ -135,13 +135,7 @@ namespace it
             }
         }
 
-
-
-    static void onProcessExit(object sender, EventArgs e)
-    {
-        MessageBox.Show("bye");
-    }
-    private bool notifyPaused = false;
+        private bool notifyPaused = false;
         private void ProcessClipboardText(string clipboardText)
         {
             if (clipboardText is null)
@@ -151,13 +145,13 @@ namespace it
 
             if (notifyPaused)
             {
-                if (clipboardText.Equals("show notifications") || clipboardText.Equals("toon notificaties"))
+                if (clipboardText.Equals("show notifications") || clipboardText.Equals("toon notificaties") || clipboardText.Equals("toon") || clipboardText.Equals("show"))
                 {
                     notifyPaused = false;
                 }
                 return;
             }
-            if (clipboardText.Equals("hide notifications") || clipboardText.Equals("verberg notificaties"))
+            if (clipboardText.Equals("hide notifications") || clipboardText.Equals("verberg notificaties") || clipboardText.Equals("verberg") || clipboardText.Equals("hide"))
             {
                 notifyPaused = true;
             }
