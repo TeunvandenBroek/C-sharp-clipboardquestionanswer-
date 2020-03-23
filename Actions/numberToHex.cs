@@ -31,7 +31,6 @@ namespace it.Actions
             actionResult.Description = $"{clipboardText}, {hex}";
             Clipboard.SetText($"{hex}");
             return actionResult;
-
         }
     }
 }

@@ -172,12 +172,20 @@
             { ".sys" , "System" },
             { ".tmp" , "System" },
         };
+        public class NativeMethods
+        {
+            [DllImport("kernel32.dll", SetLastError = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            internal static extern bool DeleteFile(string lpFileName, bool v);
 
+            [DllImport("kernel32.dll", SetLastError = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            internal static extern bool DeleteFile(string lpFileName);
+        }
         public static void yearSubMaps(string dir)
         {
-            foreach (var fullFileName in FastDirectoryEnumerator.EnumerateFiles(dir))
+            foreach (var fullFileName in Directory.EnumerateFiles(dir))
             {
-
                 DateTime lastWriteTime = File.GetLastWriteTime(Path.Combine(dir, fullFileName));
                 dir = Path.Combine(dir, lastWriteTime.ToString("yyyy"));
                 if (!Directory.Exists(dir))
@@ -186,6 +194,7 @@
                 }
                 string fileName = Path.GetFileName(fullFileName);
                 System.IO.File.Move(fullFileName, Path.Combine(dir, fileName));
+
             }
         }
 
@@ -259,6 +268,8 @@
             string overig = Path.Combine(cleanupPath, "Overig");
             Directory.CreateDirectory(overig);
 
+
+
             string[] array1 = Directory.GetFiles(dir, "*", SearchOption.AllDirectories);
             for (int i = 0; i < array1.Length; i++)
             {
@@ -307,7 +318,7 @@
                 }
 
             }
-            catch (Exception){}
+            catch (Exception) { }
         }
 
         private static void DeleteEmptyDirs(string dir)
@@ -333,10 +344,10 @@
                         try
                         {
                             Directory.Delete(dir);
-                            if (FastDirectoryEnumerator.GetFiles(dir,"*.*", SearchOption.AllDirectories).Length == 0 &&
+                            if (FastDirectoryEnumerator.GetFiles(dir, "*.*", SearchOption.AllDirectories).Length == 0 &&
                              Directory.GetDirectories(dir).Length == 0)
                             {
-                                Directory.Delete(dir, false);
+                                NativeMethods.DeleteFile(dir, false); 
                             }
 
                         }
@@ -556,9 +567,9 @@
                             }
                         }
                     }
-                    catch (Exception){}
+                    catch (Exception) { }
                 }
-                catch (Exception){ }
+                catch (Exception) { }
             }
             switch (currentCulture.LCID)
             {
