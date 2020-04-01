@@ -87,7 +87,7 @@ namespace it
             _ = serviceDescriptors.AddSingleton<IAction, StopwatchActions>();
             _ = serviceDescriptors.AddSingleton<IAction, TimespanActions>();
             _ = serviceDescriptors.AddSingleton<IAction, numberToHex>();
-            _ = serviceDescriptors.AddSingleton<IAction, CurrencyConversion>();
+            //_ = serviceDescriptors.AddSingleton<IAction, CurrencyConversion>(); // code from this class was moved to ConvertActions class
             _ = serviceDescriptors.AddSingleton<IAction, desktopCleaner>();
             _ = serviceDescriptors.AddSingleton<IAction, TimezoneActions>();
             _ = serviceDescriptors.AddSingleton<IAction, BmiActions>();
@@ -95,7 +95,7 @@ namespace it
             _ = serviceDescriptors.AddSingleton<IAction, Currency>();
             _ = serviceDescriptors.AddSingleton<IAction, Wallpaper>();
             _ = serviceDescriptors.AddSingleton<IAction, autoClicker>();
-            _ = serviceDescriptors.AddSingleton<IAction, Weatherforecast>();
+            //_ = serviceDescriptors.AddSingleton<IAction, Weatherforecast>();
             _ = serviceDescriptors.AddSingleton<IAction, MathActions>();
             (serviceProvider as IDisposable)?.Dispose();
             serviceProvider = serviceDescriptors.BuildServiceProvider();
