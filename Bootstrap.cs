@@ -97,7 +97,7 @@ namespace it
             _ = serviceDescriptors.AddSingleton<IAction, Currency>();
             _ = serviceDescriptors.AddSingleton<IAction, Wallpaper>();
             _ = serviceDescriptors.AddSingleton<IAction, autoClicker>();
-            _ = serviceDescriptors.AddSingleton<IAction, Weatherforecast>();
+            //_ = serviceDescriptors.AddSingleton<IAction, Weatherforecast>();
             _ = serviceDescriptors.AddSingleton<IAction, MathActions>();
             (serviceProvider as IDisposable)?.Dispose();
             serviceProvider = serviceDescriptors.BuildServiceProvider();
