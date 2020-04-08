@@ -34,8 +34,6 @@ namespace it.Actions
 			}
 		}
 
-
-
 		public static double EvalExpression(String expr)
 		{
 			return parseSummands(expr.ToCharArray(), 0);
@@ -48,7 +46,7 @@ namespace it.Actions
 			{
 				char op = expr[index];
 				if (op != '+' && op != '-')
-					return x;
+				return x;
 				index++;
 				double y = parseFactors(expr, ref index);
 				if (op == '+')
@@ -64,11 +62,11 @@ namespace it.Actions
 			while (true)
 			{
 				char op = expr[index];
-				if (op != '/' && op != ':' && op != '*' && op != 'x' && op != '%')
+				if (op != ':' && op != '*' && op != 'x' && op != '%')
 					return x;
 				index++;
 				double y = GetDouble(expr, ref index);
-				if (op == '/' || op == ':')
+				if (op == ':')
 					x /= y;
 				else if (op == '%')
 					x %= y;
@@ -79,10 +77,12 @@ namespace it.Actions
 
 		private static double GetDouble(char[] expr, ref int index)
 		{
+			bool isNegative = expr[index] == '-'; 
+			if (isNegative) index++;
 			string dbl = string.Empty;
-			while (((int)expr[index] >= 48 && (int)expr[index] <= 57 || expr[index] == 46 || (int)expr[index] == 32))
+			while ((int)expr[index] >= 48 && (int)expr[index] <= 57 || expr[index] == 46 || (int)expr[index] == 32)
 			{
-				dbl = dbl + expr[index].ToString();
+				dbl = dbl + expr[index];
 				index++;
 				if (index == expr.Length)
 				{
@@ -90,6 +90,8 @@ namespace it.Actions
 					break;
 				}
 			}
+			var result = double.Parse(dbl, CultureInfo.InvariantCulture); 
+			if (isNegative) result = -result; return result;
 			return double.Parse(dbl, CultureInfo.InvariantCulture);
 		}
 	}

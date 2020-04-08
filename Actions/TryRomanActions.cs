@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows;
 
 namespace it.Actions
 {
@@ -118,6 +119,7 @@ namespace it.Actions
                 (int year, int month, int day) = (dateTime.Year, dateTime.Month, dateTime.Day);
                 actionResult.Title = "Date in roman";
                 actionResult.Description = $"{day}-{month}-{year} = {To(day)}-{To(month)}-{To(year)}";
+                Clipboard.SetText($"{day}-{month}-{year} = {To(day)}-{To(month)}-{To(year)}");
                 return actionResult;
             }
             else
@@ -125,6 +127,7 @@ namespace it.Actions
                 int numberToConvert = int.Parse(clipboardText.Substring(0, index).Trim());
                 actionResult.Title = "Nummer naar romeins";
                 actionResult.Description = $"{numberToConvert} = {To(numberToConvert)}";
+                Clipboard.SetText($"{numberToConvert} = {To(numberToConvert)}");
             }
 
             return actionResult;

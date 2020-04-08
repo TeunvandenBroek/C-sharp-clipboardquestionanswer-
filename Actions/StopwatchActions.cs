@@ -84,9 +84,6 @@ namespace it.Actions
                                             $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes";
                                         break;
                                     }
-
-                                default:
-                                    break;
                             }
                         }
 
@@ -123,9 +120,6 @@ namespace it.Actions
                                             $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes";
                                         break;
                                     }
-
-                                default:
-                                    break;
                             }
                         }
 
@@ -161,9 +155,6 @@ namespace it.Actions
                                             $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes";
                                         break;
                                     }
-
-                                default:
-                                    break;
                             }
                         }
                     }
@@ -200,15 +191,9 @@ namespace it.Actions
                                         $"{ts.Hours} uur, {ts.Minutes} minuten,  {ts.Seconds}secondes";
                                     break;
                                 }
-
-                            default:
-                                break;
                         }
                         break;
                     }
-
-                default:
-                    break;
             }
 
             return actionResult;
@@ -420,9 +405,6 @@ namespace it.Actions
                         description = $"Stopwatch gestopt op: {GetElaspedTime()}";
                         break;
                     }
-
-                default:
-                    break;
             }
 
             return description;

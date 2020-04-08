@@ -71,7 +71,6 @@
             }
         }
 
-
         private void OnClipboardChanged()
         {
             try
@@ -107,6 +106,7 @@
 
         }
     }
+
 
     internal sealed class ClipboardChangedEventArgs : EventArgs
     {

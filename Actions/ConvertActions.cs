@@ -250,9 +250,6 @@
                         snelheid = number * 3.6;
                         break;
                     }
-
-                default:
-                    break;
             }
 
             // oppervlakte eenheden (area units)
@@ -454,8 +451,6 @@
                         result = snelheid / 3.6;
                         break;
                     }
-                default:
-                    break;
             }
 
             Clipboard.SetText(result.ToString(CultureInfo.CurrentCulture));

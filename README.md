@@ -9,6 +9,12 @@ Since the first version of the project, the project is expanded with multiple fu
 
 https://github.com/teun25/C-sharp-clipboardquestionanswer-.git
 
+* Place your local map at a location on your pc that is easy to find.
+* Make a git remote to pull and to push to the git repository.
+* Read the usage and style guides before pushing.
+* Watch out for merge conflicts.
+* Change the existing name to your name in the project files.
+
 ## Features
 * Calculate sums that you copy.
 * Possibility to put in custom question and answers.

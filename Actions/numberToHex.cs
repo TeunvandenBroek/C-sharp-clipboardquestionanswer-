@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace it.Actions
 {
@@ -28,8 +29,8 @@ namespace it.Actions
             string hex = toHexIndex.ToString("X");
             actionResult.Title = "Calculate hex";
             actionResult.Description = $"{clipboardText}, {hex}";
+            Clipboard.SetText($"{hex}");
             return actionResult;
-
         }
     }
 }
