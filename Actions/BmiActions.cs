@@ -29,7 +29,7 @@ namespace it.Actions
 
         public bool Matches(string clipboardText)
         {
-            return clipboardText.EndsWith(" to bmi", StringComparison.Ordinal); 
+            return clipboardText.EndsWith(" to bmi", StringComparison.Ordinal);
         }
 
         public ActionResult TryExecute(string clipboardText)

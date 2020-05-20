@@ -20,9 +20,8 @@
         {
             { "usd", "usd" },
             { "unites states dollar", "usd" },
-            { "eur", "eur" },
-            { "afn", "afn" },
-            { "afghani", "afn" }
+            { "euro", "eur" },
+            { "cad", "cad" },
         };
 
 

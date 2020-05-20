@@ -1,4 +1,4 @@
-namespace it.Actions
+﻿namespace it.Actions
 {
 	using BenchmarkDotNet.Attributes;
 	using System;
@@ -24,7 +24,7 @@ namespace it.Actions
 		public bool Matches(string clipboardText)
 		{
 			try
-            {
+			{
 				EvalExpression(clipboardText);
 				return true;
 			}
@@ -46,7 +46,7 @@ namespace it.Actions
 			{
 				char op = expr[index];
 				if (op != '+' && op != '-')
-				return x;
+					return x;
 				index++;
 				double y = parseFactors(expr, ref index);
 				if (op == '+')
@@ -77,7 +77,7 @@ namespace it.Actions
 
 		private static double GetDouble(char[] expr, ref int index)
 		{
-			bool isNegative = expr[index] == '-'; 
+			bool isNegative = expr[index] == '-';
 			if (isNegative) index++;
 			string dbl = string.Empty;
 			while ((int)expr[index] >= 48 && (int)expr[index] <= 57 || expr[index] == 46 || (int)expr[index] == 32)
@@ -90,7 +90,7 @@ namespace it.Actions
 					break;
 				}
 			}
-			var result = double.Parse(dbl, CultureInfo.InvariantCulture); 
+			var result = double.Parse(dbl, CultureInfo.InvariantCulture);
 			if (isNegative) result = -result; return result;
 			return double.Parse(dbl, CultureInfo.InvariantCulture);
 		}
