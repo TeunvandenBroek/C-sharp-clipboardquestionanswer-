@@ -488,6 +488,7 @@
     <Compile Include="Actions\numberToHex.cs" />
     <Compile Include="Actions\RandomActions.cs" />
     <Compile Include="Actions\StopwatchActions.cs" />
+    <Compile Include="Actions\timeCalculations.cs" />
     <Compile Include="Actions\TimespanActions.cs" />
     <Compile Include="Actions\TimezoneActions.cs" />
     <Compile Include="Actions\tryBinary.cs" />

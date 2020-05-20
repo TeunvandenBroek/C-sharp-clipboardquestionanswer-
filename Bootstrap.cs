@@ -19,6 +19,7 @@ namespace it
     ///     The bootstrap class is provided to allow the application to run with out a form.
     ///     We can use a form however in the future by adding it to here.
     /// </summary> 
+    ///
     internal sealed class Bootstrap : IDisposable
     {
         private readonly ClipboardMonitor clipboardMonitor = new ClipboardMonitor();
@@ -36,7 +37,6 @@ namespace it
             {
                 Visible = true,
             };
-
 
             ConfigureDependancies();
 
@@ -97,6 +97,7 @@ namespace it
             _ = serviceDescriptors.AddSingleton<IAction, Currency>();
             _ = serviceDescriptors.AddSingleton<IAction, Wallpaper>();
             _ = serviceDescriptors.AddSingleton<IAction, autoClicker>();
+            _ = serviceDescriptors.AddSingleton<IAction, timeCalculations>();
             //_ = serviceDescriptors.AddSingleton<IAction, Weatherforecast>();
             _ = serviceDescriptors.AddSingleton<IAction, MathActions>();
             (serviceProvider as IDisposable)?.Dispose();
@@ -201,7 +202,6 @@ namespace it
         {
             return clipboardText;
         }
-
 
         private void ProcessResult(ActionResult actionResult, string clipboardText)
         {
