@@ -1,11 +1,15 @@
-﻿namespace it
-{
-    using System.ComponentModel;
+﻿using System.ComponentModel;
 
+namespace it
+{
     internal sealed partial class ControlContainer
     {
-        /// <summary>Record Constructor</summary>
-        /// <param name="components"><see cref="Components"/></param>
+        /// <summary>
+        /// Record Constructor
+        /// </summary>
+        /// <param name="components">
+        /// <see cref="Components" />
+        /// </param>
         public ControlContainer(ComponentCollection components = default)
         {
             Components = components;

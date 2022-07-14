@@ -1,10 +1,8 @@
+using System;
+using System.Windows.Forms;
+
 namespace it
 {
-    using System;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Windows.Forms;
-
     internal static class Program
     {
         private static Bootstrap bootstrap;

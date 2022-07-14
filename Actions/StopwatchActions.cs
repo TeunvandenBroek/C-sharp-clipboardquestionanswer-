@@ -1,15 +1,14 @@
+using System;
+using System.Diagnostics;
+using System.Globalization;
+using System.Threading;
+
 namespace it.Actions
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.Threading;
-
     public sealed class StopwatchActions : IAction
     {
-
         private string lastClipboard;
+
         private Stopwatch stopwatch = new Stopwatch();
 
         public StopwatchActions()
@@ -19,6 +18,12 @@ namespace it.Actions
                 stopwatch.Stop();
             }
         }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as StopwatchActions);
+        }
+
         public bool Matches(string clipboardText)
         {
             return clipboardText.IndexOf(nameof(stopwatch), StringComparison.Ordinal) >= 0;
@@ -29,8 +34,8 @@ namespace it.Actions
             ActionResult actionResult = new ActionResult("Stopwatch");
             CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
 
-            // moved this from every case statement to up here. Not sure what to do if the clipboard text matches.
-            // I don't think this code is needed at all.
+            // moved this from every case statement to up here. Not sure what to do if the clipboard
+            // text matches. I don't think this code is needed at all.
             if (!string.Equals(clipboardText, lastClipboard, StringComparison.Ordinal))
             {
                 lastClipboard = clipboardText;
@@ -159,6 +164,7 @@ namespace it.Actions
                         }
                     }
                     break;
+
                 case "stop stopwatch": //stop
                     {
                         {
@@ -410,8 +416,6 @@ namespace it.Actions
             return description;
         }
 
-        #region Stopwatch Fill Methods
-
         private string GetElaspedTime(CultureInfo currentCulture = null)
         {
             if (currentCulture is null)
@@ -444,12 +448,5 @@ namespace it.Actions
 
             return description;
         }
-
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as StopwatchActions);
-        }
-
-        #endregion Stopwatch Fill Methods
     }
 }

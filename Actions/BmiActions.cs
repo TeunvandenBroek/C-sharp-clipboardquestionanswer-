@@ -1,10 +1,6 @@
-﻿using BenchmarkDotNet.Running;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace it.Actions
 {
@@ -47,7 +43,6 @@ namespace it.Actions
             actionResult.Title = "Calculate bmi";
             actionResult.Description = $"{bmi}, {bmiDescription}";
             return actionResult;
-
         }
 
         private static double CalculateBMI(int weight, double height)

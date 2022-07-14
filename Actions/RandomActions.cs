@@ -1,13 +1,13 @@
+using System;
+using System.Text;
+using System.Threading;
+
 namespace it.Actions
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using System.Threading;
-
     internal sealed class RandomActions : IAction
     {
         private readonly string[] commands = { "kop of munt", "heads or tails", "random password" };
+
         private readonly Random random = new Random();
 
         public bool Matches(string clipboardText)
@@ -73,7 +73,6 @@ namespace it.Actions
             }
 
             return actionResult;
-
         }
     }
 }

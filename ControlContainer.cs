@@ -1,9 +1,14 @@
-﻿namespace it
-{
-    using System.ComponentModel;
+﻿using System.ComponentModel;
 
+namespace it
+{
     internal sealed partial class ControlContainer : IContainer, System.IEquatable<ControlContainer>
     {
+        public ControlContainer(ControlContainer obj)
+        {
+            Components = obj.Components;
+        }
+
         public ComponentCollection Components { get; private set; }
 
         public void Add(IComponent component)
@@ -33,22 +38,17 @@
             throw new System.NotImplementedException();
         }
 
+        public override int GetHashCode()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void Remove(IComponent component)
         {
             if (component is null)
             {
                 throw new System.ArgumentNullException(nameof(component));
             }
-        }
-
-        public ControlContainer(ControlContainer obj)
-        {
-            Components = obj.Components;
-        }
-
-        public override int GetHashCode()
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

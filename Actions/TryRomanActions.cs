@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows;
 
 namespace it.Actions
 {
-
     internal sealed class TryRomanActions : IAction
     {
         public static readonly Dictionary<int, string> NumberRomanDictionary;
@@ -44,7 +39,6 @@ namespace it.Actions
             { 5, "V" },
             { 4, "IV" },
             { 1, "I" },
-
         };
         }
 
@@ -101,7 +95,6 @@ namespace it.Actions
         {
             return Equals(obj as TryRomanActions);
         }
-
 
         public bool Matches(string clipboardText = null)
         {

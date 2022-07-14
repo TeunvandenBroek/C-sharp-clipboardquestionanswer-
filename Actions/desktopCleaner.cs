@@ -1,30 +1,15 @@
-﻿namespace it.Actions
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Drawing;
-    using System.Drawing.Imaging;
-    using System.IO;
-    using System.Linq;
-    using System.Management;
-    using System.Runtime.InteropServices;
-    using System.Security;
-    using System.Security.AccessControl;
-    using System.Security.Cryptography;
-    using System.Security.Principal;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using System.Threading;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using System.Threading;
 
+namespace it.Actions
+{
     internal sealed class desktopCleaner : IAction
     {
-        public bool Matches(string clipboardText)
-        {
-            return clipboardText.EndsWith("file organizer", StringComparison.Ordinal) || clipboardText.EndsWith("bestanden opruimen", StringComparison.Ordinal);
-        }
-
         private static readonly Dictionary<string, string> CategoryAssociations = new Dictionary<string, string>
         (129, StringComparer.Ordinal)
         {
@@ -172,16 +157,7 @@
             { ".sys" , "System" },
             { ".tmp" , "System" },
         };
-        public class NativeMethods
-        {
-            [DllImport("kernel32.dll", SetLastError = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            internal static extern bool DeleteFile(string lpFileName, bool v);
 
-            [DllImport("kernel32.dll", SetLastError = true)]
-            [return: MarshalAs(UnmanagedType.Bool)]
-            internal static extern bool DeleteFile(string lpFileName);
-        }
         public static void yearSubMaps(string dir)
         {
             foreach (var fullFileName in Directory.EnumerateFiles(dir))
@@ -194,174 +170,13 @@
                 }
                 string fileName = Path.GetFileName(fullFileName);
                 System.IO.File.Move(fullFileName, Path.Combine(dir, fileName));
-
             }
         }
 
-        private static void CreateSubMaps(string dir)
+        public bool Matches(string clipboardText)
         {
-            string cleanupPath = Path.Combine(dir);
-            //sub maps desktop cleaner
-            var subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Audio")); ;
-            {
-                //Subfolders in Audio folder
-            }
-            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Text"));
-            {
-                //Subfolders in Text folder
-            }
-            foreach (var fullFileName in FastDirectoryEnumerator.EnumerateFiles(cleanupPath, "Video"))
-            {
-                var videosubmap = KnownFolders.GetPath(KnownFolder.Videos);
-                yearSubMaps(videosubmap);
-            }
-            foreach (var fullFileName in FastDirectoryEnumerator.EnumerateFiles(cleanupPath, "Images"))
-            {
-                var imagesubmap = KnownFolders.GetPath(KnownFolder.Pictures);
-                yearSubMaps(imagesubmap);
-            }
-            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Internet"));
-            {
-                //Subfolders in Internet folder
-            }
-
-            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Compressed"));
-            {
-                //Subfolders in Compressed folder
-            }
-            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Disc"));
-            {
-                //Subfolders in Disc folder
-                subFolders.CreateSubdirectory("Iso");
-            }
-            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Data"));
-            {
-                //Subfolders in Data folder
-            }
-            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Executables"));
-            {
-                //Subfolders in Executeables folder
-            }
-            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Fonts"));
-            {
-                //Subfolders in Fonts folder
-            }
-            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Presentations"));
-            {
-                //Subfolders in Presentations folder
-                subFolders.CreateSubdirectory("Powepoints");
-
-            }
-            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Programming"));
-            {
-                //Subfolders in Programming folder
-                subFolders.CreateSubdirectory("Python");
-                subFolders.CreateSubdirectory("HTML");
-                subFolders.CreateSubdirectory("Swift");
-                subFolders.CreateSubdirectory("Dart");
-                subFolders.CreateSubdirectory("C");
-                subFolders.CreateSubdirectory("Classes");
-                subFolders.CreateSubdirectory("Shell");
-            }
-            Directory.CreateDirectory(Path.Combine(cleanupPath, "Spreadsheets"));
-            Directory.CreateDirectory(Path.Combine(cleanupPath, "System"));
-            string overig = Path.Combine(cleanupPath, "Overig");
-            Directory.CreateDirectory(overig);
-
-
-
-            string[] array1 = Directory.GetFiles(dir, "*", SearchOption.AllDirectories);
-            for (int i = 0; i < array1.Length; i++)
-            {
-                string file = array1[i];
-                if (Path.HasExtension(file))
-                {
-                    try
-                    {
-                        if (CategoryAssociations.TryGetValue(Path.GetExtension(file), out dir))
-                        {
-                            File.Move(file, Path.Combine(cleanupPath, dir, Path.GetFileName(file)));
-                        }
-                        else
-                        {
-                            File.Move(file, Path.Combine(cleanupPath, "Overig", Path.GetFileName(file)));
-                        }
-                    }
-                    catch (Exception) { }
-                }
-
-            }
+            return clipboardText.EndsWith("file organizer", StringComparison.Ordinal) || clipboardText.EndsWith("bestanden opruimen", StringComparison.Ordinal);
         }
-
-        private static void MoveFolders(string dir)
-        {
-            try
-            {
-                string directoryName = dir;
-                DirectoryInfo dirInfo = new DirectoryInfo(directoryName);
-                if (dirInfo.Exists == false)
-                    Directory.CreateDirectory(directoryName);
-
-                List<FileData> MyFiles = FastDirectoryEnumerator
-                                   .EnumerateFiles(dir, "*.*", SearchOption.AllDirectories).ToList();
-
-                for (int i = 0; i < MyFiles.Count; i++)
-                {
-                    string file = MyFiles[i];
-                    FileInfo mFile = new FileInfo(file);
-                    // to remove name collisions
-                    if (new FileInfo(dirInfo + "\\" + mFile.Name).Exists == false)
-                    {
-                        mFile.MoveTo(dirInfo + "\\" + mFile.Name);
-                    }
-
-                }
-
-            }
-            catch (Exception) { }
-        }
-
-        private static void DeleteEmptyDirs(string dir)
-        {
-            if (string.IsNullOrEmpty(dir))
-                throw new ArgumentException(
-                    "Starting directory is a null reference or an empty string",
-                    "dir");
-
-            try
-            {
-                foreach (var d in Directory.EnumerateDirectories(dir))
-                {
-                    DeleteEmptyDirs(d);
-                }
-
-                var entries = Directory.EnumerateFileSystemEntries(dir);
-
-                if (!entries.Any())
-                {
-                    try
-                    {
-                        try
-                        {
-                            Directory.Delete(dir);
-                            if (FastDirectoryEnumerator.GetFiles(dir, "*.*", SearchOption.AllDirectories).Length == 0 &&
-                             Directory.GetDirectories(dir).Length == 0)
-                            {
-                                NativeMethods.DeleteFile(dir, false); 
-                            }
-
-                        }
-                        catch (Exception)
-                        {
-
-                        }
-                    }
-                    catch (Exception) { }
-                }
-            }
-            catch (UnauthorizedAccessException) { }
-        }
-
 
         public ActionResult TryExecute(string clipboardText)
         {
@@ -373,7 +188,7 @@
             System.Globalization.CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
-            //DOWNLOADS 
+            //DOWNLOADS
             string downloadPath = (KnownFolders.GetPath(KnownFolder.Downloads));
             MoveFolders(downloadPath);
             CreateSubMaps(downloadPath);
@@ -399,7 +214,6 @@
             CreateSubMaps(documentsPath);
             DeleteEmptyDirs(documentsPath);
 
-
             //delete empty dirs
             DirectoryInfo directoryInfo = new DirectoryInfo(picturesPath);
             DirectoryInfo directoryInfo1 = new DirectoryInfo(videoPath);
@@ -411,8 +225,10 @@
                 File.SetAttributes(picturesPath + videoPath + musicPath + downloadPath, FileAttributes.Normal);
                 DeleteEmptyDirs(picturesPath + videoPath + musicPath + downloadPath);
             }
+
             //create cleanup map on desktop
             string cleanupPath = Path.Combine(desktopPath, "Cleanup");
+
             //sub maps desktop cleaner
             var subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Audio")); ;
             {
@@ -463,7 +279,6 @@
             {
                 //Subfolders in Presentations folder
                 subFolders.CreateSubdirectory("Powepoints");
-
             }
             subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Programming"));
             {
@@ -489,7 +304,6 @@
                 defaultBufferSize,
                 FileOptions.DeleteOnClose);
 
-
             // move files from desktop
             string[] array1 = Directory.GetFiles(desktopPath, "*.*", SearchOption.AllDirectories);
             for (int i = 0; i < array1.Length; i++)
@@ -511,7 +325,6 @@
                     catch (Exception) { }
                 }
             }
-
 
             {
                 try
@@ -546,7 +359,6 @@
                             }
                             var similarList = finalDetails.GroupBy(f => f.FileHash)
                             .Select(g => new { FileHash = g.Key, Files = g.Select(z => z.FileName).ToList() });
-
 
                             ToDelete.AddRange(similarList.SelectMany(f => f.Files.Skip(1)).ToList());
                             if (ToDelete.Count > 0)
@@ -587,6 +399,175 @@
                     }
             }
             return actionResult;
+        }
+
+        private static void CreateSubMaps(string dir)
+        {
+            string cleanupPath = Path.Combine(dir);
+
+            //sub maps desktop cleaner
+            var subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Audio")); ;
+            {
+                //Subfolders in Audio folder
+            }
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Text"));
+            {
+                //Subfolders in Text folder
+            }
+            foreach (var fullFileName in FastDirectoryEnumerator.EnumerateFiles(cleanupPath, "Video"))
+            {
+                var videosubmap = KnownFolders.GetPath(KnownFolder.Videos);
+                yearSubMaps(videosubmap);
+            }
+            foreach (var fullFileName in FastDirectoryEnumerator.EnumerateFiles(cleanupPath, "Images"))
+            {
+                var imagesubmap = KnownFolders.GetPath(KnownFolder.Pictures);
+                yearSubMaps(imagesubmap);
+            }
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Internet"));
+            {
+                //Subfolders in Internet folder
+            }
+
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Compressed"));
+            {
+                //Subfolders in Compressed folder
+            }
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Disc"));
+            {
+                //Subfolders in Disc folder
+                subFolders.CreateSubdirectory("Iso");
+            }
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Data"));
+            {
+                //Subfolders in Data folder
+            }
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Executables"));
+            {
+                //Subfolders in Executeables folder
+            }
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Fonts"));
+            {
+                //Subfolders in Fonts folder
+            }
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Presentations"));
+            {
+                //Subfolders in Presentations folder
+                subFolders.CreateSubdirectory("Powepoints");
+            }
+            subFolders = Directory.CreateDirectory(Path.Combine(cleanupPath, "Programming"));
+            {
+                //Subfolders in Programming folder
+                subFolders.CreateSubdirectory("Python");
+                subFolders.CreateSubdirectory("HTML");
+                subFolders.CreateSubdirectory("Swift");
+                subFolders.CreateSubdirectory("Dart");
+                subFolders.CreateSubdirectory("C");
+                subFolders.CreateSubdirectory("Classes");
+                subFolders.CreateSubdirectory("Shell");
+            }
+            Directory.CreateDirectory(Path.Combine(cleanupPath, "Spreadsheets"));
+            Directory.CreateDirectory(Path.Combine(cleanupPath, "System"));
+            string overig = Path.Combine(cleanupPath, "Overig");
+            Directory.CreateDirectory(overig);
+
+            string[] array1 = Directory.GetFiles(dir, "*", SearchOption.AllDirectories);
+            for (int i = 0; i < array1.Length; i++)
+            {
+                string file = array1[i];
+                if (Path.HasExtension(file))
+                {
+                    try
+                    {
+                        if (CategoryAssociations.TryGetValue(Path.GetExtension(file), out dir))
+                        {
+                            File.Move(file, Path.Combine(cleanupPath, dir, Path.GetFileName(file)));
+                        }
+                        else
+                        {
+                            File.Move(file, Path.Combine(cleanupPath, "Overig", Path.GetFileName(file)));
+                        }
+                    }
+                    catch (Exception) { }
+                }
+            }
+        }
+
+        private static void DeleteEmptyDirs(string dir)
+        {
+            if (string.IsNullOrEmpty(dir))
+                throw new ArgumentException(
+                    "Starting directory is a null reference or an empty string",
+                    "dir");
+
+            try
+            {
+                foreach (var d in Directory.EnumerateDirectories(dir))
+                {
+                    DeleteEmptyDirs(d);
+                }
+
+                var entries = Directory.EnumerateFileSystemEntries(dir);
+
+                if (!entries.Any())
+                {
+                    try
+                    {
+                        try
+                        {
+                            Directory.Delete(dir);
+                            if (FastDirectoryEnumerator.GetFiles(dir, "*.*", SearchOption.AllDirectories).Length == 0 &&
+                             Directory.GetDirectories(dir).Length == 0)
+                            {
+                                NativeMethods.DeleteFile(dir, false);
+                            }
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
+                    catch (Exception) { }
+                }
+            }
+            catch (UnauthorizedAccessException) { }
+        }
+
+        private static void MoveFolders(string dir)
+        {
+            try
+            {
+                string directoryName = dir;
+                DirectoryInfo dirInfo = new DirectoryInfo(directoryName);
+                if (dirInfo.Exists == false)
+                    Directory.CreateDirectory(directoryName);
+
+                List<FileData> MyFiles = FastDirectoryEnumerator
+                                   .EnumerateFiles(dir, "*.*", SearchOption.AllDirectories).ToList();
+
+                for (int i = 0; i < MyFiles.Count; i++)
+                {
+                    string file = MyFiles[i];
+                    FileInfo mFile = new FileInfo(file);
+
+                    // to remove name collisions
+                    if (new FileInfo(dirInfo + "\\" + mFile.Name).Exists == false)
+                    {
+                        mFile.MoveTo(dirInfo + "\\" + mFile.Name);
+                    }
+                }
+            }
+            catch (Exception) { }
+        }
+
+        public class NativeMethods
+        {
+            [DllImport("kernel32.dll", SetLastError = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            internal static extern bool DeleteFile(string lpFileName, bool v);
+
+            [DllImport("kernel32.dll", SetLastError = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            internal static extern bool DeleteFile(string lpFileName);
         }
     }
 }

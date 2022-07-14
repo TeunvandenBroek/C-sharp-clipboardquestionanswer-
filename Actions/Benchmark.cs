@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace it.Actions
 {
@@ -25,6 +21,7 @@ namespace it.Actions
 
             // Stop timing.
             stopwatch.Stop();
+
             // Write result.
             Console.WriteLine("Total time: {0}", stopwatch.Elapsed.TotalMilliseconds);
             Console.WriteLine("Avg time: {0}", stopwatch.Elapsed.TotalMilliseconds / 10000000.0);

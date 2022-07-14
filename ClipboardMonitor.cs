@@ -1,13 +1,25 @@
-﻿namespace it
+﻿using System;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
+
+namespace it
 {
-    using System;
-    using System.ComponentModel;
-    using System.Runtime.InteropServices;
-    using System.Windows.Forms;
+    internal sealed class ClipboardChangedEventArgs : EventArgs
+    {
+        public ClipboardChangedEventArgs(IDataObject dataObject)
+        {
+            DataObject = dataObject;
+        }
+
+        public IDataObject DataObject { get; }
+    }
 
     [DefaultEvent("ClipboardChanged")]
     internal sealed class ClipboardMonitor : Control
     {
+        private IntPtr NextViewerPtr;
+
         public ClipboardMonitor()
         {
             CreateHandle();
@@ -23,10 +35,7 @@
             Dispose(disposing: false);
         }
 
-        private IntPtr NextViewerPtr;
-
         public event EventHandler<ClipboardChangedEventArgs> ClipboardChanged;
-
 
         protected override void Dispose(bool disposing)
         {
@@ -38,7 +47,6 @@
 
             base.Dispose(disposing);
         }
-
 
         protected override void WndProc(ref Message m)
         {
@@ -84,17 +92,11 @@
             catch (ExternalException) { }
         }
 
-
-
         private static class NativeMethods
         {
-
-            internal const int WM_DRAWCLIPBOARD = 0x0308;
             internal const int WM_CHANGECBCHAIN = 0x030D;
 
-
-            [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-            internal static extern IntPtr SetClipboardViewer(IntPtr hWndNewViewer);
+            internal const int WM_DRAWCLIPBOARD = 0x0308;
 
             [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
@@ -103,18 +105,8 @@
             [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
             internal static extern IntPtr SendMessage(IntPtr hwnd, int wMsg, IntPtr wParam, IntPtr lParam);
 
-
+            [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+            internal static extern IntPtr SetClipboardViewer(IntPtr hWndNewViewer);
         }
-    }
-
-
-    internal sealed class ClipboardChangedEventArgs : EventArgs
-    {
-        public ClipboardChangedEventArgs(IDataObject dataObject)
-        {
-            DataObject = dataObject;
-        }
-
-        public IDataObject DataObject { get; }
     }
 }

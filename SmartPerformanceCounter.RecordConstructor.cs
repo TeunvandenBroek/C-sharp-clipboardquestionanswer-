@@ -4,8 +4,12 @@ namespace it
 {
     public sealed partial class SmartPerformanceCounter : IEquatable<SmartPerformanceCounter>
     {
-        /// <summary>Record Constructor</summary>
-        /// <param name="isValueCreated"><see cref="IsValueCreated"/></param>
+        /// <summary>
+        /// Record Constructor
+        /// </summary>
+        /// <param name="isValueCreated">
+        /// <see cref="IsValueCreated" />
+        /// </param>
         internal SmartPerformanceCounter(bool isValueCreated = default)
         {
             IsValueCreated = isValueCreated;

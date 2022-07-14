@@ -1,35 +1,42 @@
+using System;
+
 namespace it
 {
     using it.Actions;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Win32;
-    using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Diagnostics;
     using System.Drawing;
     using System.Linq;
     using System.Reflection;
-    using System.Threading.Tasks;
+    using System.Web.Services.Description;
+    using System.Windows;
     using System.Windows.Forms;
 
-
-
     /// <summary>
-    ///     The bootstrap class is provided to allow the application to run with out a form.
-    ///     We can use a form however in the future by adding it to here.
-    /// </summary> 
-    ///
+    /// The bootstrap class is provided to allow the application to run with out a form. We can use
+    /// a form however in the future by adding it to here.
+    /// </summary>
     internal sealed class Bootstrap : IDisposable
     {
         private readonly ClipboardMonitor clipboardMonitor = new ClipboardMonitor();
+
         private readonly ControlContainer container = new ControlContainer();
+
         private readonly NotifyIcon notifyIcon;
+
         private readonly List<Question> questionList = Questions.LoadQuestions();
+
+        private bool clipboardPaused = false;
+
+        private bool disposed = false;
+
+        private IntPtr handle;
+
+        private bool notifyPaused = false;
 
         // Container to hold the actions
         private ServiceProvider serviceProvider;
-
 
         public Bootstrap()
         {
@@ -43,13 +50,112 @@ namespace it
             clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
         }
 
-        private IntPtr handle;
-        private bool disposed = false;
+        ~Bootstrap()
+        {
+            Dispose(false);
+        }
 
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        internal static void EnsureWindowStartup(bool isStartingWithWindows)
+        {
+            const string keyName = "Clipboard Assistant";
+            using (
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true))
+            {
+                if (key is null)
+                {
+                    return;
+                }
+
+                string value = key.GetValue(keyName, null) as string;
+
+                if (isStartingWithWindows)
+                {
+                    // key doesn't exist, add it
+                    if (string.IsNullOrWhiteSpace(value) && string.Equals(value, Assembly.GetExecutingAssembly().Location, StringComparison.Ordinal))
+                    {
+                        key.SetValue(keyName, Assembly.GetExecutingAssembly().Location);
+                    }
+                }
+                else if (!string.IsNullOrWhiteSpace(value))
+                {
+                    key.DeleteValue(keyName);
+                }
+            }
+        }
+
+        internal void Startup(string clipboardText)
+        {
+        }
+
+        [System.Runtime.InteropServices.DllImport("Kernel32")]
+        private static extern Boolean CloseHandle(IntPtr handle);
+
+        private static string GetClipboardText(string clipboardText)
+        {
+            return clipboardText;
+        }
+
+        private void ClipboardMonitor_ClipboardChanged(object sender, ClipboardChangedEventArgs e)
+        {
+            // retrieve the text from the clipboard
+            if (e.DataObject.GetData(System.Windows.DataFormats.Text) is string clipboardText)
+            {
+                // the data is not a string. bail.
+                if (string.IsNullOrWhiteSpace(clipboardText))
+                {
+                    return;
+                }
+                if (clipboardPaused)
+                {
+                    if (clipboardText.Equals("hervat") || clipboardText.Equals("resume"))
+                    {
+                        clipboardPaused = false;
+                    }
+                    return;
+                }
+                if (clipboardText.Equals("pauze") || clipboardText.Equals("pause"))
+                {
+                    clipboardPaused = true;
+                    return;
+                }
+
+                // if we get to here, we have text
+                ProcessClipboardText(clipboardText);
+            }
+        }
+
+        private void ConfigureDependancies()
+        {
+            // Add configure services
+            Microsoft.Extensions.DependencyInjection.ServiceCollection serviceDescriptors = new Microsoft.Extensions.DependencyInjection.ServiceCollection();
+            _ = serviceDescriptors.AddSingleton<IAction, CurrencyConversion>();
+            _ = serviceDescriptors.AddSingleton<IAction, ConvertActions>();
+            _ = serviceDescriptors.AddSingleton<IAction, TryRomanActions>();
+            _ = serviceDescriptors.AddSingleton<IAction, CountdownActions>();
+            _ = serviceDescriptors.AddSingleton<IAction, DeviceActions>();
+            _ = serviceDescriptors.AddSingleton<IAction, RandomActions>();
+            _ = serviceDescriptors.AddSingleton<IAction, StopwatchActions>();
+            _ = serviceDescriptors.AddSingleton<IAction, TimespanActions>();
+            _ = serviceDescriptors.AddSingleton<IAction, numberToHex>();
+            _ = serviceDescriptors.AddSingleton<IAction, desktopCleaner>();
+            _ = serviceDescriptors.AddSingleton<IAction, TimezoneActions>();
+            _ = serviceDescriptors.AddSingleton<IAction, BmiActions>();
+            _ = serviceDescriptors.AddSingleton<IAction, tryBinary>();
+            _ = serviceDescriptors.AddSingleton<IAction, Currency>();
+            _ = serviceDescriptors.AddSingleton<IAction, Wallpaper>();
+            _ = serviceDescriptors.AddSingleton<IAction, autoClicker>();
+            _ = serviceDescriptors.AddSingleton<IAction, timeCalculations>();
+
+            //_ = serviceDescriptors.AddSingleton<IAction, Weatherforecast>();
+            _ = serviceDescriptors.AddSingleton<IAction, MathActions>();
+            (serviceProvider as IDisposable)?.Dispose();
+            serviceProvider = serviceDescriptors.BuildServiceProvider();
         }
 
         private void Dispose(bool disposing)
@@ -70,73 +176,12 @@ namespace it
             handle = IntPtr.Zero;
             disposed = true;
         }
-        [System.Runtime.InteropServices.DllImport("Kernel32")]
-        private extern static Boolean CloseHandle(IntPtr handle);
-        ~Bootstrap()
+
+        private IAction GetService(string clipboardText)
         {
-            Dispose(false);
+            return serviceProvider.GetServices<IAction>().FirstOrDefault(s => s.Matches(GetClipboardText(clipboardText)));
         }
 
-        private void ConfigureDependancies()
-        {
-            // Add configure services
-            ServiceCollection serviceDescriptors = new ServiceCollection();
-            _ = serviceDescriptors.AddSingleton<IAction, CurrencyConversion>();
-            _ = serviceDescriptors.AddSingleton<IAction, ConvertActions>();
-            _ = serviceDescriptors.AddSingleton<IAction, TryRomanActions>();
-            _ = serviceDescriptors.AddSingleton<IAction, CountdownActions>();
-            _ = serviceDescriptors.AddSingleton<IAction, DeviceActions>();
-            _ = serviceDescriptors.AddSingleton<IAction, RandomActions>();
-            _ = serviceDescriptors.AddSingleton<IAction, StopwatchActions>();
-            _ = serviceDescriptors.AddSingleton<IAction, TimespanActions>();
-            _ = serviceDescriptors.AddSingleton<IAction, numberToHex>();
-            _ = serviceDescriptors.AddSingleton<IAction, desktopCleaner>();
-            _ = serviceDescriptors.AddSingleton<IAction, TimezoneActions>();
-            _ = serviceDescriptors.AddSingleton<IAction, BmiActions>();
-            _ = serviceDescriptors.AddSingleton<IAction, tryBinary>();
-            _ = serviceDescriptors.AddSingleton<IAction, Currency>();
-            _ = serviceDescriptors.AddSingleton<IAction, Wallpaper>();
-            _ = serviceDescriptors.AddSingleton<IAction, autoClicker>();
-            _ = serviceDescriptors.AddSingleton<IAction, timeCalculations>();
-            //_ = serviceDescriptors.AddSingleton<IAction, Weatherforecast>();
-            _ = serviceDescriptors.AddSingleton<IAction, MathActions>();
-            (serviceProvider as IDisposable)?.Dispose();
-            serviceProvider = serviceDescriptors.BuildServiceProvider();
-        }
-        internal void Startup(string clipboardText)
-        {
-
-        }
-        private bool clipboardPaused = false;
-        private void ClipboardMonitor_ClipboardChanged(object sender, ClipboardChangedEventArgs e)
-        {
-            // retrieve the text from the clipboard
-            if (e.DataObject.GetData(DataFormats.Text) is string clipboardText)
-            {
-                // the data is not a string. bail.
-                if (string.IsNullOrWhiteSpace(clipboardText))
-                {
-                    return;
-                }
-                if (clipboardPaused)
-                {
-                    if (clipboardText.Equals("hervat") || clipboardText.Equals("resume"))
-                    {
-                        clipboardPaused = false;
-                    }
-                    return;
-                }
-                if (clipboardText.Equals("pauze") || clipboardText.Equals("pause"))
-                {
-                    clipboardPaused = true;
-                    return;
-                }
-                // if we get to here, we have text
-                ProcessClipboardText(clipboardText);
-            }
-        }
-
-        private bool notifyPaused = false;
         private void ProcessClipboardText(string clipboardText)
         {
             if (clipboardText is null)
@@ -164,13 +209,13 @@ namespace it
                     clipboardMonitor.ClipboardChanged -= ClipboardMonitor_ClipboardChanged;
                     ActionResult actionResult = service.TryExecute(clipboardText);
                     clipboardMonitor.ClipboardChanged += ClipboardMonitor_ClipboardChanged;
+
                     // re attach the event
                     if (!string.IsNullOrWhiteSpace(actionResult.Title) || !string.IsNullOrWhiteSpace(actionResult.Description))
                     {
                         ProcessResult(actionResult, clipboardText);
                     }
                     return;
-
                 }
                 if (clipboardText.Length > 2)
                 {
@@ -189,18 +234,8 @@ namespace it
             }
             catch (Exception ex)
             {
-                _ = MessageBox.Show(ex.ToString());
+                _ = System.Windows.Forms.MessageBox.Show(ex.ToString());
             }
-        }
-
-        private IAction GetService(string clipboardText)
-        {
-            return serviceProvider.GetServices<IAction>().FirstOrDefault(s => s.Matches(GetClipboardText(clipboardText)));
-        }
-
-        private static string GetClipboardText(string clipboardText)
-        {
-            return clipboardText;
         }
 
         private void ProcessResult(ActionResult actionResult, string clipboardText)
@@ -212,35 +247,6 @@ namespace it
             if (!notifyPaused)
             {
                 notifyIcon.ShowBalloonTip(1000);
-            }
-        }
-
-
-        internal static void EnsureWindowStartup(bool isStartingWithWindows)
-        {
-            const string keyName = "Clipboard Assistant";
-            using (
-            RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true))
-            {
-                if (key is null)
-                {
-                    return;
-                }
-
-                string value = key.GetValue(keyName, null) as string;
-
-                if (isStartingWithWindows)
-                {
-                    // key doesn't exist, add it
-                    if (string.IsNullOrWhiteSpace(value) && string.Equals(value, Assembly.GetExecutingAssembly().Location, StringComparison.Ordinal))
-                    {
-                        key.SetValue(keyName, Assembly.GetExecutingAssembly().Location);
-                    }
-                }
-                else if (!string.IsNullOrWhiteSpace(value))
-                {
-                    key.DeleteValue(keyName);
-                }
             }
         }
     }

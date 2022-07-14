@@ -17,7 +17,6 @@ namespace it
             ["Test Question 3, Enjoy the program! "] = "Thanks for using the program!"
         };
 
-
         internal static List<Question> LoadQuestions()
         {
             return questionDict.Select(item => new Question(item.Key, item.Value)).ToList();

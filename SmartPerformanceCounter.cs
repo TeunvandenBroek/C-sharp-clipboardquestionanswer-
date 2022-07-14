@@ -1,18 +1,20 @@
-﻿namespace it
-{
-    using System;
-    using System.Diagnostics;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
+namespace it
+{
     public sealed partial class SmartPerformanceCounter : IDisposable
     {
         private readonly object @lock = new object();
 
-        private long cpuCounterLastAccessedTimestamp;
-        private bool disposed;
         private readonly Func<PerformanceCounter> factory;
 
         private readonly TimeSpan time;
+
+        private long cpuCounterLastAccessedTimestamp;
+
+        private bool disposed;
 
         private PerformanceCounter value;
 

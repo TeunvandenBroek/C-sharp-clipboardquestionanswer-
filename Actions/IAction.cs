@@ -1,11 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Threading;
 
 namespace it.Actions
 {
+    internal interface IAction
+    {
+        bool Matches(string clipboardText = null);
+
+        ActionResult TryExecute(string clipboardText = null);
+    }
+
     public sealed partial class ActionResult : IEquatable<ActionResult>, INotifyPropertyChanged
     {
         internal ActionResult(string title = null, string description = null)
@@ -36,20 +41,15 @@ namespace it.Actions
         }
     }
 
-    internal interface IAction
-    {
-        ActionResult TryExecute(string clipboardText = null);
-        bool Matches(string clipboardText = null);
-    }
-
     internal abstract class ActionBase : IAction, IEquatable<ActionBase>
     {
-
         public bool Equals(ActionBase other)
         {
             throw new NotImplementedException();
         }
+
         public abstract bool Matches(string clipboardText = null);
+
         public abstract ActionResult TryExecute(string clipboardText = null);
     }
 }

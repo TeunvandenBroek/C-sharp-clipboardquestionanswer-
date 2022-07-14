@@ -1,22 +1,20 @@
-﻿namespace it.Actions
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.Specialized;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.Net;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using System.Windows.Forms;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Globalization;
+using System.Net;
+using System.Text.Json;
+using System.Text.RegularExpressions;
+using System.Windows;
 
+namespace it.Actions
+{
     internal sealed class ConvertActions : ActionBase
     {
         private readonly Regex unitRegex =
         new Regex("(?<number>^[0-9]+([.,][0-9]+)?)(\\s*)(?<from>[a-z]+[2-3]?) (to|naar) (?<to>[a-z]+[2-3]?)", RegexOptions.Compiled);
 
-
-        NameValueCollection currencies = new NameValueCollection()
+        private NameValueCollection currencies = new NameValueCollection()
         {
             { "usd", "usd" },
             { "unites states dollar", "usd" },
@@ -24,7 +22,10 @@
             { "cad", "cad" },
         };
 
-
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as ConvertActions);
+        }
 
         public override bool Matches(string clipboardText = null)
         {
@@ -48,9 +49,9 @@
             // we should place the conversion of currency here
             string fromCurrency = currencies[from];
             string toCurrency = currencies[to];
+
             // we have a currency, make a call and get the result.
             return GetCurrencyActionResult(clipboardText, fromCurrency, toCurrency, (decimal)number);
-
 
             double meter = 0, gram = 0, liter = 0, oppervlakte = 0, snelheid = 0;
             switch (from)
@@ -459,47 +460,32 @@
             return actionResult;
         }
 
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as ConvertActions);
-        }
-
-
-
-        #region Helpers
-
-        internal class ExchangeRateModel
-        {
-            public Dictionary<string, decimal> rates { get; set; }
-        }
-
-
         private ActionResult GetCurrencyActionResult(string clipboardText, string fromCurrency, string toCurrency, decimal amount)
         {
             ActionResult actionResult = new ActionResult();
-            if (String.IsNullOrWhiteSpace(fromCurrency) | String.IsNullOrWhiteSpace(toCurrency)) return actionResult;
+            if (string.IsNullOrWhiteSpace(fromCurrency) | string.IsNullOrWhiteSpace(toCurrency)) return actionResult;
 
             using (WebClient client = new WebClient())
             {
-
                 try
                 {
                     string json = client.DownloadString($"https://api.exchangeratesapi.io/latest?base={fromCurrency.ToUpper()}&symbols={toCurrency.ToUpper()}");
-                    ExchangeRateModel deserializedJson = Newtonsoft.Json.JsonConvert.DeserializeObject<ExchangeRateModel>(json);
-                    decimal rate = deserializedJson.rates[toCurrency.ToUpper()];
+                    ExchangeRateModel deserializedJson = JsonSerializer.Deserialize<ExchangeRateModel>(json);
+                    decimal rate = deserializedJson.rates[toCurrency];
                     actionResult.Description = $"{clipboardText} = {amount * rate:N2} {toCurrency}";
                 }
                 catch (Exception ex)
                 {
                     actionResult.Description = $"There was an error getting the exchange rate: {ex.Message}";
                 }
-
-
             }
 
             return actionResult;
         }
-        #endregion Helpers
 
+        internal class ExchangeRateModel
+        {
+            public Dictionary<string, decimal> rates { get; set; }
+        }
     }
 }

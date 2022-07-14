@@ -1,24 +1,17 @@
+using Microsoft.Win32.SafeHandles;
+using System;
+using System.Diagnostics;
+using System.Globalization;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
+using System.Runtime.InteropServices;
+using System.Threading;
+using System.Windows.Forms;
 namespace it.Actions
 {
-    using IronPython.Hosting;
-    using Microsoft.Scripting.Hosting;
-    using Microsoft.Win32.SafeHandles;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.Net;
-    using System.Net.NetworkInformation;
-    using System.Net.Sockets;
-    using System.Runtime.InteropServices;
-    using System.Threading;
-    using System.Windows.Forms;
-
     internal sealed class DeviceActions : IAction, IDisposable
     {
-        private Process afsluiten;
-
         private readonly string[] commands = { "sluit", "opnieuw opstarten", "reboot", "slaapstand", "sleep", "taakbeheer",
             "task mananger", "notepad", "kladblok", "leeg prullebak", "prullebak", "empty recycle bin", "empty bin",
             "empty recycling bin", "vergrendel", "lock", nameof(afsluiten), "shut down", "ram", "windows versie", "windows version",
@@ -27,15 +20,17 @@ namespace it.Actions
         private readonly SmartPerformanceCounter cpuCounter = new SmartPerformanceCounter(
             () => new PerformanceCounter("Processor", "% Processor Time", "_Total"), TimeSpan.FromMinutes(1));
 
-
         private readonly SafeFileHandle handle = new SafeFileHandle(IntPtr.Zero, true);
-        private bool isCountingWords;
-
-        private Process kladblok;
 
         private readonly SmartPerformanceCounter ramCounter =
             new SmartPerformanceCounter(() => new PerformanceCounter("Memory", "Available MBytes"),
                 TimeSpan.FromMinutes(1));
+
+        private Process afsluiten;
+
+        private bool isCountingWords;
+
+        private Process kladblok;
 
         private Process reboot;
 
@@ -46,7 +41,9 @@ namespace it.Actions
         private enum Recycle : uint
         {
             SHRB_NOCONFIRMATION = 0x00000001,
+
             SHRB_NOPROGRESSUI = 0x00000002,
+
             SHRB_NOSOUND = 0x00000004,
         }
 
@@ -72,6 +69,11 @@ namespace it.Actions
             throw new NotImplementedException();
         }
 
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as DeviceActions);
+        }
+
         public bool Matches(string clipboardText = null)
         {
             for (int i = 0; i < commands.Length; i++)
@@ -80,32 +82,11 @@ namespace it.Actions
                 if (command.Equals(clipboardText, StringComparison.Ordinal))
                 {
                     return true;
-                } 
+                }
             }
 
             return isCountingWords;
         }
-        public class Item
-        {
-            public string id { get; set; }
-            public string name { get; set; }
-            public string symbol { get; set; }
-            public string rank { get; set; }
-            public decimal price_usd { get; set; }
-            [JsonProperty(PropertyName = "24h_volume_usd")]
-            public string volume_usd_24h { get; set; }
-            public string market_cap_usd { get; set; }
-            public string available_supply { get; set; }
-            public string total_supply { get; set; }
-            public string percent_change_1h { get; set; }
-            public string percent_change_24h { get; set; }
-            public string percent_change_7d { get; set; }
-            public string last_updated { get; set; }
-        }
-
-        [DllImport("Shell32.dll", CharSet = CharSet.Unicode)]
-
-        private static extern uint SHEmptyRecycleBin(IntPtr hwnd, string pszRootPath, Recycle dwFlags);
 
         ActionResult IAction.TryExecute(string clipboardText)
         {
@@ -190,7 +171,7 @@ namespace it.Actions
                         afsluiten = Process.Start("shutdown", "/s /t 0");
                         break;
                     }
-                    
+
                 //om je momentele ram geheugen te laten zien (To display your momentary RAM memory)
                 case "ram":
                     {
@@ -253,7 +234,7 @@ namespace it.Actions
                         NetworkInterface[] array = NetworkInterface.GetAllNetworkInterfaces();
                         for (int i = 0; i < array.Length; i++)
                         {
-                            NetworkInterface adapter = array[i]; 
+                            NetworkInterface adapter = array[i];
                             if (string.IsNullOrEmpty(sMacAddress))
                             {
                                 _ = adapter.GetPhysicalAddress().ToString();
@@ -361,7 +342,7 @@ namespace it.Actions
                                         }
                                     default:
                                         {
-                                            return  actionResult;
+                                            return actionResult;
                                         }
                                 }
                             }
@@ -399,7 +380,7 @@ namespace it.Actions
                             {
                                 IPHostEntry iPHostEntry = Dns.GetHostEntry(Dns.GetHostName());
                                 for (int i = 0; i < iPHostEntry.AddressList.Length; i++)
-                                { 
+                                {
                                     IPAddress ipAddress = iPHostEntry.AddressList[i];
                                     if (ipAddress.AddressFamily == AddressFamily.InterNetwork)
                                     {
@@ -457,9 +438,36 @@ namespace it.Actions
             return actionResult;
         }
 
-        public override bool Equals(object obj)
+        [DllImport("Shell32.dll", CharSet = CharSet.Unicode)]
+        private static extern uint SHEmptyRecycleBin(IntPtr hwnd, string pszRootPath, Recycle dwFlags);
+
+        public class Item
         {
-            return Equals(obj as DeviceActions);
+            public string available_supply { get; set; }
+
+            public string id { get; set; }
+
+            public string last_updated { get; set; }
+
+            public string market_cap_usd { get; set; }
+
+            public string name { get; set; }
+
+            public string percent_change_1h { get; set; }
+
+            public string percent_change_24h { get; set; }
+
+            public string percent_change_7d { get; set; }
+
+            public decimal price_usd { get; set; }
+
+            public string rank { get; set; }
+
+            public string symbol { get; set; }
+
+            public string total_supply { get; set; }
+
+            public string volume_usd_24h { get; set; }
         }
     }
 }

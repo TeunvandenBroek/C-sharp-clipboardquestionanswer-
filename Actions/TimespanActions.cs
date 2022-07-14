@@ -1,15 +1,15 @@
+using System;
+using System.Globalization;
+
 namespace it.Actions
 {
-    using System;
-    using System.Globalization;
-
     public sealed class TimespanActions : IAction
     {
-
         private readonly string[] dateFormats =
         {
             "dd.MM.yyyy",
-            "dd-MM-yyyy", 
+            "dd-MM-yyyy",
+
             //american format
             "MM.dd.yyyy",
             "MM-dd-yyyy",
@@ -18,6 +18,11 @@ namespace it.Actions
         private bool isUsingTimespan;
 
         private DateTimeOffset? prevDate;
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as TimespanActions);
+        }
 
         public bool Matches(string clipboardText)
         {
@@ -44,13 +49,6 @@ namespace it.Actions
             }
 
             return actionResult;
-
-        }
-
-
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as TimespanActions);
         }
     }
 }

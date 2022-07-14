@@ -1,20 +1,20 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+
 namespace it.Actions
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-
     internal sealed class TimezoneActions : IAction
     {
         private string country;
+
         private string timeZoneId = string.Empty;
 
         public override bool Equals(object obj)
         {
             return Equals(obj as TimezoneActions);
         }
-
 
         public bool Matches(string clipboardText)
         {
@@ -148,7 +148,7 @@ namespace it.Actions
 
                 case Countries.UtcOffset.UtcPlusFourpointfive:
                     {
-                        timeZoneId = "Afghanistan Standard Time"; 
+                        timeZoneId = "Afghanistan Standard Time";
                         break;
                     }
 
